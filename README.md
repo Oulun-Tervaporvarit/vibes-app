@@ -4,7 +4,7 @@ This project was generated using [Angular CLI](https://github.com/angular/angula
 
 ## Publishing
 
-* Push to stag branch -> <https://passi.stag.allvibes.fi>
+* Push to main branch -> <https://passi.stag.allvibes.fi>
 * Push to prod branch -> <https://passi.allvibes.fi>
 
 ## Development server
