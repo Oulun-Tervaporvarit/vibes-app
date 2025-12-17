@@ -1,6 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { Component, HostListener, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
+import { ServiceProviderTabs } from "./service-provider-tabs/service-provider-tabs";
+import { Header } from "./header/header";
 
 type UserChoice = Promise<{
   outcome: 'accepted' | 'dismissed';
@@ -15,7 +17,7 @@ interface BeforeInstallPromptEvent extends Event {
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, CommonModule],
+  imports: [RouterOutlet, CommonModule, ServiceProviderTabs, Header],
   templateUrl: './app.html',
   styleUrl: './app.scss'
 })
