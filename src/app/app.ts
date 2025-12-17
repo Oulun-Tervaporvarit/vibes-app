@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, HostListener, signal } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { RouterOutlet } from '@angular/router';
 import { ServiceProviderTabs } from "./service-provider-tabs/service-provider-tabs";
 import { Header } from "./header/header";
@@ -17,7 +18,7 @@ interface BeforeInstallPromptEvent extends Event {
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, CommonModule, ServiceProviderTabs, Header],
+  imports: [RouterOutlet, CommonModule, FormsModule, ServiceProviderTabs, Header],
   templateUrl: './app.html',
   styleUrl: './app.scss'
 })

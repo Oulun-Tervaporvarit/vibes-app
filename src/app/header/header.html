@@ -1,10 +1,12 @@
 <div class="flex justify-end m-6">
   <div class="fled flex-col">
     <div>
-        <input style="background-color: white; border-style: solid; border: 5px; border-color: black;" placeholder="SYÖTÄ ETUKOODI">
+        <input [(ngModel)]="code" (input)="onCodeChange($event)" style="background-color: white; border-style: solid; border: 5px; border-color: black;" placeholder="SYÖTÄ ETUKOODI">
     </div>
+    @if(this.code === this.validCode) {
     <div style="text-transform: uppercase;">
         3 etua käyttämättä!
     </div>
+    }
   </div>
-</div>
+</div>a
