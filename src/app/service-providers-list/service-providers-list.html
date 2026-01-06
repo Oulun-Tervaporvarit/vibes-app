@@ -1,18 +1,19 @@
-<mat-card class="example-card" appearance="outlined">
+
+
+@for (provider of providers; track $index) {
+<mat-card class="provider-card" appearance="outlined">
   <mat-card-header>
     <div mat-card-avatar class="example-header-image"></div>
-    <mat-card-title>Shiba Inu #1</mat-card-title>
-    <mat-card-subtitle>Terapiakoira</mat-card-subtitle>
+    <mat-card-title>{{ provider.title }}</mat-card-title>
+    <mat-card-subtitle>{{ provider.subtitle }}</mat-card-subtitle>
   </mat-card-header>
   
   <mat-card-content>
     <div class="flex flex-row gap-4">
-        <img mat-card-image src="https://material.angular.dev/assets/img/examples/shiba2.jpg" style="max-width: 50%" alt="Photo of a Shiba Inu">
-        <div>
+        <img mat-card-image [src]="provider.image" style="max-width: 50%; object-fit: contain;">
+        <div class="provider-card">
             <p>
-                The Shiba Inu is the smallest of the six original and distinct spitz breeds of dog from Japan.
-                A small, agile dog that copes very well with mountainous terrain, the Shiba Inu was originally
-                bred for hunting.
+                {{ provider.description }}
             </p>
             <mat-divider></mat-divider>
             <div>
@@ -21,37 +22,8 @@
                 Aukioloajat: Ma-Pe 9-17<br>
             </div>
         </div>
-        
-    </div>
-  </mat-card-content>
-  <mat-card-actions>
-  </mat-card-actions>
-</mat-card>
-
-
-
-<mat-card class="example-card" appearance="outlined">
-  <mat-card-header>
-    <div mat-card-avatar class="example-header-image"></div>
-    <mat-card-title>Shiba Inu #2</mat-card-title>
-    <mat-card-subtitle>Terapiakoira</mat-card-subtitle>
-  </mat-card-header>
-  
-  <mat-card-content>
-    <div class="flex flex-row gap-4">
-        <img mat-card-image src="https://material.angular.dev/assets/img/examples/shiba2.jpg" style="max-width: 50%" alt="Photo of a Shiba Inu">
         <div>
-            <p>
-                The Shiba Inu is the smallest of the six original and distinct spitz breeds of dog from Japan.
-                A small, agile dog that copes very well with mountainous terrain, the Shiba Inu was originally
-                bred for hunting.
-            </p>
-            <mat-divider></mat-divider>
-            <div>
-                Etäisyys: 10 km<br>
-                Osoite: Shiba street 1, Tokyo<br>
-                Aukioloajat: Ma-Pe 9-17<br>
-            </div>
+          <button routerLink="/service/1" matButton><mat-icon aria-hidden="false" fontIcon="arrow_forward"></mat-icon></button>
         </div>
         
     </div>
@@ -59,3 +31,6 @@
   <mat-card-actions>
   </mat-card-actions>
 </mat-card>
+
+}
+

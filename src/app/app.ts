@@ -18,7 +18,7 @@ interface BeforeInstallPromptEvent extends Event {
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, CommonModule, FormsModule, ServiceProviderTabs, Header],
+  imports: [RouterOutlet, CommonModule, FormsModule, Header],
   templateUrl: './app.html',
   styleUrl: './app.scss'
 })
