@@ -4,8 +4,8 @@
   </mat-card-header>
   
   <mat-card-content>
-    <div class="flex flex-row gap-4">
-        <img mat-card-image [src]="item.image" style="max-width: 50%; object-fit: contain;">
+    <div class="flex flex-col gap-4">
+        <img mat-card-image [src]="item.image" style="max-width: 100%; object-fit: contain;">
         <div class="provider-card">
 
             <div>
@@ -16,12 +16,7 @@
                 Aukioloajat: Ma-Pe 9-17<br>
             </div>
             <div>
-                <p class="alert">
-                    <b>Tärkeää tietoa</b>
-                    <br />
-                    Klikkaa "näytä henkilökunnalle" vasta kun olet paikan päällä.
-                </p>
-                <button matButton="filled" style="text-transform: uppercase; margin-bottom: 15px;">Näytä henkilökunnalle</button>
+
             </div>
             
             <p>
@@ -44,5 +39,13 @@
     </div>
   </mat-card-content>
   <mat-card-actions>
+    <div>
+        <p class="alert">
+            <b>Tärkeää tietoa</b>
+            <br />
+            Klikkaa "näytä henkilökunnalle" vasta kun olet paikan päällä.
+        </p>
+        <button matButton="filled" style="text-transform: uppercase; margin-bottom: 15px;">Näytä henkilökunnalle</button>
+    </div>
   </mat-card-actions>
 </mat-card>
