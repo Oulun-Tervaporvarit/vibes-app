@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { RouterOutlet } from '@angular/router';
 import { ServiceProviderTabs } from "./service-provider-tabs/service-provider-tabs";
 import { Header } from "./header/header";
+import { VibesDialog } from './vibes-dialog/vibes-dialog';
 
 type UserChoice = Promise<{
   outcome: 'accepted' | 'dismissed';
@@ -18,12 +19,13 @@ interface BeforeInstallPromptEvent extends Event {
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, CommonModule, FormsModule, Header],
+  imports: [RouterOutlet, CommonModule, FormsModule, Header, VibesDialog],
   templateUrl: './app.html',
   styleUrl: './app.scss'
 })
 export class App {
   protected readonly title = signal('allvibes-passi-app');
+  showVibesDialog = signal(true);
 
   deferredPrompt?: BeforeInstallPromptEvent;
   showInstallButton = false;

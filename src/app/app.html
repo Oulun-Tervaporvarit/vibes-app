@@ -6,3 +6,7 @@
 <app-header></app-header>
 
 <router-outlet />
+
+@if (showVibesDialog()) {
+  <app-vibes-dialog (dismissed)="showVibesDialog.set(false)" />
+}
