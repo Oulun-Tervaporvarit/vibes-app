@@ -52,4 +52,15 @@ export class ServiceProviderService {
   bannerUrl(provider: ServiceProvider): string | null {
     return provider.banner ? `${CMS_BASE_URL}/assets/${provider.banner.id}` : null;
   }
+
+  geocodeAddress(address: string): Observable<{ lat: number; lng: number } | null> {
+    const url = `https://nominatim.openstreetmap.org/search?format=json&limit=1&q=${encodeURIComponent(address)}`;
+    return this.http
+      .get<Array<{ lat: string; lon: string }>>(url)
+      .pipe(
+        map((res) =>
+          res && res.length > 0 ? { lat: Number(res[0].lat), lng: Number(res[0].lon) } : null
+        )
+      );
+  }
 }

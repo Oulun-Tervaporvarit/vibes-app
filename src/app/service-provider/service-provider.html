@@ -70,10 +70,85 @@
             <b>Tärkeää tietoa</b> — paina alla olevaa nappia vasta paikan päällä.
           </span>
         </p>
-        <button type="button" class="av-btn av-btn--block">
-          Näytä henkilökunnalle
+        <button
+          type="button"
+          class="av-btn av-btn--block"
+          [disabled]="gate().kind === 'checking'"
+          (click)="onShowToStaff()"
+        >
+          @if (gate().kind === 'checking') {
+            Tarkistetaan sijaintia…
+          } @else {
+            Näytä henkilökunnalle
+          }
         </button>
       </footer>
+    }
+
+    @if (gate().kind !== 'idle' && gate().kind !== 'checking') {
+      <div class="av-gate-overlay" (click)="dismissGate()">
+        <div class="av-gate-card" (click)="$event.stopPropagation()">
+          <button
+            type="button"
+            class="av-gate-card__dismiss"
+            (click)="dismissGate()"
+            aria-label="Sulje"
+          >✕</button>
+
+          @switch (gate().kind) {
+            @case ('success') {
+              <span class="av-gate-card__emoji" aria-hidden="true">✨</span>
+              <h2 class="av-gate-card__title">Olet paikalla!</h2>
+              <p class="av-gate-card__body">
+                Näytä tämä näkymä henkilökunnalle etusi käyttämiseksi.
+              </p>
+            }
+            @case ('too-far') {
+              <span class="av-gate-card__emoji" aria-hidden="true">📍</span>
+              <h2 class="av-gate-card__title">Olet liian kaukana</h2>
+              <p class="av-gate-card__body">
+                Sinun täytyy olla alle 100 metrin päässä paikasta käyttääksesi etua.
+                Olet nyt noin <b>{{ asTooFar(gate()).distance }} m</b> päässä osoitteesta
+                <i>{{ provider.address }}</i>.
+              </p>
+            }
+            @case ('denied') {
+              <span class="av-gate-card__emoji" aria-hidden="true">🔒</span>
+              <h2 class="av-gate-card__title">Sijainti ei ole käytössä</h2>
+              <p class="av-gate-card__body">
+                Etua voi käyttää vain paikan päällä. Salli sovellukselle sijainnin
+                käyttö selaimen asetuksista ja yritä uudelleen.
+              </p>
+            }
+            @case ('unsupported') {
+              <span class="av-gate-card__emoji" aria-hidden="true">🧭</span>
+              <h2 class="av-gate-card__title">Selain ei tue sijaintia</h2>
+              <p class="av-gate-card__body">
+                Sijaintitieto tarvitaan edun käyttämiseen paikan päällä.
+              </p>
+            }
+            @case ('not-found') {
+              <span class="av-gate-card__emoji" aria-hidden="true">❓</span>
+              <h2 class="av-gate-card__title">Osoitetta ei löytynyt</h2>
+              <p class="av-gate-card__body">
+                Paikan sijaintia ei pystytty selvittämään. Yritä uudelleen tai
+                ole yhteydessä henkilökuntaan.
+              </p>
+            }
+            @default {
+              <span class="av-gate-card__emoji" aria-hidden="true">⚠️</span>
+              <h2 class="av-gate-card__title">Jotain meni pieleen</h2>
+              <p class="av-gate-card__body">
+                Sijainnin tarkistus epäonnistui. Yritä hetken kuluttua uudelleen.
+              </p>
+            }
+          }
+
+          <button type="button" class="av-btn av-btn--block" (click)="dismissGate()">
+            Selvä
+          </button>
+        </div>
+      </div>
     }
   } @else {
     <div class="av-loading">
