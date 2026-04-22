@@ -1,3 +1,5 @@
+@use 'sass:list';
+
 :host {
   display: block;
 }
@@ -246,6 +248,246 @@
   @media (min-width: 600px) {
     align-items: center;
     padding: 24px;
+  }
+}
+
+// ---- Successful redemption dialog ---------------------------------------
+@keyframes av-spin-slow {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+@keyframes av-spin-reverse {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(-360deg); }
+}
+
+@keyframes av-pulse {
+  0%, 100% { transform: translate(-50%, -50%) scale(1);   opacity: 0.8; }
+  50%      { transform: translate(-50%, -50%) scale(1.12); opacity: 1; }
+}
+
+@keyframes av-card-in {
+  0%   { opacity: 0; transform: translateY(24px) scale(0.94); }
+  60%  { opacity: 1; transform: translateY(-4px) scale(1.02); }
+  100% { opacity: 1; transform: translateY(0)    scale(1); }
+}
+
+@keyframes av-fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes av-check-pop {
+  0%   { transform: translate(-50%, -50%) scale(0);   opacity: 0; }
+  60%  { transform: translate(-50%, -50%) scale(1.25); opacity: 1; }
+  100% { transform: translate(-50%, -50%) scale(1);   opacity: 1; }
+}
+
+@keyframes av-confetti-fall {
+  0%   { transform: translate(0, -120%) rotate(0deg);   opacity: 0; }
+  10%  { opacity: 1; }
+  90%  { opacity: 1; }
+  100% { transform: translate(var(--av-confetti-x, 0), 110vh) rotate(720deg); opacity: 0; }
+}
+
+.av-redeem-overlay {
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(
+    circle at 50% 40%,
+    rgba(72, 149, 233, 0.55),
+    rgba(14, 14, 14, 0.8) 75%
+  );
+  backdrop-filter: blur(10px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  z-index: 1100;
+  overflow: hidden;
+  animation: av-fade-in 220ms ease-out;
+}
+
+.av-redeem-confetti {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+
+  &__piece {
+    position: absolute;
+    top: 0;
+    width: 8px;
+    height: 14px;
+    border-radius: 2px;
+    animation: av-confetti-fall 3.6s ease-in forwards;
+  }
+
+  // spray confetti across the width in a deterministic pattern
+  $colors: (var(--av-yellow), var(--av-blue-light), #ff9ec7, var(--av-orange), #fff);
+  @for $i from 1 through 20 {
+    &__piece:nth-child(#{$i}) {
+      left: ($i * 5.3%);
+      background: list.nth($colors, (($i - 1) % 5) + 1);
+      --av-confetti-x: #{(($i % 7) - 3) * 20px};
+      animation-delay: #{($i * 0.07)}s;
+      animation-duration: #{2.8 + ($i % 5) * 0.3}s;
+      transform-origin: center;
+    }
+  }
+}
+
+.av-redeem-card {
+  position: relative;
+  width: 100%;
+  max-width: 420px;
+  background: var(--av-surface);
+  color: var(--av-text);
+  border-radius: var(--av-radius-lg);
+  padding: 124px 24px 24px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  box-shadow: 0 24px 60px rgba(14, 14, 14, 0.35), 0 0 0 1px rgba(255, 255, 255, 0.08);
+  animation: av-card-in 520ms cubic-bezier(0.22, 1.2, 0.36, 1) both;
+}
+
+.av-redeem-stage {
+  position: absolute;
+  top: -72px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 160px;
+  height: 160px;
+}
+
+.av-redeem-aura {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(255, 248, 107, 0.55) 0%,
+    rgba(72, 149, 233, 0.35) 55%,
+    transparent 72%
+  );
+  filter: blur(6px);
+  animation: av-pulse 2.6s ease-in-out infinite;
+  z-index: 0;
+}
+
+.av-redeem-ring {
+  position: absolute;
+  inset: -6px;
+  border-radius: 50%;
+  border: 3px dashed var(--av-blue);
+  animation: av-spin-reverse 14s linear infinite;
+  z-index: 1;
+  opacity: 0.9;
+}
+
+.av-redeem-banner {
+  position: relative;
+  width: 160px;
+  height: 160px;
+  border-radius: 50%;
+  object-fit: cover;
+  box-shadow: 0 10px 24px rgba(14, 14, 14, 0.3), 0 0 0 4px var(--av-yellow);
+  background: var(--av-surface);
+  animation: av-spin-slow 18s linear infinite;
+  z-index: 2;
+
+  &--fallback {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 64px;
+    background: linear-gradient(135deg, var(--av-blue-light), var(--av-yellow-soft));
+  }
+}
+
+.av-redeem-check {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--av-yellow);
+  color: var(--av-black);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px !important;
+  box-shadow: 0 6px 14px rgba(14, 14, 14, 0.22);
+  z-index: 3;
+  animation: av-check-pop 420ms 300ms cubic-bezier(0.22, 1.4, 0.36, 1) both;
+}
+
+.av-redeem-eyebrow {
+  margin: 4px 0 0;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.22em;
+  color: var(--av-blue-dark);
+}
+
+.av-redeem-title {
+  font-family: 'Poppins', sans-serif;
+  font-size: clamp(22px, 5vw, 28px);
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: -0.01em;
+  margin: 0;
+  color: var(--av-text);
+}
+
+.av-redeem-meta {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.av-redeem-address {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0;
+  font-size: 14px;
+  color: var(--av-text-muted);
+
+  .material-icons {
+    font-size: 18px;
+    color: var(--av-blue);
+  }
+}
+
+.av-redeem-time {
+  margin: 0 0 8px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--av-text-muted);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .av-redeem-banner,
+  .av-redeem-ring,
+  .av-redeem-aura,
+  .av-redeem-check,
+  .av-redeem-card,
+  .av-redeem-confetti__piece {
+    animation: none !important;
   }
 }
 

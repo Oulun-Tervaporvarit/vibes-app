@@ -85,7 +85,59 @@
       </footer>
     }
 
-    @if (gate().kind !== 'idle' && gate().kind !== 'checking') {
+    @if (gate().kind === 'success') {
+      <div class="av-redeem-overlay" (click)="dismissGate()">
+        <div class="av-redeem-confetti" aria-hidden="true">
+          @for (i of [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19]; track i) {
+            <span class="av-redeem-confetti__piece"></span>
+          }
+        </div>
+
+        <div class="av-redeem-card" (click)="$event.stopPropagation()">
+          <button
+            type="button"
+            class="av-gate-card__dismiss"
+            (click)="dismissGate()"
+            aria-label="Sulje"
+          >✕</button>
+
+          <div class="av-redeem-stage">
+            <div class="av-redeem-aura" aria-hidden="true"></div>
+            <div class="av-redeem-ring" aria-hidden="true"></div>
+            @if (bannerSrc(); as src) {
+              <img class="av-redeem-banner" [src]="src" [alt]="provider.name" />
+            } @else {
+              <div class="av-redeem-banner av-redeem-banner--fallback" aria-hidden="true">✨</div>
+            }
+            <span class="av-redeem-check material-icons" aria-hidden="true">verified</span>
+          </div>
+
+          <p class="av-redeem-eyebrow">Etu käytössä</p>
+          <h2 class="av-redeem-title">{{ provider.name }}</h2>
+
+          <div class="av-redeem-meta">
+            <span class="av-chip av-chip--yellow">{{ categoryLabel() }}</span>
+          </div>
+
+          <p class="av-redeem-address">
+            <span class="material-icons" aria-hidden="true">place</span>
+            {{ provider.address }}
+          </p>
+
+          @if (redeemedAt(); as ts) {
+            <p class="av-redeem-time">
+              Vahvistettu {{ ts | date: 'd.M.yyyy' }} klo {{ ts | date: 'HH:mm' }}
+            </p>
+          }
+
+          <button type="button" class="av-btn av-btn--block" (click)="dismissGate()">
+            Valmis
+          </button>
+        </div>
+      </div>
+    }
+
+    @if (gate().kind !== 'idle' && gate().kind !== 'checking' && gate().kind !== 'success') {
       <div class="av-gate-overlay" (click)="dismissGate()">
         <div class="av-gate-card" (click)="$event.stopPropagation()">
           <button
@@ -96,13 +148,6 @@
           >✕</button>
 
           @switch (gate().kind) {
-            @case ('success') {
-              <span class="av-gate-card__emoji" aria-hidden="true">✨</span>
-              <h2 class="av-gate-card__title">Olet paikalla!</h2>
-              <p class="av-gate-card__body">
-                Näytä tämä näkymä henkilökunnalle etusi käyttämiseksi.
-              </p>
-            }
             @case ('too-far') {
               <span class="av-gate-card__emoji" aria-hidden="true">📍</span>
               <h2 class="av-gate-card__title">Olet liian kaukana</h2>

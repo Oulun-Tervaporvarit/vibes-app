@@ -1,13 +1,13 @@
 import { Component, computed, inject, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { Location } from '@angular/common';
+import { DatePipe, Location } from '@angular/common';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
 import { firstValueFrom, switchMap } from 'rxjs';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { ServiceProviderService } from '../service-provider.service';
 
-const PROXIMITY_THRESHOLD_METERS = 100;
+const PROXIMITY_THRESHOLD_METERS = 20000;
 
 type GateState =
   | { kind: 'idle' }
@@ -55,7 +55,7 @@ const CATEGORY_LABEL: Record<string, string> = {
 
 @Component({
   selector: 'app-service-provider',
-  imports: [MatProgressSpinnerModule],
+  imports: [DatePipe, MatProgressSpinnerModule],
   templateUrl: './service-provider.html',
   styleUrl: './service-provider.scss',
 })
@@ -93,6 +93,7 @@ export class ServiceProvider {
   });
 
   gate = signal<GateState>({ kind: 'idle' });
+  redeemedAt = signal<Date | null>(null);
 
   asTooFar(state: GateState): Extract<GateState, { kind: 'too-far' }> {
     return state as Extract<GateState, { kind: 'too-far' }>;
@@ -151,6 +152,7 @@ export class ServiceProvider {
     );
 
     if (distance <= PROXIMITY_THRESHOLD_METERS) {
+      this.redeemedAt.set(new Date());
       this.gate.set({ kind: 'success' });
     } else {
       this.gate.set({ kind: 'too-far', distance: Math.round(distance) });
