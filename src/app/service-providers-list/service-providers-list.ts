@@ -1,63 +1,43 @@
-import { Component } from '@angular/core';
+import { Component, computed, inject, input } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDividerModule } from '@angular/material/divider';
-import { FormsModule } from "@angular/forms";
+import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
-import {MatIconModule} from '@angular/material/icon';
-
-
-const MOCK_PROVIDERS = [
-  {
-    title: "Shiba Inu #1",
-    subtitle: "Terapiakoira",
-    image: "https://material.angular.dev/assets/img/examples/shiba2.jpg",
-    description: `The Shiba Inu is the smallest of the six original and distinct spitz breeds of dog from Japan.
-                A small, agile dog that copes very well with mountainous terrain, the Shiba Inu was originally
-                bred for hunting.`
-  },
-  {
-    title: "Shiba Inu #2",
-    subtitle: "Terapiakoira",
-    image: "https://material.angular.dev/assets/img/examples/shiba2.jpg",
-    description: `The Shiba Inu is the smallest of the six original and distinct spitz breeds of dog from Japan.
-                A small, agile dog that copes very well with mountainous terrain, the Shiba Inu was originally
-                bred for hunting.`
-  },
-  {
-    title: "Shiba Inu #3",
-    subtitle: "Terapiakoira",
-    image: "https://material.angular.dev/assets/img/examples/shiba2.jpg",
-    description: `The Shiba Inu is the smallest of the six original and distinct spitz breeds of dog from Japan.
-                A small, agile dog that copes very well with mountainous terrain, the Shiba Inu was originally
-                bred for hunting.`
-  },
-  {
-    title: "Shiba Inu #4",
-    subtitle: "Terapiakoira",
-    image: "https://material.angular.dev/assets/img/examples/shiba2.jpg",
-    description: `The Shiba Inu is the smallest of the six original and distinct spitz breeds of dog from Japan.
-                A small, agile dog that copes very well with mountainous terrain, the Shiba Inu was originally
-                bred for hunting.`
-  },
-  {
-    title: "Shiba Inu #5",
-    subtitle: "Terapiakoira",
-    image: "https://material.angular.dev/assets/img/examples/shiba2.jpg",
-    description: `The Shiba Inu is the smallest of the six original and distinct spitz breeds of dog from Japan.
-                A small, agile dog that copes very well with mountainous terrain, the Shiba Inu was originally
-                bred for hunting.`
-  }
-]
+import { MatIconModule } from '@angular/material/icon';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { ServiceProvider, ServiceProviderService } from '../service-provider.service';
 
 @Component({
   selector: 'app-service-providers-list',
-  imports: [MatCardModule, MatButtonModule, MatDividerModule, FormsModule, RouterLink, MatIconModule],
+  imports: [
+    MatCardModule,
+    MatButtonModule,
+    MatDividerModule,
+    FormsModule,
+    RouterLink,
+    MatIconModule,
+    MatProgressSpinnerModule,
+  ],
   templateUrl: './service-providers-list.html',
   styleUrl: './service-providers-list.scss',
 })
 export class ServiceProvidersList {
+  private service = inject(ServiceProviderService);
 
-  providers = MOCK_PROVIDERS;
+  category = input<string>();
 
+  private allProviders = toSignal(this.service.getAll(), { initialValue: undefined });
+
+  providers = computed(() => {
+    const all = this.allProviders();
+    if (all === undefined) return undefined;
+    const cat = this.category();
+    return cat ? all.filter((p) => p.category === cat) : all;
+  });
+
+  bannerUrl(provider: ServiceProvider): string | null {
+    return this.service.bannerUrl(provider);
+  }
 }

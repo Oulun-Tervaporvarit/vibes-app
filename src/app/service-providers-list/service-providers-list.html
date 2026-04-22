@@ -1,33 +1,37 @@
+@if (providers(); as items) {
+  @if (items.length === 0) {
+    <p class="empty-state">Ei palveluntarjoajia tässä kategoriassa.</p>
+  }
 
+  @for (provider of items; track provider.id) {
+  <mat-card class="provider-card" appearance="outlined">
+    <mat-card-header>
+      <mat-card-title>{{ provider.name }}</mat-card-title>
+    </mat-card-header>
 
-@for (provider of providers; track $index) {
-<mat-card class="provider-card" appearance="outlined">
-  <mat-card-header>
-    <mat-card-title>{{ provider.title }}</mat-card-title>
-    <mat-card-subtitle>{{ provider.subtitle }}</mat-card-subtitle>
-  </mat-card-header>
-  
-  <mat-card-content>
-    <div class="flex flex-col gap-4">
-        <img mat-card-image [src]="provider.image" style="max-width: 100%; object-fit: contain;">
+    <mat-card-content>
+      <div class="flex flex-col gap-4">
+        @if (bannerUrl(provider); as src) {
+          <img mat-card-image [src]="src" [alt]="provider.name" style="max-width: 100%; object-fit: contain;">
+        }
         <div class="provider-card">
-            <p>
-                {{ provider.description }}
-            </p>
-            <mat-divider></mat-divider>
-            <div>
-                Etäisyys: 10 km<br>
-                Osoite: Shiba street 1, Tokyo<br>
-                Aukioloajat: Ma-Pe 9-17<br>
-            </div>
+          <div [innerHTML]="provider.description"></div>
+          <mat-divider></mat-divider>
+          <div>
+            Osoite: {{ provider.address }}<br>
+          </div>
         </div>
-        
-    </div>
-  </mat-card-content>
-  <mat-card-actions>
-    <button routerLink="/service/1" matButton><mat-icon aria-hidden="false" fontIcon="arrow_forward"></mat-icon></button>
-  </mat-card-actions>
-</mat-card>
-
+      </div>
+    </mat-card-content>
+    <mat-card-actions>
+      <button [routerLink]="['/service', provider.id]" matButton>
+        <mat-icon aria-hidden="false" fontIcon="arrow_forward"></mat-icon>
+      </button>
+    </mat-card-actions>
+  </mat-card>
+  }
+} @else {
+  <div class="loading">
+    <mat-spinner diameter="32"></mat-spinner>
+  </div>
 }
-

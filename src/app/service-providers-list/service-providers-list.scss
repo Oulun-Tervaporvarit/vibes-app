@@ -2,3 +2,15 @@
     filter: brightness(95%);
     cursor: pointer;
 }
+
+.loading {
+    display: flex;
+    justify-content: center;
+    padding: 24px;
+}
+
+.empty-state {
+    padding: 24px;
+    text-align: center;
+    color: rgba(0, 0, 0, 0.6);
+}
