@@ -1,4 +1,4 @@
-<section class="av-detail">
+<section class="av-detail" [class.av-detail--no-cta]="item()?.free">
   @if (item(); as provider) {
     <header class="av-detail__hero">
       <button type="button" class="av-detail__back" (click)="goBack()" aria-label="Takaisin">
@@ -62,17 +62,19 @@
       </section>
     </article>
 
-    <footer class="av-detail__cta-bar">
-      <p class="av-detail__alert">
-        <span class="material-icons" aria-hidden="true">info</span>
-        <span>
-          <b>Tärkeää tietoa</b> — paina alla olevaa nappia vasta paikan päällä.
-        </span>
-      </p>
-      <button type="button" class="av-btn av-btn--block">
-        Näytä henkilökunnalle
-      </button>
-    </footer>
+    @if (!provider.free) {
+      <footer class="av-detail__cta-bar">
+        <p class="av-detail__alert">
+          <span class="material-icons" aria-hidden="true">info</span>
+          <span>
+            <b>Tärkeää tietoa</b> — paina alla olevaa nappia vasta paikan päällä.
+          </span>
+        </p>
+        <button type="button" class="av-btn av-btn--block">
+          Näytä henkilökunnalle
+        </button>
+      </footer>
+    }
   } @else {
     <div class="av-loading">
       <mat-spinner diameter="36"></mat-spinner>

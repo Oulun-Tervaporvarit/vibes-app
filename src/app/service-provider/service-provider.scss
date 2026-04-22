@@ -6,6 +6,10 @@
   max-width: 760px;
   margin: 0 auto;
   padding: 16px 16px 220px;
+
+  &--no-cta {
+    padding-bottom: 32px;
+  }
 }
 
 .av-detail__hero {
