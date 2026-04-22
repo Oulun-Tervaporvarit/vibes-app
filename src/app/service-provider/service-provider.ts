@@ -7,7 +7,7 @@ import { firstValueFrom, switchMap } from 'rxjs';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { ServiceProviderService } from '../service-provider.service';
 
-const PROXIMITY_THRESHOLD_METERS = 20000;
+const PROXIMITY_THRESHOLD_METERS = 100;
 
 type GateState =
   | { kind: 'idle' }
