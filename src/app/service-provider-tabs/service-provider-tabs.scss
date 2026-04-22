@@ -1,4 +1,86 @@
+:host {
+  display: block;
+}
 
-::ng-deep .mat-mdc-tab-header {
+.av-tabs-hero {
+  background: var(--av-blue);
+  color: #fff;
+  padding: 28px 20px 36px;
+  text-align: center;
+
+  &__inner {
+    max-width: 720px;
+    margin: 0 auto;
+  }
+
+  &__eyebrow {
+    margin: 0 0 8px;
+    font-size: 12px;
+    font-weight: 600;
     text-transform: uppercase;
+    letter-spacing: 0.18em;
+    color: var(--av-yellow);
+  }
+
+  &__title {
+    font-size: clamp(28px, 5vw, 40px);
+    font-weight: 800;
+    text-transform: uppercase;
+    line-height: 1.05;
+    margin: 0;
+  }
+
+  &__sub {
+    margin: 12px auto 0;
+    max-width: 520px;
+    font-size: 15px;
+    color: rgba(255, 255, 255, 0.85);
+  }
+}
+
+.av-tabs {
+  background: var(--av-blue);
+
+  ::ng-deep .mat-mdc-tab-header {
+    background: var(--av-blue);
+    border-bottom: none;
+    --mdc-secondary-navigation-tab-container-height: 56px;
+  }
+
+  ::ng-deep .mat-mdc-tab .mdc-tab__text-label {
+    color: rgba(255, 255, 255, 0.75);
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  ::ng-deep .mat-mdc-tab--active .mdc-tab__text-label,
+  ::ng-deep .mat-mdc-tab.mdc-tab--active .mdc-tab__text-label {
+    color: #fff;
+  }
+
+  ::ng-deep .mdc-tab-indicator__content--underline {
+    border-color: var(--av-yellow) !important;
+    border-top-width: 4px !important;
+    border-radius: 4px;
+  }
+
+  ::ng-deep .mat-mdc-tab .mdc-tab__ripple::before,
+  ::ng-deep .mat-mdc-tab-ripple {
+    background-color: rgba(255, 255, 255, 0.08) !important;
+  }
+
+  ::ng-deep .mat-mdc-tab-body-wrapper {
+    background: var(--av-surface-muted);
+    min-height: 60vh;
+    border-top-left-radius: var(--av-radius-lg);
+    border-top-right-radius: var(--av-radius-lg);
+    margin-top: -2px;
+  }
+
+  ::ng-deep .mat-mdc-tab-body-content {
+    padding: 24px 16px 32px;
+  }
 }

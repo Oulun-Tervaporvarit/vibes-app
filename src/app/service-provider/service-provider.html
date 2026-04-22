@@ -1,54 +1,81 @@
-<mat-card class="provider-card" appearance="outlined">
-  <mat-card-header style="margin-bottom: 15px;">
-    <button matButton (click)="location.back()"><mat-icon aria-hidden="false" fontIcon="arrow_back"></mat-icon>Takaisin</button>
-  </mat-card-header>
-
+<section class="av-detail">
   @if (item(); as provider) {
-    <mat-card-content>
-      <div class="flex flex-col gap-4">
-        @if (bannerSrc(); as src) {
-          <img mat-card-image [src]="src" [alt]="provider.name" style="max-width: 100%; object-fit: contain;">
+    <header class="av-detail__hero">
+      <button type="button" class="av-detail__back" (click)="goBack()" aria-label="Takaisin">
+        <span class="material-icons" aria-hidden="true">arrow_back</span>
+        <span>Takaisin</span>
+      </button>
+
+      @if (bannerSrc(); as src) {
+        <img class="av-detail__banner" [src]="src" [alt]="provider.name">
+      } @else {
+        <div class="av-detail__banner av-detail__banner--fallback" aria-hidden="true">✨</div>
+      }
+    </header>
+
+    <article class="av-detail__card">
+      <div class="av-detail__chips">
+        <span class="av-chip">{{ categoryLabel() }}</span>
+        @if (provider.free) {
+          <span class="av-chip av-chip--yellow">Maksuton</span>
         }
-        <div class="provider-card">
+      </div>
 
-          <div>
-            <b>{{ provider.name }}</b>
-          </div>
-          <div>
-            Osoite: {{ provider.address }}<br>
-          </div>
+      <h1 class="av-detail__title">{{ provider.name }}</h1>
 
-          <p>
-            <b>Kuvaus</b>
-            <span [innerHTML]="provider.description"></span>
-          </p>
-          <mat-divider></mat-divider>
-          <p>
-            <b>Näin pääset hyödyntämään</b>
-            <span [innerHTML]="provider.instructions"></span>
-          </p>
-          <mat-divider></mat-divider>
-
-          TODO: Tähän sijainti google maps kartalla
+      <div class="av-detail__meta">
+        <div class="av-detail__meta-row">
+          <span class="material-icons" aria-hidden="true">place</span>
+          <span>{{ provider.address }}</span>
         </div>
+      </div>
 
-      </div>
-    </mat-card-content>
-    <mat-card-actions>
-      <div>
-        <p class="alert">
-          <b>Tärkeää tietoa</b>
-          <br />
-          Klikkaa "näytä henkilökunnalle" vasta kun olet paikan päällä.
-        </p>
-        <button matButton="filled" style="text-transform: uppercase; margin-bottom: 15px;">Näytä henkilökunnalle</button>
-      </div>
-    </mat-card-actions>
+      <section class="av-detail__section">
+        <h2 class="av-detail__section-title">Kuvaus</h2>
+        <div class="av-detail__rich" [innerHTML]="provider.description"></div>
+      </section>
+
+      <section class="av-detail__section">
+        <h2 class="av-detail__section-title">Näin pääset hyödyntämään</h2>
+        <div class="av-detail__rich" [innerHTML]="provider.instructions"></div>
+      </section>
+
+      <section class="av-detail__section av-detail__section--map">
+        <h2 class="av-detail__section-title">Sijainti</h2>
+        @if (mapSrc(); as src) {
+          <iframe
+            class="av-detail__map-frame"
+            [src]="src"
+            title="Kartta: {{ provider.address }}"
+            loading="lazy"
+            referrerpolicy="no-referrer-when-downgrade"
+            allowfullscreen
+          ></iframe>
+          <!-- redundant because the iframe contains open in maps button -->
+          <!--@if (mapLinkUrl(); as href) {
+            <a class="av-detail__map-link" [href]="href" target="_blank" rel="noopener">
+              <span class="material-icons" aria-hidden="true">open_in_new</span>
+              Avaa Google Mapsissa
+            </a>
+        }-->
+        }
+      </section>
+    </article>
+
+    <footer class="av-detail__cta-bar">
+      <p class="av-detail__alert">
+        <span class="material-icons" aria-hidden="true">info</span>
+        <span>
+          <b>Tärkeää tietoa</b> — paina alla olevaa nappia vasta paikan päällä.
+        </span>
+      </p>
+      <button type="button" class="av-btn av-btn--block">
+        Näytä henkilökunnalle
+      </button>
+    </footer>
   } @else {
-    <mat-card-content>
-      <div class="loading">
-        <mat-spinner diameter="32"></mat-spinner>
-      </div>
-    </mat-card-content>
+    <div class="av-loading">
+      <mat-spinner diameter="36"></mat-spinner>
+    </div>
   }
-</mat-card>
+</section>

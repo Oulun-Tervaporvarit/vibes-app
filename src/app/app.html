@@ -1,11 +1,15 @@
-
-@if(showInstallButton) {
-  <button (click)="install()">Asenna</button>
-}
-
 <app-header></app-header>
 
-<router-outlet />
+<main class="av-main">
+  <router-outlet />
+</main>
+
+@if (showInstallButton() && isFrontPage()) {
+  <button class="av-install-banner av-btn" (click)="install()">
+    <span class="material-icons" aria-hidden="true">download</span>
+    Asenna sovellus
+  </button>
+}
 
 @if (showVibesDialog()) {
   <app-vibes-dialog (dismissed)="showVibesDialog.set(false)" />

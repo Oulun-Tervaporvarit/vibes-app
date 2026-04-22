@@ -1,0 +1,150 @@
+.av-header {
+  background: var(--av-blue);
+  color: #fff;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+
+.av-header__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 14px 20px;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.av-brand-row {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+
+  &__divider {
+    display: block;
+    width: 1px;
+    height: 28px;
+    background: rgba(255, 255, 255, 0.3);
+  }
+}
+
+.av-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  user-select: none;
+  text-decoration: none;
+  color: inherit;
+
+  &__logo {
+    display: block;
+    height: 40px;
+    width: auto;
+    object-fit: contain;
+    transition: transform 0.18s ease;
+  }
+
+  &:hover .av-brand__logo {
+    transform: scale(1.04);
+  }
+
+  &__partner {
+    display: block;
+    height: 36px;
+    width: auto;
+    object-fit: contain;
+  }
+}
+
+.av-header__right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.av-benefits-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: var(--av-radius-pill);
+  background: var(--av-yellow);
+  color: var(--av-black);
+  font-weight: 600;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  box-shadow: 0 3px 10px rgba(14, 14, 14, 0.18), 0 1px 2px rgba(14, 14, 14, 0.08);
+
+  &__count {
+    font-weight: 800;
+    font-size: 15px;
+  }
+}
+
+.av-code-input {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: #fff;
+  border-radius: var(--av-radius-pill);
+  padding: 6px 14px 6px 12px;
+  box-shadow: 0 3px 10px rgba(14, 14, 14, 0.16), 0 1px 2px rgba(14, 14, 14, 0.06);
+
+  &__icon {
+    color: var(--av-blue-dark);
+    font-size: 18px;
+  }
+
+  input {
+    border: none;
+    outline: none;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--av-text);
+    background: transparent;
+    width: 140px;
+
+    &::placeholder {
+      color: var(--av-text-muted);
+      font-weight: 400;
+      letter-spacing: 0.04em;
+    }
+  }
+}
+
+@media (max-width: 540px) {
+  .av-header__inner {
+    flex-wrap: wrap;
+    padding: 12px 14px;
+  }
+
+  .av-brand__logo {
+    height: 32px;
+  }
+
+  .av-brand__partner {
+    height: 28px;
+  }
+
+  .av-brand-row {
+    gap: 10px;
+
+    &__divider {
+      height: 22px;
+    }
+  }
+
+  .av-code-input input {
+    width: 150px;
+  }
+
+  .av-benefits-badge__label {
+    display: none;
+  }
+}

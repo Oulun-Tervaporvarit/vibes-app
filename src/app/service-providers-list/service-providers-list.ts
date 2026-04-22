@@ -1,25 +1,18 @@
 import { Component, computed, inject, input } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { MatCardModule } from '@angular/material/card';
-import { MatButtonModule } from '@angular/material/button';
-import { MatDividerModule } from '@angular/material/divider';
-import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
-import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { ServiceProvider, ServiceProviderService } from '../service-provider.service';
 
+const CATEGORY_LABEL: Record<string, string> = {
+  exercise: 'Liikunta',
+  culture: 'Kulttuuri',
+  wellness: 'Hyvinvointi',
+};
+
 @Component({
   selector: 'app-service-providers-list',
-  imports: [
-    MatCardModule,
-    MatButtonModule,
-    MatDividerModule,
-    FormsModule,
-    RouterLink,
-    MatIconModule,
-    MatProgressSpinnerModule,
-  ],
+  imports: [RouterLink, MatProgressSpinnerModule],
   templateUrl: './service-providers-list.html',
   styleUrl: './service-providers-list.scss',
 })
@@ -39,5 +32,9 @@ export class ServiceProvidersList {
 
   bannerUrl(provider: ServiceProvider): string | null {
     return this.service.bannerUrl(provider);
+  }
+
+  categoryLabel(provider: ServiceProvider): string {
+    return CATEGORY_LABEL[provider.category] ?? provider.category;
   }
 }

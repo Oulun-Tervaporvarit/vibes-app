@@ -4,7 +4,7 @@ import { Observable, map } from 'rxjs';
 
 const CMS_BASE_URL = 'https://cms.allvibes.fi';
 
-export type ServiceProviderCategory = 'sport' | 'culture' | 'wellness';
+export type ServiceProviderCategory = 'exercise' | 'culture' | 'wellness';
 
 export interface DirectusFile {
   id: string;

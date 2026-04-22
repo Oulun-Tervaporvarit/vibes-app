@@ -1,41 +1,126 @@
-
-// Include theming for Angular Material with `mat.theme()`.
-// This Sass mixin will define CSS variables that are used for styling Angular Material
-// components according to the Material 3 design spec.
-// Learn more about theming and how to use it for your application's
-// custom components at https://material.angular.dev/guide/theming
 @use '@angular/material' as mat;
-@use "tailwindcss";
+@use 'tailwindcss';
+
+:root {
+  // Allvibes brand palette (sampled from allvibes.fi)
+  --av-blue: #4895E9;
+  --av-blue-dark: #2E6FB8;
+  --av-blue-light: #89C1FF;
+  --av-yellow: #FFF86B;
+  --av-yellow-soft: #FFFCD0;
+  --av-orange: #FFA500;
+  --av-black: #0E0E0E;
+  --av-surface: #FFFFFF;
+  --av-surface-muted: #F5F7FB;
+  --av-text: #0E0E0E;
+  --av-text-muted: #5A6B85;
+  --av-border: #E5EAF2;
+
+  --av-radius-sm: 8px;
+  --av-radius-md: 16px;
+  --av-radius-lg: 24px;
+  --av-radius-pill: 9999px;
+
+  --av-shadow-sm: 0 1px 2px rgba(14, 14, 14, 0.06), 0 1px 3px rgba(14, 14, 14, 0.04);
+  --av-shadow-md: 0 4px 12px rgba(14, 14, 14, 0.08), 0 2px 4px rgba(14, 14, 14, 0.04);
+  --av-shadow-lg: 0 12px 32px rgba(14, 14, 14, 0.14);
+}
 
 html {
   @include mat.theme((
     color: (
-      primary: mat.$orange-palette,
-      tertiary: mat.$orange-palette,
+      primary: mat.$azure-palette,
+      tertiary: mat.$yellow-palette,
     ),
-    typography: Roboto,
+    typography: Poppins,
     density: 0,
   ));
 }
 
-body {
-  // Default the application to a light color theme. This can be changed to
-  // `dark` to enable the dark color theme, or to `light dark` to defer to the
-  // user's system settings.
-  color-scheme: light;
-
-  // Set a default background, font and text colors for the application using
-  // Angular Material's system-level CSS variables. Learn more about these
-  // variables at https://material.angular.dev/guide/system-variables
-  background-color: #FFF86B;
-  color: var(--mat-sys-on-surface);
-  // font: var(--mat-sys-body-medium);
-  font: "Poppins:wght@300;600";
-
-  // Reset the user agent margin.
+html, body {
+  height: 100%;
   margin: 0;
 }
-/* You can add global styles to this file, and also import other style files */
 
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Poppins:wght@300;600", sans-serif; }
+body {
+  color-scheme: light;
+  background-color: var(--av-blue);
+  color: var(--av-text);
+  font-family: 'Poppins', system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+  font-weight: 400;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1, h2, h3, h4 {
+  font-family: 'Poppins', sans-serif;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  margin: 0;
+}
+
+// Branded buttons — Allvibes uses a yellow pill CTA with black uppercase text.
+.av-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 22px;
+  border: none;
+  border-radius: var(--av-radius-pill);
+  background: var(--av-yellow);
+  color: var(--av-black);
+  font-family: 'Poppins', sans-serif;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  font-size: 14px;
+  cursor: pointer;
+  transition: transform 0.18s ease, box-shadow 0.18s ease, background-color 0.18s ease;
+  box-shadow: 0 4px 12px rgba(14, 14, 14, 0.18), 0 1px 2px rgba(14, 14, 14, 0.08);
+
+  &:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 8px 20px rgba(14, 14, 14, 0.22), 0 2px 4px rgba(14, 14, 14, 0.1);
+  }
+
+  &:active {
+    transform: translateY(1px);
+    box-shadow: 0 2px 6px rgba(14, 14, 14, 0.16), 0 1px 2px rgba(14, 14, 14, 0.08);
+  }
+
+  &.av-btn--ghost {
+    background: transparent;
+    color: var(--av-text);
+    box-shadow: none;
+    border: 1.5px solid var(--av-border);
+
+    &:hover {
+      background: var(--av-surface-muted);
+      box-shadow: none;
+      transform: none;
+    }
+  }
+
+  &.av-btn--block {
+    width: 100%;
+  }
+}
+
+.av-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: var(--av-radius-pill);
+  background: var(--av-blue-light);
+  color: var(--av-black);
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+
+  &--yellow {
+    background: var(--av-yellow);
+  }
+}
