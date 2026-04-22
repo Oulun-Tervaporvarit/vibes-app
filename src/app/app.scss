@@ -19,4 +19,9 @@
   &:active {
     transform: translateX(-50%) translateY(1px);
   }
+
+  // hide install button on desktop
+  @media (min-width: 768px) {
+    display: none;
+  }
 }
