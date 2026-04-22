@@ -1,6 +1,6 @@
 {
   "configVersion": 1,
-  "timestamp": 1774034327494,
+  "timestamp": 1776852428164,
   "index": "/index.html",
   "assetGroups": [
     {
@@ -13,9 +13,9 @@
       "urls": [
         "/favicon.ico",
         "/index.html",
-        "/main-YGICVG67.js",
+        "/main-XBFKABZZ.js",
         "/manifest.webmanifest",
-        "/styles-L4FRXVM7.css"
+        "/styles-IMUVX5J5.css"
       ],
       "patterns": []
     },
@@ -27,33 +27,31 @@
         "ignoreVary": true
       },
       "urls": [
-        "/icons/icon-128x128.png",
-        "/icons/icon-144x144.png",
-        "/icons/icon-152x152.png",
-        "/icons/icon-192x192.png",
-        "/icons/icon-384x384.png",
-        "/icons/icon-512x512.png",
-        "/icons/icon-72x72.png",
-        "/icons/icon-96x96.png"
+        "/android-chrome-192x192.png",
+        "/android-chrome-512x512.png",
+        "/apple-touch-icon.png",
+        "/favicon-16x16.png",
+        "/favicon-32x32.png",
+        "/icons/pink-smile.png",
+        "/icons/tervis.png"
       ],
       "patterns": []
     }
   ],
   "dataGroups": [],
   "hashTable": {
-    "/favicon.ico": "9c39f434fe1261f68c5e3eefdf734630d99c5670",
-    "/icons/icon-128x128.png": "f912963bdc6d5a38d8f1dd0afbaab2ce8d657acb",
-    "/icons/icon-144x144.png": "b155fd5f2fd5d2ea7760721063003c4cd95fd783",
-    "/icons/icon-152x152.png": "eae6e0f0c8afb8aaae339e2a569b43e9238e5e6c",
-    "/icons/icon-192x192.png": "15c4180454633880d98674aa7394656196c91584",
-    "/icons/icon-384x384.png": "94a915751ef6c9282df9aea405ad679230631814",
-    "/icons/icon-512x512.png": "1de182f76f7329dfa8f9fcdd1fdcdd695bea6a99",
-    "/icons/icon-72x72.png": "aa88a6096bd973be7f6d7a5489bfa6bc2463f8c4",
-    "/icons/icon-96x96.png": "7fb8f59c30ce2ff12c700321a0b39e14b3dc8f95",
-    "/index.html": "dbbdd3bae1d6861ed6dc33935fb745f113b37c47",
-    "/main-YGICVG67.js": "7079b4900c75d887e721d921a94a1ab68aedab15",
-    "/manifest.webmanifest": "fceb718598616cf17827bfb5cd279e33ca09f171",
-    "/styles-L4FRXVM7.css": "1cef08e29ddae8dd09b497dd397217207cf45a62"
+    "/android-chrome-192x192.png": "6a149657b9f9440a3e250e3efbfebfbcc53d473b",
+    "/android-chrome-512x512.png": "68206c56a599c03d7f1421307a8fccdd494dd73c",
+    "/apple-touch-icon.png": "a372237dd7617a2c78c22a1ee9da9fa5b140e8c0",
+    "/favicon-16x16.png": "e04e9bde5614db8fe41914cfde2e4edda80fe9a3",
+    "/favicon-32x32.png": "40bec93a9a6195a70288bfea09658f4963c42f6e",
+    "/favicon.ico": "750666c170334dee9c2560962ea65caa1fb43e72",
+    "/icons/pink-smile.png": "b17aaa866a0ba97d980cf1a65634f366b08585d9",
+    "/icons/tervis.png": "0279228deb6efbd5df3b0e218b74c780cdab6f6d",
+    "/index.html": "6f0713ade5ef386ccad8d6cfaef35daafcc6f76c",
+    "/main-XBFKABZZ.js": "76580aac43371814bdb8ff2cdb221c1c68ec33df",
+    "/manifest.webmanifest": "03d4543f874a8b9acaa5b5e3ae24711bb3a4c2c8",
+    "/styles-IMUVX5J5.css": "22f17f038563fd89f733d0fceafbed70e76e9bb6"
   },
   "navigationUrls": [
     {
