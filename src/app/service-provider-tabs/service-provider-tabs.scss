@@ -54,6 +54,14 @@
     font-size: 14px;
     text-transform: uppercase;
     letter-spacing: 0.08em;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  ::ng-deep .av-tab-icon {
+    font-size: 18px !important;
+    line-height: 1;
   }
 
   ::ng-deep .mat-mdc-tab--active .mdc-tab__text-label,

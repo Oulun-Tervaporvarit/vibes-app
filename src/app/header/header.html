@@ -9,24 +9,42 @@
     </div>
 
     <div class="av-header__right">
-      @if (this.code === this.validCode) {
-        <div class="av-benefits-badge">
-          <span class="av-benefits-badge__count">3</span>
-          <span class="av-benefits-badge__label">etua jäljellä</span>
+      @if (code === validCode) {
+        <div class="av-benefits-badges">
+          @for (b of benefits; track b.category) {
+            <div class="av-benefits-badge">
+              <span class="material-icons av-benefits-badge__icon" aria-hidden="true">{{ b.icon }}</span>
+              <span class="av-benefits-badge__count">{{ b.count }}</span>
+              <span class="av-benefits-badge__label">{{ b.label }}</span>
+            </div>
+          }
         </div>
-      }
 
-      <label class="av-code-input">
-        <span class="av-code-input__icon material-icons" aria-hidden="true">vpn_key</span>
-        <input
-          [(ngModel)]="code"
-          (input)="onCodeChange($event)"
-          placeholder="Syötä etukoodi"
-          aria-label="Etukoodi"
-          autocomplete="off"
-          spellcheck="false"
-        />
-      </label>
+        <div class="av-code-display">
+          <span class="av-code-display__icon material-icons" aria-hidden="true">vpn_key</span>
+          <span class="av-code-display__value">{{ code }}</span>
+          <button
+            type="button"
+            class="av-code-display__clear"
+            (click)="clearCode()"
+            aria-label="Poista koodi"
+          >
+            <span class="material-icons" aria-hidden="true">close</span>
+          </button>
+        </div>
+      } @else {
+        <label class="av-code-input">
+          <span class="av-code-input__icon material-icons" aria-hidden="true">vpn_key</span>
+          <input
+            [(ngModel)]="code"
+            (input)="onCodeChange($event)"
+            placeholder="Syötä etukoodi"
+            aria-label="Etukoodi"
+            autocomplete="off"
+            spellcheck="false"
+          />
+        </label>
+      }
     </div>
   </div>
 </header>

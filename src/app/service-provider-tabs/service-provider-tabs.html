@@ -9,13 +9,25 @@
 </section>
 
 <mat-tab-group class="av-tabs" mat-stretch-tabs="false" mat-align-tabs="center" animationDuration="200ms">
-  <mat-tab label="Liikunta">
+  <mat-tab>
+    <ng-template mat-tab-label>
+      <span class="material-icons av-tab-icon" aria-hidden="true">directions_run</span>
+      Liikunta
+    </ng-template>
     <app-service-providers-list category="exercise"></app-service-providers-list>
   </mat-tab>
-  <mat-tab label="Kulttuuri">
+  <mat-tab>
+    <ng-template mat-tab-label>
+      <span class="material-icons av-tab-icon" aria-hidden="true">theater_comedy</span>
+      Kulttuuri
+    </ng-template>
     <app-service-providers-list category="culture"></app-service-providers-list>
   </mat-tab>
-  <mat-tab label="Hyvinvointi">
+  <mat-tab>
+    <ng-template mat-tab-label>
+      <span class="material-icons av-tab-icon" aria-hidden="true">spa</span>
+      Hyvinvointi
+    </ng-template>
     <app-service-providers-list category="wellness"></app-service-providers-list>
   </mat-tab>
 </mat-tab-group>
