@@ -23,43 +23,49 @@
 
       <h1 class="av-detail__title">{{ provider.name }}</h1>
 
-      <div class="av-detail__meta">
-        <div class="av-detail__meta-row">
-          <span class="material-icons" aria-hidden="true">place</span>
-          <span>{{ provider.address }}</span>
+      @if (hasAddress()) {
+        <div class="av-detail__meta">
+          <div class="av-detail__meta-row">
+            <span class="material-icons" aria-hidden="true">place</span>
+            <span>{{ provider.address }}</span>
+          </div>
         </div>
-      </div>
+      }
 
       <section class="av-detail__section">
         <h2 class="av-detail__section-title">Kuvaus</h2>
         <div class="av-detail__rich" [innerHTML]="provider.description"></div>
       </section>
 
-      <section class="av-detail__section">
-        <h2 class="av-detail__section-title">Näin pääset hyödyntämään</h2>
-        <div class="av-detail__rich" [innerHTML]="provider.instructions"></div>
-      </section>
+      @if (hasInstructions()) {
+        <section class="av-detail__section">
+          <h2 class="av-detail__section-title">Näin pääset hyödyntämään</h2>
+          <div class="av-detail__rich" [innerHTML]="provider.instructions"></div>
+        </section>
+      }
 
-      <section class="av-detail__section av-detail__section--map">
-        <h2 class="av-detail__section-title">Sijainti</h2>
-        @if (mapSrc(); as src) {
-          <iframe
-            class="av-detail__map-frame"
-            [src]="src"
-            title="Kartta: {{ provider.address }}"
-            loading="lazy"
-            referrerpolicy="no-referrer-when-downgrade"
-            allowfullscreen
-          ></iframe>
-          <!-- redundant because the iframe contains open in maps button -->
-          <!--@if (mapLinkUrl(); as href) {
-            <a class="av-detail__map-link" [href]="href" target="_blank" rel="noopener">
-              <span class="material-icons" aria-hidden="true">open_in_new</span>
-              Avaa Google Mapsissa
-            </a>
-        }-->
-        }
-      </section>
+      @if (hasAddress()) {
+        <section class="av-detail__section av-detail__section--map">
+          <h2 class="av-detail__section-title">Sijainti</h2>
+          @if (mapSrc(); as src) {
+            <iframe
+              class="av-detail__map-frame"
+              [src]="src"
+              title="Kartta: {{ provider.address }}"
+              loading="lazy"
+              referrerpolicy="no-referrer-when-downgrade"
+              allowfullscreen
+            ></iframe>
+            <!-- redundant because the iframe contains open in maps button -->
+            <!--@if (mapLinkUrl(); as href) {
+              <a class="av-detail__map-link" [href]="href" target="_blank" rel="noopener">
+                <span class="material-icons" aria-hidden="true">open_in_new</span>
+                Avaa Google Mapsissa
+              </a>
+          }-->
+          }
+        </section>
+      }
     </article>
 
     @if (!provider.free) {

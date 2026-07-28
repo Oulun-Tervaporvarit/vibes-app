@@ -53,6 +53,21 @@ const CATEGORY_LABEL: Record<string, string> = {
   wellness: 'Hyvinvointi',
 };
 
+/**
+ * Returns true when a rich-text (HTML) value actually contains visible text.
+ * Directus rich-text fields can be `null`, empty, or contain empty markup like
+ * `<p></p>` or `<p><br></p>`, all of which should count as empty.
+ */
+function hasRichText(html: string | null | undefined): boolean {
+  if (!html) return false;
+  return (
+    html
+      .replace(/<[^>]*>/g, '')
+      .replace(/&nbsp;/gi, ' ')
+      .trim().length > 0
+  );
+}
+
 @Component({
   selector: 'app-service-provider',
   imports: [DatePipe, MatProgressSpinnerModule],
@@ -78,6 +93,10 @@ export class ServiceProvider {
     const provider = this.item();
     return provider ? CATEGORY_LABEL[provider.category] ?? provider.category : '';
   });
+
+  hasInstructions = computed(() => hasRichText(this.item()?.instructions));
+
+  hasAddress = computed(() => !!this.item()?.address?.trim());
 
   mapSrc = computed<SafeResourceUrl | null>(() => {
     const addr = this.item()?.address;
