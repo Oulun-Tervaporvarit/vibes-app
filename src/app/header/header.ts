@@ -1,34 +1,48 @@
-import { Component } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
+import { VibesCodeService } from '../vibes-code.service';
 
 @Component({
   selector: 'app-header',
-  imports: [ FormsModule, RouterLink ],
+  imports: [FormsModule, RouterLink],
   templateUrl: './header.html',
   styleUrl: './header.scss',
 })
 export class Header {
+  private vibes = inject(VibesCodeService);
 
-  validCode = 'DEMO'
+  /** Bound to the input field; committed to the service on submit. */
   code = '';
 
-  benefits = [
-    { category: 'culture', label: 'Kulttuuri', icon: 'theater_comedy', count: 3 },
-    { category: 'wellness', label: 'Hyvinvointi', icon: 'spa', count: 3 },
-  ];
+  valid = computed(() => this.vibes.isValid());
+  activeCode = computed(() => this.vibes.code());
+  checking = computed(() => this.vibes.checking());
+  // True once we've checked a non-empty code and it turned out invalid.
+  invalid = computed(() => {
+    const b = this.vibes.balance();
+    return !!this.vibes.code() && b !== null && b.valid === false;
+  });
+
+  benefits = computed(() => {
+    const b = this.vibes.balance();
+    return [
+      { category: 'exercise', label: 'Liikunta', icon: 'directions_run', count: b?.exercise ?? 0 },
+      { category: 'culture', label: 'Kulttuuri', icon: 'theater_comedy', count: b?.culture ?? 0 },
+      { category: 'wellness', label: 'Hyvinvointi', icon: 'spa', count: b?.wellness ?? 0 },
+    ];
+  });
 
   ngOnInit(): void {
-    this.code = localStorage.getItem('code') || '';
+    this.code = this.vibes.code();
   }
 
-  onCodeChange(event: any) {
-    localStorage.setItem('code', event.target.value);
+  submitCode(): void {
+    this.vibes.setCode(this.code);
   }
 
-  clearCode() {
+  clearCode(): void {
     this.code = '';
-    localStorage.removeItem('code');
+    this.vibes.clearCode();
   }
-
 }

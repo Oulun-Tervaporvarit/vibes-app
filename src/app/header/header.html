@@ -9,10 +9,10 @@
     </div>
 
     <div class="av-header__right">
-      @if (code === validCode) {
+      @if (valid()) {
         <div class="av-benefits-badges">
-          @for (b of benefits; track b.category) {
-            <div class="av-benefits-badge">
+          @for (b of benefits(); track b.category) {
+            <div class="av-benefits-badge" [class.av-benefits-badge--empty]="b.count === 0">
               <span class="material-icons av-benefits-badge__icon" aria-hidden="true">{{ b.icon }}</span>
               <span class="av-benefits-badge__count">{{ b.count }}</span>
               <span class="av-benefits-badge__label">{{ b.label }}</span>
@@ -22,7 +22,7 @@
 
         <div class="av-code-display">
           <span class="av-code-display__icon material-icons" aria-hidden="true">vpn_key</span>
-          <span class="av-code-display__value">{{ code }}</span>
+          <span class="av-code-display__value">{{ activeCode() }}</span>
           <button
             type="button"
             class="av-code-display__clear"
@@ -33,17 +33,24 @@
           </button>
         </div>
       } @else {
-        <label class="av-code-input">
+        <label class="av-code-input" [class.av-code-input--error]="invalid()">
           <span class="av-code-input__icon material-icons" aria-hidden="true">vpn_key</span>
           <input
             [(ngModel)]="code"
-            (input)="onCodeChange($event)"
-            placeholder="Syötä etukoodi"
-            aria-label="Etukoodi"
+            (change)="submitCode()"
+            (keydown.enter)="submitCode()"
+            placeholder="Syötä VIBEs-koodi"
+            aria-label="VIBEs-koodi"
             autocomplete="off"
             spellcheck="false"
           />
+          @if (checking()) {
+            <span class="av-code-input__status material-icons av-spin" aria-hidden="true">progress_activity</span>
+          }
         </label>
+        @if (invalid()) {
+          <p class="av-code-hint">Koodia ei löytynyt. Tarkista VIBEs-koodisi.</p>
+        }
       }
     </div>
   </div>
