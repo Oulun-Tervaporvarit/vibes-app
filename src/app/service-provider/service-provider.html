@@ -17,7 +17,9 @@
       <div class="av-detail__chips">
         <span class="av-chip">{{ categoryLabel() }}</span>
         @if (provider.free) {
-          <span class="av-chip av-chip--yellow">Maksuton</span>
+          <span class="av-chip av-chip--yellow">Rajaton käyttö</span>
+        } @else {
+          <span class="av-chip av-chip--redeem">Vaatii lunastuksen VIBEs-koodilla</span>
         }
       </div>
 
