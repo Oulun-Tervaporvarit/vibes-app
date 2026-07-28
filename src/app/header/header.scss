@@ -61,6 +61,8 @@
 .av-header__right {
   display: flex;
   align-items: center;
+  justify-content: flex-end;
+  flex-wrap: wrap;
   gap: 12px;
 }
 
@@ -94,6 +96,13 @@
     font-weight: 800;
     font-size: 15px;
     color: var(--av-blue-dark);
+  }
+
+  // Category with no uses left — muted so it reads as "spent".
+  &--empty {
+    background: rgba(255, 255, 255, 0.75);
+    box-shadow: none;
+    opacity: 0.7;
   }
 }
 
@@ -175,6 +184,34 @@
       font-weight: 400;
       letter-spacing: 0.04em;
     }
+  }
+
+  &__status {
+    font-size: 18px;
+    color: var(--av-blue);
+  }
+
+  &--error {
+    box-shadow: 0 0 0 2px var(--av-orange);
+  }
+}
+
+.av-code-hint {
+  flex-basis: 100%;
+  margin: 0;
+  text-align: right;
+  font-size: 12px;
+  font-weight: 600;
+  color: #fff;
+}
+
+.av-spin {
+  animation: av-spin 0.9s linear infinite;
+}
+
+@keyframes av-spin {
+  to {
+    transform: rotate(360deg);
   }
 }
 

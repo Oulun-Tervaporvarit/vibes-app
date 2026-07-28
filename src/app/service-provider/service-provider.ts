@@ -6,6 +6,7 @@ import { ActivatedRoute } from '@angular/router';
 import { firstValueFrom, switchMap } from 'rxjs';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { ServiceProviderService } from '../service-provider.service';
+import { VibesCodeService } from '../vibes-code.service';
 
 const PROXIMITY_THRESHOLD_METERS = 100;
 
@@ -17,6 +18,8 @@ type GateState =
   | { kind: 'denied' }
   | { kind: 'unsupported' }
   | { kind: 'not-found' }
+  | { kind: 'no-code' }
+  | { kind: 'redeem-failed'; reason: string }
   | { kind: 'error' };
 
 function haversineMeters(
@@ -78,6 +81,7 @@ export class ServiceProvider {
   private route = inject(ActivatedRoute);
   private service = inject(ServiceProviderService);
   private sanitizer = inject(DomSanitizer);
+  protected vibes = inject(VibesCodeService);
 
   item = toSignal(
     this.route.paramMap.pipe(switchMap((params) => this.service.getById(params.get('id')!))),
@@ -113,9 +117,37 @@ export class ServiceProvider {
 
   gate = signal<GateState>({ kind: 'idle' });
   redeemedAt = signal<Date | null>(null);
+  redeemUsesLeft = signal<number | null>(null);
+
+  /** Whether the user currently has a stored VIBEs code. */
+  hasCode = computed(() => !!this.vibes.code());
+
+  /** Remaining uses of the current code for this provider's category. */
+  categoryUsesLeft = computed(() => {
+    const provider = this.item();
+    if (!provider || !this.vibes.isValid()) return null;
+    return this.vibes.usesLeft(provider.category);
+  });
 
   asTooFar(state: GateState): Extract<GateState, { kind: 'too-far' }> {
     return state as Extract<GateState, { kind: 'too-far' }>;
+  }
+
+  asRedeemFailed(state: GateState): Extract<GateState, { kind: 'redeem-failed' }> {
+    return state as Extract<GateState, { kind: 'redeem-failed' }>;
+  }
+
+  redeemErrorMessage(reason: string): string {
+    switch (reason) {
+      case 'no_uses_left':
+        return 'Tällä koodilla ei ole enää käyttökertoja tässä kategoriassa.';
+      case 'invalid_code':
+        return 'Koodia ei löytynyt. Tarkista VIBEs-koodisi.';
+      case 'free_provider':
+        return 'Tämä palvelu on maksuton, lunastusta ei tarvita.';
+      default:
+        return 'Lunastus epäonnistui. Yritä hetken kuluttua uudelleen.';
+    }
   }
 
   constructor(protected location: Location) {}
@@ -132,6 +164,12 @@ export class ServiceProvider {
     const provider = this.item();
     if (!provider) return;
     if (this.gate().kind === 'checking') return;
+
+    // A valid VIBEs code is required to redeem.
+    if (!this.vibes.code()) {
+      this.gate.set({ kind: 'no-code' });
+      return;
+    }
 
     this.gate.set({ kind: 'checking' });
 
@@ -170,11 +208,19 @@ export class ServiceProvider {
       providerPos
     );
 
-    if (distance <= PROXIMITY_THRESHOLD_METERS) {
+    if (distance > PROXIMITY_THRESHOLD_METERS) {
+      this.gate.set({ kind: 'too-far', distance: Math.round(distance) });
+      return;
+    }
+
+    // On-site confirmed — now redeem one use of the VIBEs code (server-side).
+    const result = await this.vibes.redeem(provider.id);
+    if (result.success) {
       this.redeemedAt.set(new Date());
+      this.redeemUsesLeft.set(result.uses_left);
       this.gate.set({ kind: 'success' });
     } else {
-      this.gate.set({ kind: 'too-far', distance: Math.round(distance) });
+      this.gate.set({ kind: 'redeem-failed', reason: result.reason });
     }
   }
 }

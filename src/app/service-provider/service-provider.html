@@ -78,6 +78,19 @@
             <b>Tärkeää tietoa</b> — paina alla olevaa nappia vasta paikan päällä.
           </span>
         </p>
+        @if (hasCode()) {
+          @if (categoryUsesLeft() !== null) {
+            <p class="av-detail__uses" [class.av-detail__uses--empty]="categoryUsesLeft() === 0">
+              <span class="material-icons" aria-hidden="true">confirmation_number</span>
+              Käyttökertoja jäljellä: <b>{{ categoryUsesLeft() }}</b>
+            </p>
+          }
+        } @else {
+          <p class="av-detail__uses av-detail__uses--empty">
+            <span class="material-icons" aria-hidden="true">vpn_key</span>
+            Syötä VIBEs-koodi yläpalkkiin lunastaaksesi edun.
+          </p>
+        }
         <button
           type="button"
           class="av-btn av-btn--block"
@@ -138,6 +151,12 @@
             </p>
           }
 
+          @if (redeemUsesLeft() !== null) {
+            <p class="av-redeem-uses">
+              Käyttökertoja jäljellä: <b>{{ redeemUsesLeft() }}</b>
+            </p>
+          }
+
           <button type="button" class="av-btn av-btn--block" (click)="dismissGate()">
             Valmis
           </button>
@@ -186,6 +205,21 @@
               <p class="av-gate-card__body">
                 Paikan sijaintia ei pystytty selvittämään. Yritä uudelleen tai
                 ole yhteydessä henkilökuntaan.
+              </p>
+            }
+            @case ('no-code') {
+              <span class="av-gate-card__emoji" aria-hidden="true">🔑</span>
+              <h2 class="av-gate-card__title">Syötä VIBEs-koodi</h2>
+              <p class="av-gate-card__body">
+                Edun lunastaminen vaatii VIBEs-koodin. Syötä koodi sivun
+                yläpalkkiin ja yritä uudelleen.
+              </p>
+            }
+            @case ('redeem-failed') {
+              <span class="av-gate-card__emoji" aria-hidden="true">🚫</span>
+              <h2 class="av-gate-card__title">Lunastus ei onnistunut</h2>
+              <p class="av-gate-card__body">
+                {{ redeemErrorMessage(asRedeemFailed(gate()).reason) }}
               </p>
             }
             @default {
