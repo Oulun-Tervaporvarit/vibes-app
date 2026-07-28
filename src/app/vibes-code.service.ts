@@ -9,6 +9,11 @@ const CMS_BASE_URL = 'https://cms.allvibes.fi';
  * `vibes_code` — the collection itself has no public read/write permission, so
  * codes can never be listed or tampered with from the client. The flows run
  * with Full Access server-side and expose just "check balance" and "redeem".
+ *
+ * They are called with GET + query params on purpose: a GET is a CORS "simple
+ * request" so the browser skips the preflight (the CMS's OPTIONS preflight
+ * responds with a fixed foreign origin and would otherwise block us). The
+ * flows read the params from `$trigger.query`.
  */
 const BALANCE_FLOW = '1299ab67-b0e8-4043-a67f-1e6fa59224be';
 const REDEEM_FLOW = '27897513-9e24-4ea5-ae72-a0bf3f3de78e';
@@ -97,7 +102,9 @@ export class VibesCodeService {
     this.checking.set(true);
     try {
       const res = await firstValueFrom(
-        this.http.post<CodeBalance>(`${CMS_BASE_URL}/flows/trigger/${BALANCE_FLOW}`, { code })
+        this.http.get<CodeBalance>(`${CMS_BASE_URL}/flows/trigger/${BALANCE_FLOW}`, {
+          params: { code },
+        })
       );
       this.balance.set(
         res && res.valid
@@ -122,9 +129,8 @@ export class VibesCodeService {
     if (!code) return { success: false, reason: 'no_code' };
     try {
       const res = await firstValueFrom(
-        this.http.post<RedeemResult>(`${CMS_BASE_URL}/flows/trigger/${REDEEM_FLOW}`, {
-          code,
-          service_provider: serviceProviderId,
+        this.http.get<RedeemResult>(`${CMS_BASE_URL}/flows/trigger/${REDEEM_FLOW}`, {
+          params: { code, service_provider: String(serviceProviderId) },
         })
       );
       if (res && res.success) {
