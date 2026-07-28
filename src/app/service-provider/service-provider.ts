@@ -15,6 +15,7 @@ type GateState =
   | { kind: 'checking' }
   | { kind: 'success' }
   | { kind: 'no-code' }
+  | { kind: 'confirm'; warning: string }
   | { kind: 'redeem-failed'; reason: string };
 
 function haversineMeters(
@@ -130,6 +131,10 @@ export class ServiceProvider {
     return state as Extract<GateState, { kind: 'redeem-failed' }>;
   }
 
+  asConfirm(state: GateState): Extract<GateState, { kind: 'confirm' }> {
+    return state as Extract<GateState, { kind: 'confirm' }>;
+  }
+
   redeemErrorMessage(reason: string): string {
     switch (reason) {
       case 'no_uses_left':
@@ -166,15 +171,34 @@ export class ServiceProvider {
 
     this.gate.set({ kind: 'checking' });
 
-    // The location check is optional: it never blocks redemption, it only
-    // produces a warning shown to the user when we can't confirm they're on-site.
+    // The location check is optional: it never blocks redemption. If we can't
+    // confirm the user is on-site, ask them to confirm before spending a use.
     const warning = await this.checkLocationWarning(provider);
+    this.locationWarning.set(warning);
 
+    if (warning) {
+      this.gate.set({ kind: 'confirm', warning });
+      return;
+    }
+
+    await this.doRedeem(provider);
+  }
+
+  /** Called when the user accepts the off-site confirmation dialog. */
+  async confirmRedeem() {
+    const provider = this.item();
+    if (!provider) return;
+    if (this.gate().kind !== 'confirm') return;
+    this.gate.set({ kind: 'checking' });
+    await this.doRedeem(provider);
+  }
+
+  /** Performs the actual redemption. Keeps any location warning for the receipt. */
+  private async doRedeem(provider: { id: number }) {
     const result = await this.vibes.redeem(provider.id);
     if (result.success) {
       this.redeemedAt.set(new Date());
       this.redeemUsesLeft.set(result.uses_left);
-      this.locationWarning.set(warning);
       this.gate.set({ kind: 'success' });
     } else {
       this.gate.set({ kind: 'redeem-failed', reason: result.reason });

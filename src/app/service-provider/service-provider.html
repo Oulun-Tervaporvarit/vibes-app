@@ -182,6 +182,16 @@
           >✕</button>
 
           @switch (gate().kind) {
+            @case ('confirm') {
+              <span class="av-gate-card__emoji" aria-hidden="true">📍</span>
+              <h2 class="av-gate-card__title">Vahvista lunastus</h2>
+              <p class="av-gate-card__body">
+                {{ asConfirm(gate()).warning }}
+              </p>
+              <p class="av-gate-card__body">
+                Haluatko lunastaa edun silti? Käyttökerta kuluu.
+              </p>
+            }
             @case ('no-code') {
               <span class="av-gate-card__emoji" aria-hidden="true">🔑</span>
               <h2 class="av-gate-card__title">Syötä VIBEs-koodi</h2>
@@ -206,9 +216,20 @@
             }
           }
 
-          <button type="button" class="av-btn av-btn--block" (click)="dismissGate()">
-            Selvä
-          </button>
+          @if (gate().kind === 'confirm') {
+            <div class="av-gate-card__actions">
+              <button type="button" class="av-btn av-btn--ghost av-btn--block" (click)="dismissGate()">
+                Peruuta
+              </button>
+              <button type="button" class="av-btn av-btn--block" (click)="confirmRedeem()">
+                Lunasta silti
+              </button>
+            </div>
+          } @else {
+            <button type="button" class="av-btn av-btn--block" (click)="dismissGate()">
+              Selvä
+            </button>
+          }
         </div>
       </div>
     }
