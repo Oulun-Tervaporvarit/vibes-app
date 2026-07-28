@@ -6,40 +6,65 @@
     </div>
   }
 
-  <ul class="av-provider-list">
-    @for (provider of items; track provider.id) {
-      <li class="av-provider-card">
-        <a class="av-provider-card__link" [routerLink]="['/service', provider.id]">
-          <div class="av-provider-card__media">
-            @if (bannerUrl(provider); as src) {
-              <img [src]="src" [alt]="provider.name" loading="lazy">
-            } @else {
-              <div class="av-provider-card__media-fallback" aria-hidden="true">✨</div>
-            }
-            <span class="av-chip av-provider-card__chip">{{ categoryLabel(provider) }}</span>
-            @if (provider.free) {
-              <span class="av-provider-card__free">Maksuton</span>
-            }
-          </div>
-
-          <div class="av-provider-card__body">
-            <h3 class="av-provider-card__title">{{ provider.name }}</h3>
-            <p class="av-provider-card__address">
-              <span class="material-icons" aria-hidden="true">place</span>
-              {{ provider.address }}
-            </p>
-
-            <div class="av-provider-card__footer">
-              <span class="av-provider-card__cta">
-                Katso lisää
-                <span class="material-icons" aria-hidden="true">arrow_forward</span>
+  @if (compact()) {
+    <ul class="av-complist">
+      @for (provider of items; track provider.id) {
+        <li class="av-complist__item">
+          <a class="av-complist__row" [routerLink]="['/service', provider.id]">
+            <span class="av-complist__main">
+              <span class="av-complist__name">{{ provider.name }}</span>
+              <span class="av-complist__cat">{{ categoryLabel(provider) }}</span>
+            </span>
+            <span
+              class="av-complist__access"
+              [class.av-complist__access--redeem]="!provider.free"
+            >
+              {{ provider.free ? 'Rajaton käyttö' : 'Vaatii lunastuksen VIBEs-koodilla' }}
+            </span>
+            <span class="material-icons av-complist__arrow" aria-hidden="true">chevron_right</span>
+          </a>
+        </li>
+      }
+    </ul>
+  } @else {
+    <ul class="av-provider-list">
+      @for (provider of items; track provider.id) {
+        <li class="av-provider-card">
+          <a class="av-provider-card__link" [routerLink]="['/service', provider.id]">
+            <div class="av-provider-card__media">
+              @if (bannerUrl(provider); as src) {
+                <img [src]="src" [alt]="provider.name" loading="lazy">
+              } @else {
+                <div class="av-provider-card__media-fallback" aria-hidden="true">✨</div>
+              }
+              <span class="av-chip av-provider-card__chip">{{ categoryLabel(provider) }}</span>
+              <span
+                class="av-provider-card__badge"
+                [class.av-provider-card__badge--redeem]="!provider.free"
+              >
+                {{ provider.free ? 'Rajaton käyttö' : 'VIBEs-koodi' }}
               </span>
             </div>
-          </div>
-        </a>
-      </li>
-    }
-  </ul>
+
+            <div class="av-provider-card__body">
+              <h3 class="av-provider-card__title">{{ provider.name }}</h3>
+              <p class="av-provider-card__address">
+                <span class="material-icons" aria-hidden="true">place</span>
+                {{ provider.address }}
+              </p>
+
+              <div class="av-provider-card__footer">
+                <span class="av-provider-card__cta">
+                  Katso lisää
+                  <span class="material-icons" aria-hidden="true">arrow_forward</span>
+                </span>
+              </div>
+            </div>
+          </a>
+        </li>
+      }
+    </ul>
+  }
 } @else {
   <div class="av-loading">
     <mat-spinner diameter="36"></mat-spinner>

@@ -21,6 +21,9 @@ export class ServiceProvidersList {
 
   category = input<string>();
 
+  /** When true, render a condensed text-only list instead of image cards. */
+  compact = input<boolean>(false);
+
   private allProviders = toSignal(this.service.getAll(), { initialValue: undefined });
 
   providers = computed(() => {
