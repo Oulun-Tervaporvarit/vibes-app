@@ -50,14 +50,15 @@
           <p class="question-sub">nää on just sulle tehty, no cap 🔥</p>
         </div>
         <div class="activities-list">
-          @for (activity of recommendations(); track activity.title) {
-            <div class="activity-card">
+          @for (activity of recommendations(); track activity.providerId) {
+            <button type="button" class="activity-card" (click)="openProvider(activity)">
               <span class="activity-emoji">{{ activity.emoji }}</span>
               <div class="activity-info">
                 <div class="activity-title">{{ activity.title }}</div>
                 <div class="activity-desc">{{ activity.description }}</div>
               </div>
-            </div>
+              <span class="activity-arrow material-icons" aria-hidden="true">arrow_forward</span>
+            </button>
           }
         </div>
         <button class="cta-btn" (click)="dismiss()">

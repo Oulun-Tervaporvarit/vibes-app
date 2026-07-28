@@ -181,16 +181,34 @@
   display: flex;
   align-items: flex-start;
   gap: 14px;
+  width: 100%;
   background: var(--av-surface-muted);
   border: 1px solid var(--av-border);
   border-radius: var(--av-radius-md);
   padding: 14px 16px;
-  transition: border-color 0.18s ease, transform 0.18s ease;
+  color: inherit;
+  font-family: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: border-color 0.18s ease, transform 0.18s ease, background 0.18s ease;
 
   &:hover {
     border-color: var(--av-blue);
+    background: rgba(72, 149, 233, 0.06);
     transform: translateY(-1px);
   }
+
+  &:active {
+    transform: translateY(0);
+  }
+}
+
+.activity-arrow {
+  margin-left: auto;
+  align-self: center;
+  font-size: 20px;
+  color: var(--av-blue);
+  flex-shrink: 0;
 }
 
 .activity-emoji {

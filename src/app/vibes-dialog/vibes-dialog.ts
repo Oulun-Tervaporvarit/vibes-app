@@ -1,125 +1,189 @@
-import { Component, output, signal } from '@angular/core';
+import { Component, inject, output, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 
 type Mood = 'kierroksilla' | 'low-battery' | 'hyva-flow' | 'leviamassa' | 'ihan-pihalla';
 type Desire = 'unohtaa-arkea' | 'kapertya-kotiin' | 'ulos-kavereiden' | 'kokeilla-uutta';
 
 interface Activity {
+  /** Directus `service_provider` id this recommendation links to. */
+  providerId: number;
   emoji: string;
   title: string;
   description: string;
 }
 
-const ACTIVITIES: Record<Mood, Record<Desire, Activity[]>> = {
+/**
+ * Catalog of survey recommendations. Every entry points at a real, published
+ * `service_provider` item in Directus (https://cms.allvibes.fi) via `providerId`,
+ * so tapping a result opens that provider's page (`/service/:id`).
+ */
+const PROVIDERS = {
+  yoga: {
+    providerId: 3,
+    emoji: '🧘',
+    title: 'Joogastudio Tyyni',
+    description: 'Hengitä syvään ja tule alas pilvistä — Tyynin lempeä jooga nollaa kaiken 🌙',
+  },
+  floats: {
+    providerId: 6,
+    emoji: '🛁',
+    title: 'Floats',
+    description: 'Kellu suolaisessa vedessä ja anna stressin sulaa pois — täydellinen reset 💧',
+  },
+  pakopeli: {
+    providerId: 5,
+    emoji: '🔐',
+    title: 'Pakotalo',
+    description: 'Lukitse itsesi huoneeseen bestien kanssa — teamwork makes the dream work 🧩',
+  },
+  bouldering: {
+    providerId: 13,
+    emoji: '🧗',
+    title: 'Oulun Kiipeilykeskus',
+    description: 'Kiipeä seinille ohjaajan opastuksella — abs of steel incoming 💎',
+  },
+  keilaus: {
+    providerId: 14,
+    emoji: '🎳',
+    title: 'Oulun Keilahalli',
+    description: 'Klassikko ei koskaan vanhene — strikes ja iskut kavereiden kanssa 🎯',
+  },
+  uinti: {
+    providerId: 20,
+    emoji: '🏊',
+    title: 'Raatin uimahalli',
+    description: 'Hyppy veteen nollaa kaiken, literally — nuorten uintivuorot 💦',
+  },
+  tanssi: {
+    providerId: 22,
+    emoji: '💃',
+    title: 'Tanssia Linnanmaalla',
+    description: 'Kokeile uutta tanssilajia — embarrassing = iconic 🕺',
+  },
+  luonto: {
+    providerId: 37,
+    emoji: '🌳',
+    title: 'Oulun luontopolut',
+    description: 'Eväät mukaan ja luontoon — kävele ajatukset selkeiksi 🌿',
+  },
+  lainaamo: {
+    providerId: 41,
+    emoji: '🥏',
+    title: 'Liikuntavälinelainaamo',
+    description: 'Lainaa frisbeegolf- ja pallopelivälineet ilmaiseksi ja mene menoksi 🥏',
+  },
+  kirjasto: {
+    providerId: 49,
+    emoji: '🎮',
+    title: 'Kirjaston lainavälineet',
+    description: 'Lainaa konsolipelejä, soittimia ja liikuntavälineitä kirjastosta — ilmaiseksi 🎮',
+  },
+  yokoris: {
+    providerId: 40,
+    emoji: '🏀',
+    title: 'NMKY Yökoris',
+    description: 'Korista, musaa ja chillailua iltaisin hyvässä seurassa 🏀',
+  },
+  nurkka: {
+    providerId: 36,
+    emoji: '☕',
+    title: 'Nurkka-kohtaamispaikka',
+    description: 'Hengaa Valkeassa, juo kaakao ja pelaa lautapelejä — zero pressure ☕',
+  },
+  walkers: {
+    providerId: 33,
+    emoji: '🫶',
+    title: 'Walkers-kohtaamispaikka',
+    description: 'Tule sellaisena kuin olet — kahvia, pelejä ja aikaa jutella 🫶',
+  },
+  rockcamp: {
+    providerId: 39,
+    emoji: '🎸',
+    title: 'Rock Camp',
+    description: 'Kiinnostaako musiikki? Bändivalmennusta ja jameja maksutta 🎸',
+  },
+  taidemuseo: {
+    providerId: 38,
+    emoji: '🎨',
+    title: 'Oulun taidemuseo',
+    description: 'Alle 18v ilmaiseksi sisään — imppaa taidetta ja rauhoitu 🎨',
+  },
+  karpat: {
+    providerId: 31,
+    emoji: '🏒',
+    title: 'Oulun Kärpät',
+    description: 'Kärppäpeli Energia Areenalla — pohjoinen on meissä 🏒',
+  },
+  chillaa: {
+    providerId: 32,
+    emoji: '😌',
+    title: 'Chillaa-app',
+    description: 'Lataa Chillaa-appi ja tee nopeita harjoituksia jännitykseen 😌',
+  },
+  sekasin: {
+    providerId: 35,
+    emoji: '💬',
+    title: 'Sekasin-chat',
+    description: 'Anonyymi chat mistä vaan — pienistä tai isoista jutuista 💬',
+  },
+  talot: {
+    providerId: 34,
+    emoji: '🏠',
+    title: 'Tyttöjen ja Poikien talot',
+    description: 'Turvallinen tila hengailla, tavata muita ja saada tukea 🏠',
+  },
+  rela: {
+    providerId: 30,
+    emoji: '💆',
+    title: 'Rela-hierojat',
+    description: 'Anna keholle huolto — hieronta rentouttaa ja palauttaa 💆',
+  },
+  harrastetilat: {
+    providerId: 48,
+    emoji: '🎤',
+    title: 'Maksuttomat harrastetilat',
+    description: 'Bänditiloja, studio ja pelitilat nuorille — varaa oma sessio 🎤',
+  },
+} satisfies Record<string, Activity>;
+
+type ProviderKey = keyof typeof PROVIDERS;
+
+/**
+ * Maps each mood + desire combination to three real service providers.
+ * Every key resolves through PROVIDERS to a Directus item, so the survey's
+ * results are wired to the actual palveluntarjoajat rather than dummy content.
+ */
+const RECOMMENDATIONS: Record<Mood, Record<Desire, ProviderKey[]>> = {
   'kierroksilla': {
-    'unohtaa-arkea': [
-      { emoji: '🥏', title: 'Frisbeegolf', description: 'Heitä kiekkoa metsässä ja unohda kaikki stressi bestien kanssa 🌲' },
-      { emoji: '🏊', title: 'Uinti', description: 'Hyppy veteen nollaa kaiken — literally 💦' },
-      { emoji: '🏙️', title: 'Kaupunkiseikkailu', description: 'Eksytään kaupungille ilman suunnitelmaa, vibe > plan ✨' },
-    ],
-    'kapertya-kotiin': [
-      { emoji: '💪', title: 'Kotijumppa', description: 'Pura energia kotona — workout playlist päälle ja go 🔥' },
-      { emoji: '🎮', title: 'Peli-ilta', description: 'Luo oma turnaus ja kutsu kaverit — loser tilaa pizza 🍕' },
-      { emoji: '🧘', title: 'Yoga-sessio', description: 'Rauhoitu ja tule alas pilviä — kehosi tarvitsee sen 🌙' },
-    ],
-    'ulos-kavereiden': [
-      { emoji: '🎳', title: 'Keilaus', description: 'Klassikko ei koskaan vanhene — strikes ja iskut 🏆' },
-      { emoji: '🎤', title: 'Karaoke', description: 'Ääni auki, häpeä pois — se on karaoken pointti 🎶' },
-      { emoji: '🧗', title: 'Bouldering', description: 'Kiipeä seinillä kavereiden kanssa — abs of steel incoming 💎' },
-    ],
-    'kokeilla-uutta': [
-      { emoji: '🔐', title: 'Pakopeli', description: 'Lukitse itsesi huoneeseen ja selviydy — teamwork makes the dream work 🧩' },
-      { emoji: '💃', title: 'Tanssitunti', description: 'Kokeile jotain uutta tanssilajia — embarrassing = iconic 🕺' },
-      { emoji: '🧗', title: 'Bouldering', description: 'Ensimmäinen kerta seinällä on aina legendary 🏔️' },
-    ],
+    'unohtaa-arkea': ['lainaamo', 'uinti', 'luonto'],
+    'kapertya-kotiin': ['kirjasto', 'yoga', 'chillaa'],
+    'ulos-kavereiden': ['keilaus', 'yokoris', 'harrastetilat'],
+    'kokeilla-uutta': ['pakopeli', 'tanssi', 'bouldering'],
   },
   'low-battery': {
-    'unohtaa-arkea': [
-      { emoji: '🧺', title: 'Piknik puistossa', description: 'Ruokaa, nurmikko, aurinko — ei mitään muuta tarvita ☀️' },
-      { emoji: '🎬', title: 'Elokuva kotona', description: 'Istu alas, kääri peitoon ja anna Netflix hoitaa 🍿' },
-      { emoji: '📚', title: 'Kirjasto-date', description: 'Hiljaa, rauhallista ja täysin judgement-free zone 🤫' },
-    ],
-    'kapertya-kotiin': [
-      { emoji: '🎬', title: 'Elokuva kotona', description: 'Netflix + peitto + snackit = täydellinen päivä 🛋️' },
-      { emoji: '🧘', title: 'Yoga-sessio', description: 'Gentle yoga lattialla — ei tarvii ees nousta sohvalta paljoa 🌿' },
-      { emoji: '🎮', title: 'Peli-ilta', description: 'Casual gaming, low pressure, max fun 🎯' },
-    ],
-    'ulos-kavereiden': [
-      { emoji: '🧺', title: 'Piknik puistossa', description: 'Jokainen tuo jotain, kukaan ei stressaa — perfect vibe 🌸' },
-      { emoji: '🚶', title: 'Kävelylenkki', description: 'Rauhallinen kävely bestien kanssa + hyvät juorut 👂' },
-      { emoji: '📚', title: 'Kirjasto-date', description: 'Hengaillaan hiljaa kirjastossa — surprisingly slay 📖' },
-    ],
-    'kokeilla-uutta': [
-      { emoji: '📚', title: 'Kirjasto-date', description: 'Hae jotain täysin uutta genreä — you might be surprised 🤯' },
-      { emoji: '🧘', title: 'Yoga-sessio', description: 'Kokeile ensimmäistä kertaa — se on easier than it looks 🌙' },
-      { emoji: '🎬', title: 'Elokuva kotona', description: 'Katso genre jota et yleensä katsele — expand the mind ✨' },
-    ],
+    'unohtaa-arkea': ['luonto', 'floats', 'taidemuseo'],
+    'kapertya-kotiin': ['chillaa', 'yoga', 'kirjasto'],
+    'ulos-kavereiden': ['nurkka', 'walkers', 'luonto'],
+    'kokeilla-uutta': ['kirjasto', 'yoga', 'taidemuseo'],
   },
   'hyva-flow': {
-    'unohtaa-arkea': [
-      { emoji: '🏙️', title: 'Kaupunkiseikkailu', description: 'Flow tila + kaupunki = parasta! Mee eksyksiin 🗺️' },
-      { emoji: '🧺', title: 'Piknik puistossa', description: 'Hyvä energia kannattaa jakaa ulkona luonnon kanssa 🌻' },
-      { emoji: '🏊', title: 'Uinti', description: 'Kun flow on päällä, vedessäkin liikkuu paremmin 🌊' },
-    ],
-    'kapertya-kotiin': [
-      { emoji: '🎮', title: 'Peli-ilta', description: 'Käytä flow tila pelaamiseen — today you WIN 🏆' },
-      { emoji: '🎬', title: 'Elokuva kotona', description: 'Nauti omasta seurasta, olet hyvässä seurassa 😌' },
-      { emoji: '🧘', title: 'Yoga-sessio', description: 'Kanava flow tila kehoon — mindful af 🧠' },
-    ],
-    'ulos-kavereiden': [
-      { emoji: '🍖', title: 'Grilli-ilta', description: 'Kutsu kaikki, laita grilli laulamaan — summer vibes always 🌅' },
-      { emoji: '🎳', title: 'Keilaus', description: 'Hyvällä fiiliksellä heitit varmaan striket 🎯' },
-      { emoji: '🎤', title: 'Karaoke', description: 'Flow + karaoke = legendary performance incoming 🌟' },
-    ],
-    'kokeilla-uutta': [
-      { emoji: '🔐', title: 'Pakopeli', description: 'Flow tila + puzzle room = kaikki ratkeaa 🧩' },
-      { emoji: '🧗', title: 'Bouldering', description: 'Hyvä päivä aloittaa uusi harrastus 💪' },
-      { emoji: '💃', title: 'Tanssitunti', description: 'Rytmitaju on tallessa — mee tanssimaan! 🕺' },
-    ],
+    'unohtaa-arkea': ['lainaamo', 'uinti', 'luonto'],
+    'kapertya-kotiin': ['kirjasto', 'yoga', 'chillaa'],
+    'ulos-kavereiden': ['yokoris', 'keilaus', 'karpat'],
+    'kokeilla-uutta': ['pakopeli', 'bouldering', 'tanssi'],
   },
   'leviamassa': {
-    'unohtaa-arkea': [
-      { emoji: '🧘', title: 'Yoga-sessio', description: 'Hengitä, anna kaiken hajota hallitusti — sen jälkeen ok 🌿' },
-      { emoji: '🧺', title: 'Piknik puistossa', description: 'Luonto resetoi paremmin kuin mikään app 🌳' },
-      { emoji: '🚶', title: 'Kävelylenkki', description: 'Laita kuulokkeet korvaan ja kävele ajatukset selkeiksi 🎵' },
-    ],
-    'kapertya-kotiin': [
-      { emoji: '🧘', title: 'Yoga-sessio', description: 'Kotona, rauhassa — anna kehon ja mielen rauhoittua 🕯️' },
-      { emoji: '🎬', title: 'Elokuva kotona', description: 'Peitto, tee, leffa — se on kaikki mitä tarvitset 🫖' },
-      { emoji: '🎮', title: 'Peli-ilta', description: 'Joku casual peli vie ajatukset pois hetkeksi 🕹️' },
-    ],
-    'ulos-kavereiden': [
-      { emoji: '🚶', title: 'Kävelylenkki', description: 'Kävele kavereiden kanssa — puhu tai älä, molemmat ok 💬' },
-      { emoji: '🧺', title: 'Piknik puistossa', description: 'Matala paine ulkoilu, just vibes 🌸' },
-      { emoji: '🎳', title: 'Keilaus', description: 'Huumo auttaa — ja keilaaminen on hauska tapa purkaa 😂' },
-    ],
-    'kokeilla-uutta': [
-      { emoji: '🧘', title: 'Yoga-sessio', description: 'Uusi tapa rauhoittua — kokeile kerran ainakin 🌙' },
-      { emoji: '💃', title: 'Tanssitunti', description: 'Tanssi purkaa stressiä paremmin kuin mikään scrollaus 🎶' },
-      { emoji: '📚', title: 'Kirjasto-date', description: 'Hiljaa mutta uutta — kirjastosta voi löytää yllätyksiä 🤍' },
-    ],
+    'unohtaa-arkea': ['yoga', 'luonto', 'floats'],
+    'kapertya-kotiin': ['yoga', 'chillaa', 'kirjasto'],
+    'ulos-kavereiden': ['luonto', 'nurkka', 'keilaus'],
+    'kokeilla-uutta': ['yoga', 'tanssi', 'rela'],
   },
   'ihan-pihalla': {
-    'unohtaa-arkea': [
-      { emoji: '🎬', title: 'Elokuva kotona', description: 'Ei tarvii tietää mitään — anna elokuvan viedä 🍿' },
-      { emoji: '🧺', title: 'Piknik puistossa', description: 'Ulkoilma selkeyttää päätä, edes vähän ☀️' },
-      { emoji: '🧘', title: 'Yoga-sessio', description: 'Kun ei tiedä mitä tehdä, hengitä — ihan totta 🌬️' },
-    ],
-    'kapertya-kotiin': [
-      { emoji: '🎬', title: 'Elokuva kotona', description: 'Istu alas. Rentoudu. Älä mieti. Just watch 📺' },
-      { emoji: '🎮', title: 'Peli-ilta', description: 'Pelissä on selkeät säännöt — real life ei, mut peli kyllä 🕹️' },
-      { emoji: '🧘', title: 'Yoga-sessio', description: 'Grounding session — be here now 🌿' },
-    ],
-    'ulos-kavereiden': [
-      { emoji: '🎳', title: 'Keilaus', description: 'Kaverit päättää, sä tulet mukaan — easy mode 🎯' },
-      { emoji: '🍖', title: 'Grilli-ilta', description: 'Hyvä ruoka + hyvät tyypit = kaikki menee paremmin 🫶' },
-      { emoji: '🧺', title: 'Piknik puistossa', description: 'Low effort, high reward — juuri sun meininki nyt 💫' },
-    ],
-    'kokeilla-uutta': [
-      { emoji: '🔐', title: 'Pakopeli', description: 'Peli ajattelee puolestasi — sinun tarvii vain reagoida 🧩' },
-      { emoji: '🧗', title: 'Bouldering', description: 'Kehosi tietää mitä tehdä, vaikka pää ei — trust the climb 🏔️' },
-      { emoji: '💃', title: 'Tanssitunti', description: 'Liike ennen ajatusta — let the music guide you 🎵' },
-    ],
+    'unohtaa-arkea': ['luonto', 'taidemuseo', 'yoga'],
+    'kapertya-kotiin': ['chillaa', 'kirjasto', 'sekasin'],
+    'ulos-kavereiden': ['nurkka', 'walkers', 'talot'],
+    'kokeilla-uutta': ['pakopeli', 'bouldering', 'rockcamp'],
   },
 };
 
@@ -130,6 +194,8 @@ const ACTIVITIES: Record<Mood, Record<Desire, Activity[]>> = {
   styleUrl: './vibes-dialog.scss',
 })
 export class VibesDialog {
+  private router = inject(Router);
+
   dismissed = output<void>();
 
   step = signal<'q1' | 'q2' | 'results'>('q1');
@@ -160,8 +226,15 @@ export class VibesDialog {
   selectDesire(desire: Desire) {
     this.selectedDesire.set(desire);
     const mood = this.selectedMood()!;
-    this.recommendations.set(ACTIVITIES[mood][desire]);
+    const keys = RECOMMENDATIONS[mood][desire];
+    this.recommendations.set(keys.map((key) => PROVIDERS[key]));
     this.step.set('results');
+  }
+
+  /** Opens the recommended provider's page and closes the survey. */
+  openProvider(activity: Activity) {
+    this.dismiss();
+    this.router.navigate(['/service', activity.providerId]);
   }
 
   dismiss() {
