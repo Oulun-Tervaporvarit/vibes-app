@@ -98,7 +98,7 @@
           (click)="onShowToStaff()"
         >
           @if (gate().kind === 'checking') {
-            Tarkistetaan sijaintia…
+            Lunastetaan…
           } @else {
             Näytä henkilökunnalle
           }
@@ -157,6 +157,13 @@
             </p>
           }
 
+          @if (locationWarning(); as warning) {
+            <p class="av-redeem-warning">
+              <span class="material-icons" aria-hidden="true">warning_amber</span>
+              {{ warning }}
+            </p>
+          }
+
           <button type="button" class="av-btn av-btn--block" (click)="dismissGate()">
             Valmis
           </button>
@@ -175,38 +182,6 @@
           >✕</button>
 
           @switch (gate().kind) {
-            @case ('too-far') {
-              <span class="av-gate-card__emoji" aria-hidden="true">📍</span>
-              <h2 class="av-gate-card__title">Olet liian kaukana</h2>
-              <p class="av-gate-card__body">
-                Sinun täytyy olla alle 100 metrin päässä paikasta käyttääksesi etua.
-                Olet nyt noin <b>{{ asTooFar(gate()).distance }} m</b> päässä osoitteesta
-                <i>{{ provider.address }}</i>.
-              </p>
-            }
-            @case ('denied') {
-              <span class="av-gate-card__emoji" aria-hidden="true">🔒</span>
-              <h2 class="av-gate-card__title">Sijainti ei ole käytössä</h2>
-              <p class="av-gate-card__body">
-                Etua voi käyttää vain paikan päällä. Salli sovellukselle sijainnin
-                käyttö selaimen asetuksista ja yritä uudelleen.
-              </p>
-            }
-            @case ('unsupported') {
-              <span class="av-gate-card__emoji" aria-hidden="true">🧭</span>
-              <h2 class="av-gate-card__title">Selain ei tue sijaintia</h2>
-              <p class="av-gate-card__body">
-                Sijaintitieto tarvitaan edun käyttämiseen paikan päällä.
-              </p>
-            }
-            @case ('not-found') {
-              <span class="av-gate-card__emoji" aria-hidden="true">❓</span>
-              <h2 class="av-gate-card__title">Osoitetta ei löytynyt</h2>
-              <p class="av-gate-card__body">
-                Paikan sijaintia ei pystytty selvittämään. Yritä uudelleen tai
-                ole yhteydessä henkilökuntaan.
-              </p>
-            }
             @case ('no-code') {
               <span class="av-gate-card__emoji" aria-hidden="true">🔑</span>
               <h2 class="av-gate-card__title">Syötä VIBEs-koodi</h2>
@@ -226,7 +201,7 @@
               <span class="av-gate-card__emoji" aria-hidden="true">⚠️</span>
               <h2 class="av-gate-card__title">Jotain meni pieleen</h2>
               <p class="av-gate-card__body">
-                Sijainnin tarkistus epäonnistui. Yritä hetken kuluttua uudelleen.
+                Yritä hetken kuluttua uudelleen.
               </p>
             }
           }

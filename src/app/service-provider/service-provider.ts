@@ -14,13 +14,8 @@ type GateState =
   | { kind: 'idle' }
   | { kind: 'checking' }
   | { kind: 'success' }
-  | { kind: 'too-far'; distance: number }
-  | { kind: 'denied' }
-  | { kind: 'unsupported' }
-  | { kind: 'not-found' }
   | { kind: 'no-code' }
-  | { kind: 'redeem-failed'; reason: string }
-  | { kind: 'error' };
+  | { kind: 'redeem-failed'; reason: string };
 
 function haversineMeters(
   a: { lat: number; lng: number },
@@ -118,6 +113,8 @@ export class ServiceProvider {
   gate = signal<GateState>({ kind: 'idle' });
   redeemedAt = signal<Date | null>(null);
   redeemUsesLeft = signal<number | null>(null);
+  // Non-blocking notice when we couldn't confirm the user is on-site.
+  locationWarning = signal<string | null>(null);
 
   /** Whether the user currently has a stored VIBEs code. */
   hasCode = computed(() => !!this.vibes.code());
@@ -128,10 +125,6 @@ export class ServiceProvider {
     if (!provider || !this.vibes.isValid()) return null;
     return this.vibes.usesLeft(provider.category);
   });
-
-  asTooFar(state: GateState): Extract<GateState, { kind: 'too-far' }> {
-    return state as Extract<GateState, { kind: 'too-far' }>;
-  }
 
   asRedeemFailed(state: GateState): Extract<GateState, { kind: 'redeem-failed' }> {
     return state as Extract<GateState, { kind: 'redeem-failed' }>;
@@ -173,34 +166,51 @@ export class ServiceProvider {
 
     this.gate.set({ kind: 'checking' });
 
+    // The location check is optional: it never blocks redemption, it only
+    // produces a warning shown to the user when we can't confirm they're on-site.
+    const warning = await this.checkLocationWarning(provider);
+
+    const result = await this.vibes.redeem(provider.id);
+    if (result.success) {
+      this.redeemedAt.set(new Date());
+      this.redeemUsesLeft.set(result.uses_left);
+      this.locationWarning.set(warning);
+      this.gate.set({ kind: 'success' });
+    } else {
+      this.gate.set({ kind: 'redeem-failed', reason: result.reason });
+    }
+  }
+
+  /**
+   * Best-effort proximity check. Returns a warning message when the user is far
+   * away or their location can't be determined, or null when they're confirmed
+   * to be within range. Never throws and never blocks the redemption.
+   */
+  private async checkLocationWarning(provider: {
+    address: string;
+  }): Promise<string | null> {
     let userPos: GeolocationPosition;
     try {
       userPos = await getBrowserPosition();
     } catch (err: unknown) {
-      if (err instanceof GeolocationPositionError) {
-        if (err.code === err.PERMISSION_DENIED) {
-          this.gate.set({ kind: 'denied' });
-          return;
-        }
-      } else if (err instanceof Error && err.message === 'unsupported') {
-        this.gate.set({ kind: 'unsupported' });
-        return;
+      if (err instanceof GeolocationPositionError && err.code === err.PERMISSION_DENIED) {
+        return 'Sijainti ei ole käytössä, joten emme voineet varmistaa että olet paikan päällä. Käytä etua vain paikan päällä.';
       }
-      this.gate.set({ kind: 'error' });
-      return;
+      if (err instanceof Error && err.message === 'unsupported') {
+        return 'Selaimesi ei tue sijaintia, joten emme voineet varmistaa että olet paikan päällä. Käytä etua vain paikan päällä.';
+      }
+      return 'Sijainnin tarkistus epäonnistui, joten emme voineet varmistaa että olet paikan päällä. Käytä etua vain paikan päällä.';
     }
 
     let providerPos: { lat: number; lng: number } | null;
     try {
       providerPos = await firstValueFrom(this.service.geocodeAddress(provider.address));
     } catch {
-      this.gate.set({ kind: 'error' });
-      return;
+      return 'Paikan sijaintia ei voitu selvittää, joten etäisyyttä ei tarkistettu.';
     }
 
     if (!providerPos) {
-      this.gate.set({ kind: 'not-found' });
-      return;
+      return 'Paikan sijaintia ei löytynyt, joten etäisyyttä ei tarkistettu.';
     }
 
     const distance = haversineMeters(
@@ -209,18 +219,9 @@ export class ServiceProvider {
     );
 
     if (distance > PROXIMITY_THRESHOLD_METERS) {
-      this.gate.set({ kind: 'too-far', distance: Math.round(distance) });
-      return;
+      return `Vaikutat olevan noin ${Math.round(distance)} m päässä paikasta. Käytä etua vain paikan päällä.`;
     }
 
-    // On-site confirmed — now redeem one use of the VIBEs code (server-side).
-    const result = await this.vibes.redeem(provider.id);
-    if (result.success) {
-      this.redeemedAt.set(new Date());
-      this.redeemUsesLeft.set(result.uses_left);
-      this.gate.set({ kind: 'success' });
-    } else {
-      this.gate.set({ kind: 'redeem-failed', reason: result.reason });
-    }
+    return null;
   }
 }
