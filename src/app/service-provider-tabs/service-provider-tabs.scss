@@ -62,15 +62,22 @@
     transform: none !important;
   }
 
+  // Lay the tabs out as a grid: the three categories form three auto-sized
+  // columns on the second row, and "Kaikki palvelut" spans all three on the
+  // first row — so the first row is exactly as wide as the second.
   ::ng-deep .mat-mdc-tab-labels {
-    flex-wrap: wrap;
+    display: grid;
+    grid-auto-flow: row;
+    grid-template-columns: repeat(3, auto);
+    width: fit-content;
+    max-width: 100%;
+    margin: 0 auto;
     justify-content: center;
   }
 
-  // "Kaikki palvelut" sits alone on the first row; the categories wrap below it.
   ::ng-deep .mat-mdc-tab.av-tab-all {
     order: -1;
-    flex: 0 0 100%;
+    grid-column: 1 / -1;
   }
 
   ::ng-deep .mat-mdc-tab .mdc-tab__text-label {
