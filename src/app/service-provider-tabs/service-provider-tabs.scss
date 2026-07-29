@@ -67,6 +67,12 @@
     justify-content: center;
   }
 
+  // "Kaikki palvelut" sits alone on the first row; the categories wrap below it.
+  ::ng-deep .mat-mdc-tab.av-tab-all {
+    order: -1;
+    flex: 0 0 100%;
+  }
+
   ::ng-deep .mat-mdc-tab .mdc-tab__text-label {
     color: rgba(255, 255, 255, 0.75);
     font-family: 'Poppins', sans-serif;
