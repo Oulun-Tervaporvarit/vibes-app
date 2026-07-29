@@ -44,7 +44,27 @@
   ::ng-deep .mat-mdc-tab-header {
     background: var(--av-blue);
     border-bottom: none;
+    height: auto;
     --mdc-secondary-navigation-tab-container-height: 56px;
+  }
+
+  // Let the tabs wrap onto multiple rows instead of showing pagination arrows.
+  ::ng-deep .mat-mdc-tab-header-pagination {
+    display: none !important;
+  }
+
+  ::ng-deep .mat-mdc-tab-label-container {
+    overflow: visible !important;
+  }
+
+  ::ng-deep .mat-mdc-tab-list {
+    // Cancel the scroll transform Material applies when it thinks tabs overflow.
+    transform: none !important;
+  }
+
+  ::ng-deep .mat-mdc-tab-labels {
+    flex-wrap: wrap;
+    justify-content: center;
   }
 
   ::ng-deep .mat-mdc-tab .mdc-tab__text-label {
