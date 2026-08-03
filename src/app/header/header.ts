@@ -24,14 +24,8 @@ export class Header {
     return !!this.vibes.code() && b !== null && b.valid === false;
   });
 
-  benefits = computed(() => {
-    const b = this.vibes.balance();
-    return [
-      { category: 'exercise', label: 'Liikunta', icon: 'directions_run', count: b?.exercise ?? 0 },
-      { category: 'culture', label: 'Kulttuuri', icon: 'theater_comedy', count: b?.culture ?? 0 },
-      { category: 'wellness', label: 'Hyvinvointi', icon: 'spa', count: b?.wellness ?? 0 },
-    ];
-  });
+  // Total visits left, shared across all categories.
+  uses = computed(() => this.vibes.balance()?.uses ?? 0);
 
   ngOnInit(): void {
     this.code = this.vibes.code();

@@ -20,17 +20,14 @@ const REDEEM_FLOW = '27897513-9e24-4ea5-ae72-a0bf3f3de78e';
 
 const STORAGE_KEY = 'code';
 
-export type Category = 'exercise' | 'culture' | 'wellness';
-
 export interface CodeBalance {
   valid: boolean;
-  exercise: number;
-  culture: number;
-  wellness: number;
+  /** Total visits/uses left, shared across all categories. */
+  uses: number;
 }
 
 export type RedeemResult =
-  | { success: true; category: Category; uses_left: number }
+  | { success: true; category: string; uses_left: number }
   | { success: false; reason: string };
 
 @Injectable({ providedIn: 'root' })
@@ -83,14 +80,10 @@ export class VibesCodeService {
     this.setCode('');
   }
 
-  /** Remaining uses for a given category with the current code. */
-  usesLeft(category: string): number {
+  /** Remaining uses (shared across all categories) for the current code. */
+  usesLeft(): number {
     const b = this.balance();
-    if (!b || !b.valid) return 0;
-    if (category === 'exercise') return b.exercise;
-    if (category === 'culture') return b.culture;
-    if (category === 'wellness') return b.wellness;
-    return 0;
+    return b && b.valid ? b.uses : 0;
   }
 
   async refreshBalance(): Promise<void> {
@@ -107,9 +100,7 @@ export class VibesCodeService {
         })
       );
       this.balance.set(
-        res && res.valid
-          ? { valid: true, exercise: res.exercise, culture: res.culture, wellness: res.wellness }
-          : { valid: false, exercise: 0, culture: 0, wellness: 0 }
+        res && res.valid ? { valid: true, uses: res.uses } : { valid: false, uses: 0 }
       );
     } catch {
       // Network / server error — leave validity unknown rather than claiming invalid.

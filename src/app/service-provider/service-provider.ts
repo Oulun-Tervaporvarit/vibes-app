@@ -120,11 +120,10 @@ export class ServiceProvider {
   /** Whether the user currently has a stored VIBEs code. */
   hasCode = computed(() => !!this.vibes.code());
 
-  /** Remaining uses of the current code for this provider's category. */
-  categoryUsesLeft = computed(() => {
-    const provider = this.item();
-    if (!provider || !this.vibes.isValid()) return null;
-    return this.vibes.usesLeft(provider.category);
+  /** Remaining uses of the current code (shared across all categories). */
+  usesLeft = computed(() => {
+    if (!this.vibes.isValid()) return null;
+    return this.vibes.usesLeft();
   });
 
   asRedeemFailed(state: GateState): Extract<GateState, { kind: 'redeem-failed' }> {

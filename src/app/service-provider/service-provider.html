@@ -79,10 +79,10 @@
           </span>
         </p>
         @if (hasCode()) {
-          @if (categoryUsesLeft() !== null) {
-            <p class="av-detail__uses" [class.av-detail__uses--empty]="categoryUsesLeft() === 0">
+          @if (usesLeft() !== null) {
+            <p class="av-detail__uses" [class.av-detail__uses--empty]="usesLeft() === 0">
               <span class="material-icons" aria-hidden="true">confirmation_number</span>
-              Käyttökertoja jäljellä: <b>{{ categoryUsesLeft() }}</b>
+              Käyntejä jäljellä: <b>{{ usesLeft() }}</b>
             </p>
           }
         } @else {
@@ -153,7 +153,7 @@
 
           @if (redeemUsesLeft() !== null) {
             <p class="av-redeem-uses">
-              Käyttökertoja jäljellä: <b>{{ redeemUsesLeft() }}</b>
+              Käyntejä jäljellä: <b>{{ redeemUsesLeft() }}</b>
             </p>
           }
 
@@ -189,7 +189,7 @@
                 {{ asConfirm(gate()).warning }}
               </p>
               <p class="av-gate-card__body">
-                Haluatko lunastaa edun silti? Käyttökerta kuluu.
+                Haluatko lunastaa edun silti? Käynti kuluu.
               </p>
             }
             @case ('no-code') {
