@@ -1,11 +1,11 @@
-import { Component, computed, inject, signal } from '@angular/core';
+import { Component, computed, effect, inject, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { DatePipe, Location } from '@angular/common';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
 import { firstValueFrom, switchMap } from 'rxjs';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { ServiceProviderService } from '../service-provider.service';
+import { FeedbackRating, ServiceProviderService } from '../service-provider.service';
 import { VibesCodeService } from '../vibes-code.service';
 
 const PROXIMITY_THRESHOLD_METERS = 100;
@@ -117,6 +117,11 @@ export class ServiceProvider {
   // Non-blocking notice when we couldn't confirm the user is on-site.
   locationWarning = signal<string | null>(null);
 
+  // Thumbs up/down feedback state for free services.
+  feedbackRating = signal<FeedbackRating | null>(null);
+  feedbackSending = signal(false);
+  feedbackError = signal(false);
+
   /** Whether the user currently has a stored VIBEs code. */
   hasCode = computed(() => !!this.vibes.code());
 
@@ -147,7 +152,51 @@ export class ServiceProvider {
     }
   }
 
-  constructor(protected location: Location) {}
+  constructor(protected location: Location) {
+    // Remember an already-given rating (per provider) across reloads.
+    effect(() => {
+      const provider = this.item();
+      if (!provider) return;
+      const stored = this.readFeedback(provider.id);
+      this.feedbackRating.set(stored);
+      this.feedbackError.set(false);
+    });
+  }
+
+  private feedbackKey(id: number): string {
+    return `feedback_${id}`;
+  }
+
+  private readFeedback(id: number): FeedbackRating | null {
+    try {
+      const v = localStorage.getItem(this.feedbackKey(id));
+      return v === 'up' || v === 'down' ? v : null;
+    } catch {
+      return null;
+    }
+  }
+
+  async submitFeedback(rating: FeedbackRating) {
+    const provider = this.item();
+    if (!provider) return;
+    if (this.feedbackSending() || this.feedbackRating()) return;
+
+    this.feedbackSending.set(true);
+    this.feedbackError.set(false);
+    const ok = await this.service.submitFeedback(provider.id, rating);
+    this.feedbackSending.set(false);
+
+    if (ok) {
+      this.feedbackRating.set(rating);
+      try {
+        localStorage.setItem(this.feedbackKey(provider.id), rating);
+      } catch {
+        /* storage may be unavailable — feedback still counts server-side */
+      }
+    } else {
+      this.feedbackError.set(true);
+    }
+  }
 
   goBack() {
     this.location.back();
