@@ -58,6 +58,10 @@ export const TRANSLATIONS: Record<string, Entry> = {
     fi: 'Syötä VIBEs-koodi yläpalkkiin lunastaaksesi edun.',
     en: 'Enter your VIBEs code in the top bar to redeem the perk.',
   },
+  'detail.already_redeemed': {
+    fi: 'Olet jo lunastanut tämän edun tällä koodilla.',
+    en: 'You have already redeemed this perk with this code.',
+  },
   'detail.important': { fi: 'Tärkeää tietoa', en: 'Important' },
   'detail.important_rest': {
     fi: ' — paina alla olevaa nappia vasta paikan päällä.',

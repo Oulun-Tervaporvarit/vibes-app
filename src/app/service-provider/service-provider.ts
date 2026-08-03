@@ -202,6 +202,13 @@ export class ServiceProvider {
     return this.vibes.usesLeft();
   });
 
+  /** Whether the current code has already redeemed this (non-free) service. */
+  alreadyRedeemed = computed(() => {
+    const provider = this.item();
+    if (!provider || provider.free) return false;
+    return this.vibes.hasRedeemed(provider.id);
+  });
+
   asRedeemFailed(state: GateState): Extract<GateState, { kind: 'redeem-failed' }> {
     return state as Extract<GateState, { kind: 'redeem-failed' }>;
   }
