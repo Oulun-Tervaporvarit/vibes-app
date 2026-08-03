@@ -1,4 +1,4 @@
-<section class="av-detail" [class.av-detail--no-cta]="item()?.free">
+<section class="av-detail">
   @if (item(); as provider) {
     <header class="av-detail__hero">
       <button type="button" class="av-detail__back" (click)="goBack()" aria-label="Takaisin">
@@ -103,6 +103,42 @@
             Näytä henkilökunnalle
           }
         </button>
+      </footer>
+    } @else {
+      <footer class="av-detail__cta-bar av-feedback">
+        @if (feedbackRating(); as rating) {
+          <p class="av-feedback__thanks">
+            <span class="material-icons" aria-hidden="true">
+              {{ rating === 'up' ? 'thumb_up' : 'thumb_down' }}
+            </span>
+            Kiitos palautteestasi!
+          </p>
+        } @else {
+          <p class="av-feedback__q">Tykkäsitkö tästä palvelusta?</p>
+          <div class="av-feedback__actions">
+            <button
+              type="button"
+              class="av-feedback__btn av-feedback__btn--up"
+              [disabled]="feedbackSending()"
+              (click)="submitFeedback('up')"
+              aria-label="Tykkäsin"
+            >
+              <span class="material-icons" aria-hidden="true">thumb_up</span>
+            </button>
+            <button
+              type="button"
+              class="av-feedback__btn av-feedback__btn--down"
+              [disabled]="feedbackSending()"
+              (click)="submitFeedback('down')"
+              aria-label="En tykännyt"
+            >
+              <span class="material-icons" aria-hidden="true">thumb_down</span>
+            </button>
+          </div>
+          @if (feedbackError()) {
+            <p class="av-feedback__error">Palautteen tallennus epäonnistui. Yritä uudelleen.</p>
+          }
+        }
       </footer>
     }
 
