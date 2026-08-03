@@ -32,7 +32,16 @@ export class ServiceProvidersList {
     const all = this.allProviders();
     if (all === undefined) return undefined;
     const cat = this.category();
-    return cat ? all.filter((p) => p.category === cat) : all;
+    const list = cat ? all.filter((p) => p.category === cat) : [...all];
+
+    // The "all services" list is sorted alphabetically by the displayed name.
+    if (this.compact()) {
+      const lang = this.i18n.lang();
+      return [...list].sort((a, b) =>
+        this.name(a).localeCompare(this.name(b), lang, { sensitivity: 'base' })
+      );
+    }
+    return list;
   });
 
   bannerUrl(provider: ServiceProvider): string | null {
