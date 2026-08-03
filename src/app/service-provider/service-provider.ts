@@ -141,8 +141,10 @@ export class ServiceProvider {
 
   redeemErrorMessage(reason: string): string {
     switch (reason) {
+      case 'already_used':
+        return 'Olet jo lunastanut edun tähän palveluun tällä koodilla.';
       case 'no_uses_left':
-        return 'Tällä koodilla ei ole enää käyttökertoja tässä kategoriassa.';
+        return 'Tällä koodilla ei ole enää käyntejä jäljellä.';
       case 'invalid_code':
         return 'Koodia ei löytynyt. Tarkista VIBEs-koodisi.';
       case 'free_provider':
