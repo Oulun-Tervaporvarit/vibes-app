@@ -14,7 +14,7 @@
           <div class="av-benefits-badge" [class.av-benefits-badge--empty]="uses() === 0">
             <span class="material-icons av-benefits-badge__icon" aria-hidden="true">confirmation_number</span>
             <span class="av-benefits-badge__count">{{ uses() }}</span>
-            <span class="av-benefits-badge__label">Käyntiä</span>
+            <span class="av-benefits-badge__label">{{ 'header.visits' | t }}</span>
           </div>
         </div>
 
@@ -25,7 +25,7 @@
             type="button"
             class="av-code-display__clear"
             (click)="clearCode()"
-            aria-label="Poista koodi"
+            [attr.aria-label]="'header.clear' | t"
           >
             <span class="material-icons" aria-hidden="true">close</span>
           </button>
@@ -37,8 +37,8 @@
             [(ngModel)]="code"
             (change)="submitCode()"
             (keydown.enter)="submitCode()"
-            placeholder="Syötä VIBEs-koodi"
-            aria-label="VIBEs-koodi"
+            [placeholder]="'header.placeholder' | t"
+            [attr.aria-label]="'header.code_aria' | t"
             autocomplete="off"
             spellcheck="false"
           />
@@ -47,9 +47,19 @@
           }
         </label>
         @if (invalid()) {
-          <p class="av-code-hint">Koodia ei löytynyt. Tarkista VIBEs-koodisi.</p>
+          <p class="av-code-hint">{{ 'header.invalid' | t }}</p>
         }
       }
+
+      <button
+        type="button"
+        class="av-lang-toggle"
+        (click)="i18n.toggle()"
+        [attr.aria-label]="'lang.switch' | t"
+      >
+        <span class="material-icons" aria-hidden="true">language</span>
+        {{ i18n.isEn() ? ('lang.fi' | t) : ('lang.en' | t) }}
+      </button>
     </div>
   </div>
 </header>

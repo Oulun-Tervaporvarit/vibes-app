@@ -2,7 +2,7 @@
   @if (items.length === 0) {
     <div class="av-empty-state">
       <span class="av-empty-state__emoji" aria-hidden="true">🌱</span>
-      <p>Ei vielä palveluntarjoajia tässä kategoriassa.</p>
+      <p>{{ 'list.empty' | t }}</p>
     </div>
   }
 
@@ -19,7 +19,7 @@
               class="av-complist__access"
               [class.av-complist__access--redeem]="!provider.free"
             >
-              {{ provider.free ? 'Rajaton käyttö' : 'Vaatii lunastuksen VIBEs-koodilla' }}
+              {{ (provider.free ? 'access.unlimited' : 'access.code_long') | t }}
             </span>
             <span class="material-icons av-complist__arrow" aria-hidden="true">chevron_right</span>
           </a>
@@ -42,7 +42,7 @@
                 class="av-provider-card__badge"
                 [class.av-provider-card__badge--redeem]="!provider.free"
               >
-                {{ provider.free ? 'Rajaton käyttö' : 'VIBEs-koodi' }}
+                {{ (provider.free ? 'access.unlimited' : 'access.code_short') | t }}
               </span>
             </div>
 
@@ -55,7 +55,7 @@
 
               <div class="av-provider-card__footer">
                 <span class="av-provider-card__cta">
-                  Katso lisää
+                  {{ 'list.more' | t }}
                   <span class="material-icons" aria-hidden="true">arrow_forward</span>
                 </span>
               </div>

@@ -7,6 +7,7 @@ import { filter, map, startWith } from 'rxjs';
 import { ServiceProviderTabs } from "./service-provider-tabs/service-provider-tabs";
 import { Header } from "./header/header";
 import { VibesDialog } from './vibes-dialog/vibes-dialog';
+import { TranslatePipe } from './i18n';
 
 type UserChoice = Promise<{
   outcome: 'accepted' | 'dismissed';
@@ -21,7 +22,7 @@ interface BeforeInstallPromptEvent extends Event {
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, CommonModule, FormsModule, Header, VibesDialog],
+  imports: [RouterOutlet, CommonModule, FormsModule, Header, VibesDialog, TranslatePipe],
   templateUrl: './app.html',
   styleUrl: './app.scss'
 })

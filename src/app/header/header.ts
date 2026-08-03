@@ -2,15 +2,17 @@ import { Component, computed, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { VibesCodeService } from '../vibes-code.service';
+import { LanguageService, TranslatePipe } from '../i18n';
 
 @Component({
   selector: 'app-header',
-  imports: [FormsModule, RouterLink],
+  imports: [FormsModule, RouterLink, TranslatePipe],
   templateUrl: './header.html',
   styleUrl: './header.scss',
 })
 export class Header {
   private vibes = inject(VibesCodeService);
+  protected i18n = inject(LanguageService);
 
   /** Bound to the input field; committed to the service on submit. */
   code = '';

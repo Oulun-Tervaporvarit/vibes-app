@@ -1,21 +1,21 @@
 <div class="vibes-overlay" (click)="dismiss()">
   <div class="vibes-card" (click)="$event.stopPropagation()">
 
-    <button class="dismiss-btn" (click)="dismiss()" aria-label="Sulje">✕</button>
+    <button class="dismiss-btn" (click)="dismiss()" [attr.aria-label]="'vd.close' | t">✕</button>
 
     <!-- Question 1 -->
     @if (step() === 'q1') {
       <div class="step-content">
         <div class="step-header">
-          <div class="step-pill">1 / 2</div>
-          <h2 class="question-title">Miltä vibes tuntuu<br>just nyt? 🌊</h2>
-          <p class="question-sub">no rehellisesti vaa 👀</p>
+          <div class="step-pill">{{ 'vd.step' | t }}</div>
+          <h2 class="question-title">{{ 'vd.q1_title' | t }}</h2>
+          <p class="question-sub">{{ 'vd.q1_sub' | t }}</p>
         </div>
         <div class="options-grid">
           @for (opt of moodOptions; track opt.value) {
             <button class="option-btn" (click)="selectMood(opt.value)">
               <span class="opt-emoji">{{ opt.emoji }}</span>
-              <span class="opt-label">{{ opt.label }}</span>
+              <span class="opt-label">{{ ('mood.' + opt.value) | t }}</span>
             </button>
           }
         </div>
@@ -26,15 +26,15 @@
     @if (step() === 'q2') {
       <div class="step-content">
         <div class="step-header">
-          <div class="step-pill">2 / 2</div>
-          <h2 class="question-title">Mikä tuntuis hyvältä<br>just nyt? 💭</h2>
-          <p class="question-sub">gut feeling, älä mieti liikaa fr fr 🙏</p>
+          <div class="step-pill">{{ 'vd.q2_step' | t }}</div>
+          <h2 class="question-title">{{ 'vd.q2_title' | t }}</h2>
+          <p class="question-sub">{{ 'vd.q2_sub' | t }}</p>
         </div>
         <div class="options-grid options-grid--2col">
           @for (opt of desireOptions; track opt.value) {
             <button class="option-btn option-btn--wide" (click)="selectDesire(opt.value)">
               <span class="opt-emoji">{{ opt.emoji }}</span>
-              <span class="opt-label">{{ opt.label }}</span>
+              <span class="opt-label">{{ ('desire.' + opt.value) | t }}</span>
             </button>
           }
         </div>
@@ -46,8 +46,8 @@
       <div class="step-content">
         <div class="step-header">
           <div class="mood-badge">{{ getMoodEmoji() }} {{ getMoodLabel() }}</div>
-          <h2 class="question-title">Sun vibes match 🎯</h2>
-          <p class="question-sub">nää on just sulle tehty, no cap 🔥</p>
+          <h2 class="question-title">{{ 'vd.results_title' | t }}</h2>
+          <p class="question-sub">{{ 'vd.results_sub' | t }}</p>
         </div>
         <div class="activities-list">
           @for (activity of recommendations(); track activity.providerId) {
@@ -55,14 +55,14 @@
               <span class="activity-emoji">{{ activity.emoji }}</span>
               <div class="activity-info">
                 <div class="activity-title">{{ activity.title }}</div>
-                <div class="activity-desc">{{ activity.description }}</div>
+                <div class="activity-desc">{{ desc(activity) }}</div>
               </div>
               <span class="activity-arrow material-icons" aria-hidden="true">arrow_forward</span>
             </button>
           }
         </div>
         <button class="cta-btn" (click)="dismiss()">
-          Let's gooo! 🚀
+          {{ 'vd.cta' | t }}
         </button>
       </div>
     }

@@ -1,6 +1,7 @@
 import { Component, inject, output, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
+import { Lang, LanguageService, TranslatePipe } from '../i18n';
 
 type Mood = 'kierroksilla' | 'low-battery' | 'hyva-flow' | 'leviamassa' | 'ihan-pihalla';
 type Desire = 'unohtaa-arkea' | 'kapertya-kotiin' | 'ulos-kavereiden' | 'kokeilla-uutta';
@@ -9,8 +10,9 @@ interface Activity {
   /** Directus `service_provider` id this recommendation links to. */
   providerId: number;
   emoji: string;
+  /** Provider name — a proper noun, shown as-is in both languages. */
   title: string;
-  description: string;
+  description: Record<Lang, string>;
 }
 
 /**
@@ -23,127 +25,190 @@ const PROVIDERS = {
     providerId: 3,
     emoji: '🧘',
     title: 'Joogastudio Tyyni',
-    description: 'Hengitä syvään ja tule alas pilvistä — Tyynin lempeä jooga nollaa kaiken 🌙',
+    description: {
+      fi: 'Hengitä syvään ja tule alas pilvistä — Tyynin lempeä jooga nollaa kaiken 🌙',
+      en: 'Breathe deep and come down from the clouds — Tyyni’s gentle yoga resets everything 🌙',
+    },
   },
   floats: {
     providerId: 6,
     emoji: '🛁',
     title: 'Floats',
-    description: 'Kellu suolaisessa vedessä ja anna stressin sulaa pois — täydellinen reset 💧',
+    description: {
+      fi: 'Kellu suolaisessa vedessä ja anna stressin sulaa pois — täydellinen reset 💧',
+      en: 'Float in salt water and let the stress melt away — the perfect reset 💧',
+    },
   },
   pakopeli: {
     providerId: 5,
     emoji: '🔐',
     title: 'Pakotalo',
-    description: 'Lukitse itsesi huoneeseen bestien kanssa — teamwork makes the dream work 🧩',
+    description: {
+      fi: 'Lukitse itsesi huoneeseen bestien kanssa — teamwork makes the dream work 🧩',
+      en: 'Lock yourself in a room with your besties — teamwork makes the dream work 🧩',
+    },
   },
   bouldering: {
     providerId: 13,
     emoji: '🧗',
     title: 'Oulun Kiipeilykeskus',
-    description: 'Kiipeä seinille ohjaajan opastuksella — abs of steel incoming 💎',
+    description: {
+      fi: 'Kiipeä seinille ohjaajan opastuksella — abs of steel incoming 💎',
+      en: 'Climb the walls with a guide — abs of steel incoming 💎',
+    },
   },
   keilaus: {
     providerId: 14,
     emoji: '🎳',
     title: 'Oulun Keilahalli',
-    description: 'Klassikko ei koskaan vanhene — strikes ja iskut kavereiden kanssa 🎯',
+    description: {
+      fi: 'Klassikko ei koskaan vanhene — strikes ja iskut kavereiden kanssa 🎯',
+      en: 'A classic that never gets old — strikes and laughs with friends 🎯',
+    },
   },
   uinti: {
     providerId: 20,
     emoji: '🏊',
     title: 'Raatin uimahalli',
-    description: 'Hyppy veteen nollaa kaiken, literally — nuorten uintivuorot 💦',
+    description: {
+      fi: 'Hyppy veteen nollaa kaiken, literally — nuorten uintivuorot 💦',
+      en: 'A dip in the pool resets everything, literally — youth swim sessions 💦',
+    },
   },
   tanssi: {
     providerId: 22,
     emoji: '💃',
     title: 'Tanssia Linnanmaalla',
-    description: 'Kokeile uutta tanssilajia — embarrassing = iconic 🕺',
+    description: {
+      fi: 'Kokeile uutta tanssilajia — embarrassing = iconic 🕺',
+      en: 'Try a new dance style — embarrassing = iconic 🕺',
+    },
   },
   luonto: {
     providerId: 37,
     emoji: '🌳',
     title: 'Oulun luontopolut',
-    description: 'Eväät mukaan ja luontoon — kävele ajatukset selkeiksi 🌿',
+    description: {
+      fi: 'Eväät mukaan ja luontoon — kävele ajatukset selkeiksi 🌿',
+      en: 'Grab some snacks and head outdoors — walk your thoughts clear 🌿',
+    },
   },
   lainaamo: {
     providerId: 41,
     emoji: '🥏',
     title: 'Liikuntavälinelainaamo',
-    description: 'Lainaa frisbeegolf- ja pallopelivälineet ilmaiseksi ja mene menoksi 🥏',
+    description: {
+      fi: 'Lainaa frisbeegolf- ja pallopelivälineet ilmaiseksi ja mene menoksi 🥏',
+      en: 'Borrow disc golf and ball-game gear for free and get going 🥏',
+    },
   },
   kirjasto: {
     providerId: 49,
     emoji: '🎮',
     title: 'Kirjaston lainavälineet',
-    description: 'Lainaa konsolipelejä, soittimia ja liikuntavälineitä kirjastosta — ilmaiseksi 🎮',
+    description: {
+      fi: 'Lainaa konsolipelejä, soittimia ja liikuntavälineitä kirjastosta — ilmaiseksi 🎮',
+      en: 'Borrow console games, instruments and sports gear from the library — for free 🎮',
+    },
   },
   yokoris: {
     providerId: 40,
     emoji: '🏀',
     title: 'NMKY Yökoris',
-    description: 'Korista, musaa ja chillailua iltaisin hyvässä seurassa 🏀',
+    description: {
+      fi: 'Korista, musaa ja chillailua iltaisin hyvässä seurassa 🏀',
+      en: 'Hoops, music and chilling in the evenings with good company 🏀',
+    },
   },
   nurkka: {
     providerId: 36,
     emoji: '☕',
     title: 'Nurkka-kohtaamispaikka',
-    description: 'Hengaa Valkeassa, juo kaakao ja pelaa lautapelejä — zero pressure ☕',
+    description: {
+      fi: 'Hengaa Valkeassa, juo kaakao ja pelaa lautapelejä — zero pressure ☕',
+      en: 'Hang out at Valkea, grab a cocoa and play board games — zero pressure ☕',
+    },
   },
   walkers: {
     providerId: 33,
     emoji: '🫶',
     title: 'Walkers-kohtaamispaikka',
-    description: 'Tule sellaisena kuin olet — kahvia, pelejä ja aikaa jutella 🫶',
+    description: {
+      fi: 'Tule sellaisena kuin olet — kahvia, pelejä ja aikaa jutella 🫶',
+      en: 'Come as you are — coffee, games and time to talk 🫶',
+    },
   },
   rockcamp: {
     providerId: 39,
     emoji: '🎸',
     title: 'Rock Camp',
-    description: 'Kiinnostaako musiikki? Bändivalmennusta ja jameja maksutta 🎸',
+    description: {
+      fi: 'Kiinnostaako musiikki? Bändivalmennusta ja jameja maksutta 🎸',
+      en: 'Into music? Free band coaching and jams 🎸',
+    },
   },
   taidemuseo: {
     providerId: 38,
     emoji: '🎨',
     title: 'Oulun taidemuseo',
-    description: 'Alle 18v ilmaiseksi sisään — imppaa taidetta ja rauhoitu 🎨',
+    description: {
+      fi: 'Alle 18v ilmaiseksi sisään — imppaa taidetta ja rauhoitu 🎨',
+      en: 'Free entry under 18 — soak up some art and unwind 🎨',
+    },
   },
   karpat: {
     providerId: 31,
     emoji: '🏒',
     title: 'Oulun Kärpät',
-    description: 'Kärppäpeli Energia Areenalla — pohjoinen on meissä 🏒',
+    description: {
+      fi: 'Kärppäpeli Energia Areenalla — pohjoinen on meissä 🏒',
+      en: 'A Kärpät game at Energia Areena — the north is in us 🏒',
+    },
   },
   chillaa: {
     providerId: 32,
     emoji: '😌',
     title: 'Chillaa-app',
-    description: 'Lataa Chillaa-appi ja tee nopeita harjoituksia jännitykseen 😌',
+    description: {
+      fi: 'Lataa Chillaa-appi ja tee nopeita harjoituksia jännitykseen 😌',
+      en: 'Download the Chillaa app and do quick exercises for anxiety 😌',
+    },
   },
   sekasin: {
     providerId: 35,
     emoji: '💬',
     title: 'Sekasin-chat',
-    description: 'Anonyymi chat mistä vaan — pienistä tai isoista jutuista 💬',
+    description: {
+      fi: 'Anonyymi chat mistä vaan — pienistä tai isoista jutuista 💬',
+      en: 'Anonymous chat about anything — small stuff or big stuff 💬',
+    },
   },
   talot: {
     providerId: 34,
     emoji: '🏠',
     title: 'Tyttöjen ja Poikien talot',
-    description: 'Turvallinen tila hengailla, tavata muita ja saada tukea 🏠',
+    description: {
+      fi: 'Turvallinen tila hengailla, tavata muita ja saada tukea 🏠',
+      en: 'A safe space to hang out, meet others and get support 🏠',
+    },
   },
   rela: {
     providerId: 30,
     emoji: '💆',
     title: 'Rela-hierojat',
-    description: 'Anna keholle huolto — hieronta rentouttaa ja palauttaa 💆',
+    description: {
+      fi: 'Anna keholle huolto — hieronta rentouttaa ja palauttaa 💆',
+      en: 'Give your body a service — a massage relaxes and restores 💆',
+    },
   },
   harrastetilat: {
     providerId: 48,
     emoji: '🎤',
     title: 'Maksuttomat harrastetilat',
-    description: 'Bänditiloja, studio ja pelitilat nuorille — varaa oma sessio 🎤',
+    description: {
+      fi: 'Bänditiloja, studio ja pelitilat nuorille — varaa oma sessio 🎤',
+      en: 'Band rooms, a studio and gaming spaces for youth — book your session 🎤',
+    },
   },
 } satisfies Record<string, Activity>;
 
@@ -189,12 +254,13 @@ const RECOMMENDATIONS: Record<Mood, Record<Desire, ProviderKey[]>> = {
 
 @Component({
   selector: 'app-vibes-dialog',
-  imports: [CommonModule],
+  imports: [CommonModule, TranslatePipe],
   templateUrl: './vibes-dialog.html',
   styleUrl: './vibes-dialog.scss',
 })
 export class VibesDialog {
   private router = inject(Router);
+  protected i18n = inject(LanguageService);
 
   dismissed = output<void>();
 
@@ -203,20 +269,25 @@ export class VibesDialog {
   selectedDesire = signal<Desire | null>(null);
   recommendations = signal<Activity[]>([]);
 
-  moodOptions: { value: Mood; label: string; emoji: string }[] = [
-    { value: 'kierroksilla', label: 'Kierroksilla', emoji: '⚡' },
-    { value: 'low-battery', label: 'Low Battery', emoji: '🪫' },
-    { value: 'hyva-flow', label: 'Hyvä Flow', emoji: '✨' },
-    { value: 'leviamassa', label: 'Leviämässä', emoji: '🌀' },
-    { value: 'ihan-pihalla', label: 'Ihan pihalla', emoji: '😵' },
+  moodOptions: { value: Mood; emoji: string }[] = [
+    { value: 'kierroksilla', emoji: '⚡' },
+    { value: 'low-battery', emoji: '🪫' },
+    { value: 'hyva-flow', emoji: '✨' },
+    { value: 'leviamassa', emoji: '🌀' },
+    { value: 'ihan-pihalla', emoji: '😵' },
   ];
 
-  desireOptions: { value: Desire; label: string; emoji: string }[] = [
-    { value: 'unohtaa-arkea', label: 'Unohtaa arjen kiireet', emoji: '🏖️' },
-    { value: 'kapertya-kotiin', label: 'Käpertyä kerälle kotiin', emoji: '🛋️' },
-    { value: 'ulos-kavereiden', label: 'Ulos kavereiden kanssa', emoji: '👯' },
-    { value: 'kokeilla-uutta', label: 'Kokeilla jotain uutta', emoji: '🚀' },
+  desireOptions: { value: Desire; emoji: string }[] = [
+    { value: 'unohtaa-arkea', emoji: '🏖️' },
+    { value: 'kapertya-kotiin', emoji: '🛋️' },
+    { value: 'ulos-kavereiden', emoji: '👯' },
+    { value: 'kokeilla-uutta', emoji: '🚀' },
   ];
+
+  /** Localized description for a recommendation. */
+  desc(activity: Activity): string {
+    return activity.description[this.i18n.lang()];
+  }
 
   selectMood(mood: Mood) {
     this.selectedMood.set(mood);
@@ -242,7 +313,8 @@ export class VibesDialog {
   }
 
   getMoodLabel(): string {
-    return this.moodOptions.find(o => o.value === this.selectedMood())?.label ?? '';
+    const mood = this.selectedMood();
+    return mood ? this.i18n.t(`mood.${mood}`) : '';
   }
 
   getMoodEmoji(): string {

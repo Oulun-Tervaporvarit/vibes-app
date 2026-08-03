@@ -1,13 +1,13 @@
 <section class="av-tabs-hero">
   <div class="av-tabs-hero__inner">
-    <p class="av-tabs-hero__eyebrow">Sun passi</p>
-    <h1 class="av-tabs-hero__title">Löydä omat vibesi</h1>
+    <p class="av-tabs-hero__eyebrow">{{ 'hero.eyebrow' | t }}</p>
+    <h1 class="av-tabs-hero__title">{{ 'hero.title' | t }}</h1>
     <p class="av-tabs-hero__sub">
-      Valitse kategoria ja näe paikat, joista pääset etujen pariin.
+      {{ 'hero.sub' | t }}
     </p>
     <a class="av-tabs-hero__help" routerLink="/ohje">
       <span class="material-icons" aria-hidden="true">help_outline</span>
-      Näin käytät passia
+      {{ 'hero.help' | t }}
     </a>
   </div>
 </section>
@@ -16,28 +16,28 @@
   <mat-tab>
     <ng-template mat-tab-label>
       <span class="material-icons av-tab-icon" aria-hidden="true">directions_run</span>
-      Liikunta
+      {{ 'cat.exercise' | t }}
     </ng-template>
     <app-service-providers-list category="exercise"></app-service-providers-list>
   </mat-tab>
   <mat-tab>
     <ng-template mat-tab-label>
       <span class="material-icons av-tab-icon" aria-hidden="true">theater_comedy</span>
-      Kulttuuri
+      {{ 'cat.culture' | t }}
     </ng-template>
     <app-service-providers-list category="culture"></app-service-providers-list>
   </mat-tab>
   <mat-tab>
     <ng-template mat-tab-label>
       <span class="material-icons av-tab-icon" aria-hidden="true">spa</span>
-      Hyvinvointi
+      {{ 'cat.wellness' | t }}
     </ng-template>
     <app-service-providers-list category="wellness"></app-service-providers-list>
   </mat-tab>
   <mat-tab labelClass="av-tab-all">
     <ng-template mat-tab-label>
       <span class="material-icons av-tab-icon" aria-hidden="true">list</span>
-      Kaikki palvelut
+      {{ 'tab.all' | t }}
     </ng-template>
     <app-service-providers-list [compact]="true"></app-service-providers-list>
   </mat-tab>
