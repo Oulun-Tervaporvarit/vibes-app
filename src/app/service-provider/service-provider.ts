@@ -104,7 +104,28 @@ export class ServiceProvider {
     return key ? this.i18n.t(key) : provider.category;
   });
 
-  hasInstructions = computed(() => hasRichText(this.item()?.instructions));
+  /** Provider fields in the current language, falling back to Finnish. */
+  localizedName = computed(() => {
+    const p = this.item();
+    if (!p) return '';
+    return this.i18n.lang() === 'en' && p.name_en ? p.name_en : p.name;
+  });
+
+  localizedDescription = computed(() => {
+    const p = this.item();
+    if (!p) return '';
+    return this.i18n.lang() === 'en' && p.description_en ? p.description_en : p.description;
+  });
+
+  localizedInstructions = computed(() => {
+    const p = this.item();
+    if (!p) return '';
+    return this.i18n.lang() === 'en' && p.instructions_en
+      ? p.instructions_en
+      : p.instructions ?? '';
+  });
+
+  hasInstructions = computed(() => hasRichText(this.localizedInstructions()));
 
   hasAddress = computed(() => !!this.item()?.address?.trim());
 
