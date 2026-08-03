@@ -4,8 +4,21 @@ This project was generated using [Angular CLI](https://github.com/angular/angula
 
 ## Publishing
 
-* Push to main branch -> <https://passi.stag.allvibes.fi>
-* Push to prod branch -> <https://passi.allvibes.fi>
+* Push to `main` branch -> <https://passi.stag.allvibes.fi> (staging, GitHub Pages via `.github/workflows/main.yml`)
+* Push to `prod` branch -> <https://passi.allvibes.fi> (production, Cloudflare Pages)
+
+### Production (Cloudflare Pages)
+
+Production is served by a Cloudflare Pages project connected to this repo:
+
+* **Production branch:** `prod`
+* **Build command:** `npm run build` (uses the Angular `production` configuration)
+* **Build output directory:** `dist/allvibes-passi-app/browser`
+* **Custom domain:** `passi.allvibes.fi`
+
+`public/_redirects` provides the single-page-app fallback (`/* /index.html 200`)
+so deep links like `/service/:id` and `/ohje` resolve, and `.nvmrc` pins the
+Node version used by the Cloudflare build.
 
 ## Development server
 
