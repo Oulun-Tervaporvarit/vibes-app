@@ -33,6 +33,7 @@ export interface ServiceProvider {
   description_en?: string | null;
   instructions: string;
   instructions_en?: string | null;
+  instruction_video?: string | null;
   address: string;
   banner: DirectusFile | null;
 }

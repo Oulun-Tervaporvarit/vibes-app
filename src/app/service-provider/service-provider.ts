@@ -74,6 +74,39 @@ function hasRichText(html: string | null | undefined): boolean {
   );
 }
 
+/**
+ * Extracts an 11-character YouTube video id from a bare id or from any of the
+ * common URL forms (watch?v=, youtu.be/, /embed/, /shorts/, /live/). Returns
+ * null when nothing usable is found.
+ */
+function youtubeId(input: string | null | undefined): string | null {
+  if (!input) return null;
+  const raw = input.trim();
+  if (/^[A-Za-z0-9_-]{11}$/.test(raw)) return raw;
+
+  let url: URL;
+  try {
+    url = new URL(raw);
+  } catch {
+    return null;
+  }
+
+  const host = url.hostname.replace(/^www\./, '');
+  let candidate: string | null = null;
+  if (host === 'youtu.be') {
+    candidate = url.pathname.slice(1);
+  } else if (host.endsWith('youtube.com') || host.endsWith('youtube-nocookie.com')) {
+    candidate = url.searchParams.get('v');
+    if (!candidate) {
+      const parts = url.pathname.split('/').filter(Boolean);
+      const idx = parts.findIndex((p) => p === 'embed' || p === 'shorts' || p === 'live');
+      if (idx >= 0) candidate = parts[idx + 1] ?? null;
+    }
+  }
+
+  return candidate && /^[A-Za-z0-9_-]{11}$/.test(candidate) ? candidate : null;
+}
+
 @Component({
   selector: 'app-service-provider',
   imports: [DatePipe, MatProgressSpinnerModule, TranslatePipe],
@@ -128,6 +161,13 @@ export class ServiceProvider {
   hasInstructions = computed(() => hasRichText(this.localizedInstructions()));
 
   hasAddress = computed(() => !!this.item()?.address?.trim());
+
+  videoSrc = computed<SafeResourceUrl | null>(() => {
+    const id = youtubeId(this.item()?.instruction_video);
+    if (!id) return null;
+    const url = `https://www.youtube-nocookie.com/embed/${id}`;
+    return this.sanitizer.bypassSecurityTrustResourceUrl(url);
+  });
 
   mapSrc = computed<SafeResourceUrl | null>(() => {
     const addr = this.item()?.address;

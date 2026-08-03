@@ -51,6 +51,7 @@ export const TRANSLATIONS: Record<string, Entry> = {
   'detail.description': { fi: 'Kuvaus', en: 'Description' },
   'detail.instructions': { fi: 'Näin pääset hyödyntämään', en: 'How to use it' },
   'detail.location': { fi: 'Sijainti', en: 'Location' },
+  'detail.video': { fi: 'Ohjevideo', en: 'Instruction video' },
   'detail.map': { fi: 'Kartta', en: 'Map' },
   'detail.visits_left': { fi: 'Käyntejä jäljellä', en: 'Visits left' },
   'detail.enter_code_hint': {
