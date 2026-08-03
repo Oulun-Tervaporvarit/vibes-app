@@ -11,13 +11,11 @@
     <div class="av-header__right">
       @if (valid()) {
         <div class="av-benefits-badges">
-          @for (b of benefits(); track b.category) {
-            <div class="av-benefits-badge" [class.av-benefits-badge--empty]="b.count === 0">
-              <span class="material-icons av-benefits-badge__icon" aria-hidden="true">{{ b.icon }}</span>
-              <span class="av-benefits-badge__count">{{ b.count }}</span>
-              <span class="av-benefits-badge__label">{{ b.label }}</span>
-            </div>
-          }
+          <div class="av-benefits-badge" [class.av-benefits-badge--empty]="uses() === 0">
+            <span class="material-icons av-benefits-badge__icon" aria-hidden="true">confirmation_number</span>
+            <span class="av-benefits-badge__count">{{ uses() }}</span>
+            <span class="av-benefits-badge__label">Käyntiä</span>
+          </div>
         </div>
 
         <div class="av-code-display">
