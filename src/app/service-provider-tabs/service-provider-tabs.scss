@@ -36,6 +36,30 @@
     font-size: 15px;
     color: rgba(255, 255, 255, 0.85);
   }
+
+  &__help {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 18px;
+    padding: 9px 18px;
+    border-radius: var(--av-radius-pill);
+    background: rgba(255, 255, 255, 0.15);
+    color: #fff;
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: background 0.18s ease, transform 0.18s ease;
+
+    .material-icons {
+      font-size: 18px;
+    }
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.25);
+      transform: translateY(-1px);
+    }
+  }
 }
 
 .av-tabs {

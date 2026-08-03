@@ -1,0 +1,341 @@
+:host {
+  display: block;
+}
+
+.guide {
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 16px 16px 48px;
+}
+
+.guide__back {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin: 4px 0 16px;
+  color: var(--av-blue-dark);
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 14px;
+
+  .material-icons {
+    font-size: 20px;
+  }
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.guide-hero {
+  background: var(--av-blue);
+  color: #fff;
+  border-radius: var(--av-radius-lg);
+  padding: 28px 24px;
+  text-align: center;
+  margin-bottom: 24px;
+
+  &__eyebrow {
+    margin: 0 0 8px;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    color: var(--av-yellow);
+  }
+
+  &__title {
+    margin: 0;
+    font-size: clamp(26px, 6vw, 36px);
+    font-weight: 800;
+    text-transform: uppercase;
+    line-height: 1.05;
+  }
+
+  &__sub {
+    margin: 12px 0 0;
+    font-size: 15px;
+    color: rgba(255, 255, 255, 0.9);
+  }
+}
+
+.guide-steps {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.guide-step {
+  background: var(--av-surface);
+  border: 1px solid var(--av-border);
+  border-radius: var(--av-radius-md);
+  padding: 18px 18px 20px;
+  box-shadow: var(--av-shadow-sm);
+
+  &__head {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 10px;
+  }
+
+  &__num {
+    flex-shrink: 0;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: var(--av-blue);
+    color: #fff;
+    font-weight: 800;
+    font-size: 17px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  &__title {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 700;
+    line-height: 1.2;
+  }
+
+  &__text {
+    margin: 0;
+    font-size: 15px;
+    line-height: 1.55;
+    color: var(--av-text-muted);
+  }
+}
+
+// Colour-coded legend for step 3.
+.guide-legend {
+  list-style: none;
+  margin: 14px 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+
+  li {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    font-size: 14px;
+    color: var(--av-text-muted);
+  }
+}
+
+// --- Mockup "screenshots" -------------------------------------------------
+.guide-shot {
+  margin-top: 14px;
+  background: var(--av-surface-muted);
+  border: 1px solid var(--av-border);
+  border-radius: var(--av-radius-md);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-items: center;
+}
+
+.gm-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  border-radius: var(--av-radius-pill);
+  font-weight: 700;
+  font-size: 14px;
+  letter-spacing: 0.04em;
+
+  .material-icons {
+    font-size: 18px;
+  }
+
+  &--code {
+    background: #fff;
+    color: var(--av-blue-dark);
+    box-shadow: var(--av-shadow-sm);
+  }
+
+  &--badge {
+    background: var(--av-yellow);
+    color: var(--av-blue-dark);
+  }
+}
+
+.guide-shot--header {
+  background: var(--av-blue);
+  border-color: var(--av-blue);
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+// Step 2 — tabs + card
+.gm-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  justify-content: center;
+}
+
+.gm-tab {
+  padding: 6px 12px;
+  border-radius: var(--av-radius-pill);
+  background: #fff;
+  border: 1px solid var(--av-border);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--av-text-muted);
+
+  &--all {
+    flex-basis: 100%;
+    text-align: center;
+    background: var(--av-surface-muted);
+  }
+
+  &--active {
+    background: var(--av-blue);
+    color: #fff;
+    border-color: var(--av-blue);
+  }
+}
+
+.gm-card {
+  width: 100%;
+  max-width: 260px;
+  background: #fff;
+  border-radius: var(--av-radius-md);
+  overflow: hidden;
+  box-shadow: var(--av-shadow-sm);
+
+  &__img {
+    height: 76px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 32px;
+    background: linear-gradient(135deg, var(--av-blue-light), var(--av-yellow-soft));
+  }
+
+  &__body {
+    padding: 12px 14px 14px;
+  }
+
+  &__title {
+    font-size: 15px;
+    font-weight: 700;
+  }
+
+  &__line {
+    margin-top: 8px;
+    height: 8px;
+    width: 70%;
+    border-radius: 4px;
+    background: var(--av-surface-muted);
+  }
+}
+
+// Step 4 — redeem
+.guide-shot--redeem {
+  .gm-cta {
+    width: 100%;
+    max-width: 320px;
+    text-align: center;
+    padding: 13px 22px;
+    border-radius: var(--av-radius-pill);
+    background: var(--av-yellow);
+    color: var(--av-black);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    font-size: 14px;
+    box-shadow: var(--av-shadow-sm);
+  }
+}
+
+.gm-success {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 700;
+  color: var(--av-blue-dark);
+  font-size: 14px;
+
+  .material-icons {
+    color: #2e9e5b;
+    font-size: 20px;
+  }
+}
+
+// Step 5 — thumbs
+.gm-question {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--av-text);
+}
+
+.gm-thumbs {
+  display: flex;
+  gap: 16px;
+}
+
+.gm-thumb {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: 1.5px solid var(--av-border);
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  .material-icons {
+    font-size: 22px;
+  }
+
+  &--up {
+    border-color: var(--av-blue);
+    color: var(--av-blue-dark);
+  }
+
+  &--down {
+    border-color: var(--av-orange);
+    color: var(--av-orange);
+  }
+}
+
+// Tip box
+.guide-tip {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin-top: 20px;
+  padding: 14px 16px;
+  background: var(--av-yellow-soft);
+  border-radius: var(--av-radius-md);
+
+  .material-icons {
+    color: var(--av-orange);
+    font-size: 20px;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  p {
+    margin: 0;
+    font-size: 14px;
+    line-height: 1.5;
+    color: var(--av-black);
+  }
+}
+
+.guide__cta {
+  margin-top: 24px;
+}
