@@ -34,14 +34,12 @@ export class ServiceProvidersList {
     const cat = this.category();
     const list = cat ? all.filter((p) => p.category === cat) : [...all];
 
-    // The "all services" list is sorted alphabetically by the displayed name.
-    if (this.compact()) {
-      const lang = this.i18n.lang();
-      return [...list].sort((a, b) =>
-        this.name(a).localeCompare(this.name(b), lang, { sensitivity: 'base' })
-      );
-    }
-    return list;
+    // All lists are sorted alphabetically by the displayed name (locale-aware,
+    // so it re-sorts correctly when the language changes).
+    const lang = this.i18n.lang();
+    return [...list].sort((a, b) =>
+      this.name(a).localeCompare(this.name(b), lang, { sensitivity: 'base' })
+    );
   });
 
   bannerUrl(provider: ServiceProvider): string | null {
