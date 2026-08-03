@@ -43,4 +43,9 @@ export class ServiceProvidersList {
     const key = CATEGORY_KEYS[provider.category];
     return key ? this.i18n.t(key) : provider.category;
   }
+
+  /** Provider name in the current language, falling back to Finnish. */
+  name(provider: ServiceProvider): string {
+    return this.i18n.lang() === 'en' && provider.name_en ? provider.name_en : provider.name;
+  }
 }

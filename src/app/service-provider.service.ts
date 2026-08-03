@@ -26,10 +26,13 @@ export interface ServiceProvider {
   id: number;
   status: string;
   name: string;
+  name_en?: string | null;
   category: ServiceProviderCategory | string;
   free: boolean;
   description: string;
+  description_en?: string | null;
   instructions: string;
+  instructions_en?: string | null;
   address: string;
   banner: DirectusFile | null;
 }
