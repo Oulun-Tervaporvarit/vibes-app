@@ -81,37 +81,44 @@
 
     @if (!provider.free) {
       <footer class="av-detail__cta-bar">
-        <p class="av-detail__alert">
-          <span class="material-icons" aria-hidden="true">info</span>
-          <span>
-            <b>{{ 'detail.important' | t }}</b>{{ 'detail.important_rest' | t }}
-          </span>
-        </p>
-        @if (hasCode()) {
-          @if (usesLeft() !== null) {
-            <p class="av-detail__uses" [class.av-detail__uses--empty]="usesLeft() === 0">
-              <span class="material-icons" aria-hidden="true">confirmation_number</span>
-              {{ 'detail.visits_left' | t }}: <b>{{ usesLeft() }}</b>
+        @if (alreadyRedeemed()) {
+          <p class="av-detail__redeemed">
+            <span class="material-icons" aria-hidden="true">check_circle</span>
+            {{ 'detail.already_redeemed' | t }}
+          </p>
+        } @else {
+          <p class="av-detail__alert">
+            <span class="material-icons" aria-hidden="true">info</span>
+            <span>
+              <b>{{ 'detail.important' | t }}</b>{{ 'detail.important_rest' | t }}
+            </span>
+          </p>
+          @if (hasCode()) {
+            @if (usesLeft() !== null) {
+              <p class="av-detail__uses" [class.av-detail__uses--empty]="usesLeft() === 0">
+                <span class="material-icons" aria-hidden="true">confirmation_number</span>
+                {{ 'detail.visits_left' | t }}: <b>{{ usesLeft() }}</b>
+              </p>
+            }
+          } @else {
+            <p class="av-detail__uses av-detail__uses--empty">
+              <span class="material-icons" aria-hidden="true">vpn_key</span>
+              {{ 'detail.enter_code_hint' | t }}
             </p>
           }
-        } @else {
-          <p class="av-detail__uses av-detail__uses--empty">
-            <span class="material-icons" aria-hidden="true">vpn_key</span>
-            {{ 'detail.enter_code_hint' | t }}
-          </p>
+          <button
+            type="button"
+            class="av-btn av-btn--block"
+            [disabled]="gate().kind === 'checking'"
+            (click)="onShowToStaff()"
+          >
+            @if (gate().kind === 'checking') {
+              {{ 'detail.redeeming' | t }}
+            } @else {
+              {{ 'detail.show_staff' | t }}
+            }
+          </button>
         }
-        <button
-          type="button"
-          class="av-btn av-btn--block"
-          [disabled]="gate().kind === 'checking'"
-          (click)="onShowToStaff()"
-        >
-          @if (gate().kind === 'checking') {
-            {{ 'detail.redeeming' | t }}
-          } @else {
-            {{ 'detail.show_staff' | t }}
-          }
-        </button>
       </footer>
     } @else {
       <footer class="av-detail__cta-bar av-feedback">

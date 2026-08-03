@@ -24,6 +24,8 @@ export interface CodeBalance {
   valid: boolean;
   /** Total visits/uses left, shared across all categories. */
   uses: number;
+  /** Service provider ids this code has already redeemed. */
+  usedProviders: number[];
 }
 
 export type RedeemResult =
@@ -86,6 +88,12 @@ export class VibesCodeService {
     return b && b.valid ? b.uses : 0;
   }
 
+  /** Whether the current code has already redeemed a given service provider. */
+  hasRedeemed(serviceProviderId: number): boolean {
+    const b = this.balance();
+    return !!b && b.valid && b.usedProviders.includes(serviceProviderId);
+  }
+
   async refreshBalance(): Promise<void> {
     const code = this.code();
     if (!code) {
@@ -95,12 +103,15 @@ export class VibesCodeService {
     this.checking.set(true);
     try {
       const res = await firstValueFrom(
-        this.http.get<CodeBalance>(`${CMS_BASE_URL}/flows/trigger/${BALANCE_FLOW}`, {
-          params: { code },
-        })
+        this.http.get<{ valid: boolean; uses: number; used_providers?: number[] }>(
+          `${CMS_BASE_URL}/flows/trigger/${BALANCE_FLOW}`,
+          { params: { code } }
+        )
       );
       this.balance.set(
-        res && res.valid ? { valid: true, uses: res.uses } : { valid: false, uses: 0 }
+        res && res.valid
+          ? { valid: true, uses: res.uses, usedProviders: res.used_providers ?? [] }
+          : { valid: false, uses: 0, usedProviders: [] }
       );
     } catch {
       // Network / server error — leave validity unknown rather than claiming invalid.

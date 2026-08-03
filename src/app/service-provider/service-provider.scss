@@ -323,6 +323,27 @@
   }
 }
 
+.av-detail__redeemed {
+  margin: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 18px;
+  max-width: 560px;
+  width: 100%;
+  justify-content: center;
+  border-radius: var(--av-radius-md);
+  background: rgba(46, 158, 91, 0.12);
+  color: #2e7d4f;
+  font-size: 15px;
+  font-weight: 700;
+
+  .material-icons {
+    font-size: 20px;
+    color: #2e9e5b;
+  }
+}
+
 .av-detail__uses {
   margin: 0;
   display: inline-flex;
