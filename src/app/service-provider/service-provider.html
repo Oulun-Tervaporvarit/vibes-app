@@ -1,9 +1,9 @@
 <section class="av-detail">
   @if (item(); as provider) {
     <header class="av-detail__hero">
-      <button type="button" class="av-detail__back" (click)="goBack()" aria-label="Takaisin">
+      <button type="button" class="av-detail__back" (click)="goBack()" [attr.aria-label]="'detail.back' | t">
         <span class="material-icons" aria-hidden="true">arrow_back</span>
-        <span>Takaisin</span>
+        <span>{{ 'detail.back' | t }}</span>
       </button>
 
       @if (bannerSrc(); as src) {
@@ -17,9 +17,9 @@
       <div class="av-detail__chips">
         <span class="av-chip">{{ categoryLabel() }}</span>
         @if (provider.free) {
-          <span class="av-chip av-chip--yellow">Rajaton käyttö</span>
+          <span class="av-chip av-chip--yellow">{{ 'access.unlimited' | t }}</span>
         } @else {
-          <span class="av-chip av-chip--redeem">Vaatii lunastuksen VIBEs-koodilla</span>
+          <span class="av-chip av-chip--redeem">{{ 'access.code_long' | t }}</span>
         }
       </div>
 
@@ -35,36 +35,29 @@
       }
 
       <section class="av-detail__section">
-        <h2 class="av-detail__section-title">Kuvaus</h2>
+        <h2 class="av-detail__section-title">{{ 'detail.description' | t }}</h2>
         <div class="av-detail__rich" [innerHTML]="provider.description"></div>
       </section>
 
       @if (hasInstructions()) {
         <section class="av-detail__section">
-          <h2 class="av-detail__section-title">Näin pääset hyödyntämään</h2>
+          <h2 class="av-detail__section-title">{{ 'detail.instructions' | t }}</h2>
           <div class="av-detail__rich" [innerHTML]="provider.instructions"></div>
         </section>
       }
 
       @if (hasAddress()) {
         <section class="av-detail__section av-detail__section--map">
-          <h2 class="av-detail__section-title">Sijainti</h2>
+          <h2 class="av-detail__section-title">{{ 'detail.location' | t }}</h2>
           @if (mapSrc(); as src) {
             <iframe
               class="av-detail__map-frame"
               [src]="src"
-              title="Kartta: {{ provider.address }}"
+              title="{{ ('detail.map' | t) }}: {{ provider.address }}"
               loading="lazy"
               referrerpolicy="no-referrer-when-downgrade"
               allowfullscreen
             ></iframe>
-            <!-- redundant because the iframe contains open in maps button -->
-            <!--@if (mapLinkUrl(); as href) {
-              <a class="av-detail__map-link" [href]="href" target="_blank" rel="noopener">
-                <span class="material-icons" aria-hidden="true">open_in_new</span>
-                Avaa Google Mapsissa
-              </a>
-          }-->
           }
         </section>
       }
@@ -75,20 +68,20 @@
         <p class="av-detail__alert">
           <span class="material-icons" aria-hidden="true">info</span>
           <span>
-            <b>Tärkeää tietoa</b> — paina alla olevaa nappia vasta paikan päällä.
+            <b>{{ 'detail.important' | t }}</b>{{ 'detail.important_rest' | t }}
           </span>
         </p>
         @if (hasCode()) {
           @if (usesLeft() !== null) {
             <p class="av-detail__uses" [class.av-detail__uses--empty]="usesLeft() === 0">
               <span class="material-icons" aria-hidden="true">confirmation_number</span>
-              Käyntejä jäljellä: <b>{{ usesLeft() }}</b>
+              {{ 'detail.visits_left' | t }}: <b>{{ usesLeft() }}</b>
             </p>
           }
         } @else {
           <p class="av-detail__uses av-detail__uses--empty">
             <span class="material-icons" aria-hidden="true">vpn_key</span>
-            Syötä VIBEs-koodi yläpalkkiin lunastaaksesi edun.
+            {{ 'detail.enter_code_hint' | t }}
           </p>
         }
         <button
@@ -98,9 +91,9 @@
           (click)="onShowToStaff()"
         >
           @if (gate().kind === 'checking') {
-            Lunastetaan…
+            {{ 'detail.redeeming' | t }}
           } @else {
-            Näytä henkilökunnalle
+            {{ 'detail.show_staff' | t }}
           }
         </button>
       </footer>
@@ -111,17 +104,17 @@
             <span class="material-icons" aria-hidden="true">
               {{ rating === 'up' ? 'thumb_up' : 'thumb_down' }}
             </span>
-            Kiitos palautteestasi!
+            {{ 'fb.thanks' | t }}
           </p>
         } @else {
-          <p class="av-feedback__q">Tykkäsitkö tästä palvelusta?</p>
+          <p class="av-feedback__q">{{ 'fb.question' | t }}</p>
           <div class="av-feedback__actions">
             <button
               type="button"
               class="av-feedback__btn av-feedback__btn--up"
               [disabled]="feedbackSending()"
               (click)="submitFeedback('up')"
-              aria-label="Tykkäsin"
+              [attr.aria-label]="'fb.like' | t"
             >
               <span class="material-icons" aria-hidden="true">thumb_up</span>
             </button>
@@ -130,13 +123,13 @@
               class="av-feedback__btn av-feedback__btn--down"
               [disabled]="feedbackSending()"
               (click)="submitFeedback('down')"
-              aria-label="En tykännyt"
+              [attr.aria-label]="'fb.dislike' | t"
             >
               <span class="material-icons" aria-hidden="true">thumb_down</span>
             </button>
           </div>
           @if (feedbackError()) {
-            <p class="av-feedback__error">Palautteen tallennus epäonnistui. Yritä uudelleen.</p>
+            <p class="av-feedback__error">{{ 'fb.error' | t }}</p>
           }
         }
       </footer>
@@ -155,7 +148,7 @@
             type="button"
             class="av-gate-card__dismiss"
             (click)="dismissGate()"
-            aria-label="Sulje"
+            [attr.aria-label]="'vd.close' | t"
           >✕</button>
 
           <div class="av-redeem-stage">
@@ -169,7 +162,7 @@
             <span class="av-redeem-check material-icons" aria-hidden="true">verified</span>
           </div>
 
-          <p class="av-redeem-eyebrow">Etu käytössä</p>
+          <p class="av-redeem-eyebrow">{{ 'redeem.eyebrow' | t }}</p>
           <h2 class="av-redeem-title">{{ provider.name }}</h2>
 
           <div class="av-redeem-meta">
@@ -183,25 +176,25 @@
 
           @if (redeemedAt(); as ts) {
             <p class="av-redeem-time">
-              Vahvistettu {{ ts | date: 'd.M.yyyy' }} klo {{ ts | date: 'HH:mm' }}
+              {{ 'redeem.confirmed' | t }} {{ ts | date: 'd.M.yyyy' }} {{ 'redeem.at' | t }} {{ ts | date: 'HH:mm' }}
             </p>
           }
 
           @if (redeemUsesLeft() !== null) {
             <p class="av-redeem-uses">
-              Käyntejä jäljellä: <b>{{ redeemUsesLeft() }}</b>
+              {{ 'detail.visits_left' | t }}: <b>{{ redeemUsesLeft() }}</b>
             </p>
           }
 
           @if (locationWarning(); as warning) {
             <p class="av-redeem-warning">
               <span class="material-icons" aria-hidden="true">warning_amber</span>
-              {{ warning }}
+              {{ warning.key | t: warning.params }}
             </p>
           }
 
           <button type="button" class="av-btn av-btn--block" (click)="dismissGate()">
-            Valmis
+            {{ 'redeem.done' | t }}
           </button>
         </div>
       </div>
@@ -214,40 +207,41 @@
             type="button"
             class="av-gate-card__dismiss"
             (click)="dismissGate()"
-            aria-label="Sulje"
+            [attr.aria-label]="'vd.close' | t"
           >✕</button>
 
           @switch (gate().kind) {
             @case ('confirm') {
               <span class="av-gate-card__emoji" aria-hidden="true">📍</span>
-              <h2 class="av-gate-card__title">Vahvista lunastus</h2>
+              <h2 class="av-gate-card__title">{{ 'confirm.title' | t }}</h2>
+              @if (locationWarning(); as warning) {
+                <p class="av-gate-card__body">
+                  {{ warning.key | t: warning.params }}
+                </p>
+              }
               <p class="av-gate-card__body">
-                {{ asConfirm(gate()).warning }}
-              </p>
-              <p class="av-gate-card__body">
-                Haluatko lunastaa edun silti? Käynti kuluu.
+                {{ 'confirm.body' | t }}
               </p>
             }
             @case ('no-code') {
               <span class="av-gate-card__emoji" aria-hidden="true">🔑</span>
-              <h2 class="av-gate-card__title">Syötä VIBEs-koodi</h2>
+              <h2 class="av-gate-card__title">{{ 'nocode.title' | t }}</h2>
               <p class="av-gate-card__body">
-                Edun lunastaminen vaatii VIBEs-koodin. Syötä koodi sivun
-                yläpalkkiin ja yritä uudelleen.
+                {{ 'nocode.body' | t }}
               </p>
             }
             @case ('redeem-failed') {
               <span class="av-gate-card__emoji" aria-hidden="true">🚫</span>
-              <h2 class="av-gate-card__title">Lunastus ei onnistunut</h2>
+              <h2 class="av-gate-card__title">{{ 'fail.title' | t }}</h2>
               <p class="av-gate-card__body">
                 {{ redeemErrorMessage(asRedeemFailed(gate()).reason) }}
               </p>
             }
             @default {
               <span class="av-gate-card__emoji" aria-hidden="true">⚠️</span>
-              <h2 class="av-gate-card__title">Jotain meni pieleen</h2>
+              <h2 class="av-gate-card__title">{{ 'err.title' | t }}</h2>
               <p class="av-gate-card__body">
-                Yritä hetken kuluttua uudelleen.
+                {{ 'err.body' | t }}
               </p>
             }
           }
@@ -255,15 +249,15 @@
           @if (gate().kind === 'confirm') {
             <div class="av-gate-card__actions">
               <button type="button" class="av-btn av-btn--ghost av-btn--block" (click)="dismissGate()">
-                Peruuta
+                {{ 'confirm.cancel' | t }}
               </button>
               <button type="button" class="av-btn av-btn--block" (click)="confirmRedeem()">
-                Lunasta silti
+                {{ 'confirm.anyway' | t }}
               </button>
             </div>
           } @else {
             <button type="button" class="av-btn av-btn--block" (click)="dismissGate()">
-              Selvä
+              {{ 'gate.ok' | t }}
             </button>
           }
         </div>

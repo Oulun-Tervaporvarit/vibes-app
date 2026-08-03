@@ -7,7 +7,7 @@
 @if (showInstallButton() && isFrontPage()) {
   <button class="av-install-banner av-btn" (click)="install()">
     <span class="material-icons" aria-hidden="true">download</span>
-    Asenna sovellus
+    {{ 'install.button' | t }}
   </button>
 }
 

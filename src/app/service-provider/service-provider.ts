@@ -7,15 +7,22 @@ import { firstValueFrom, switchMap } from 'rxjs';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { FeedbackRating, ServiceProviderService } from '../service-provider.service';
 import { VibesCodeService } from '../vibes-code.service';
+import { LanguageService, TranslatePipe } from '../i18n';
 
 const PROXIMITY_THRESHOLD_METERS = 100;
+
+/** A translatable message: a dictionary key plus optional interpolation params. */
+interface LocalizedMessage {
+  key: string;
+  params?: Record<string, string | number>;
+}
 
 type GateState =
   | { kind: 'idle' }
   | { kind: 'checking' }
   | { kind: 'success' }
   | { kind: 'no-code' }
-  | { kind: 'confirm'; warning: string }
+  | { kind: 'confirm' }
   | { kind: 'redeem-failed'; reason: string };
 
 function haversineMeters(
@@ -46,10 +53,10 @@ function getBrowserPosition(): Promise<GeolocationPosition> {
   });
 }
 
-const CATEGORY_LABEL: Record<string, string> = {
-  exercise: 'Liikunta',
-  culture: 'Kulttuuri',
-  wellness: 'Hyvinvointi',
+const CATEGORY_KEYS: Record<string, string> = {
+  exercise: 'cat.exercise',
+  culture: 'cat.culture',
+  wellness: 'cat.wellness',
 };
 
 /**
@@ -69,7 +76,7 @@ function hasRichText(html: string | null | undefined): boolean {
 
 @Component({
   selector: 'app-service-provider',
-  imports: [DatePipe, MatProgressSpinnerModule],
+  imports: [DatePipe, MatProgressSpinnerModule, TranslatePipe],
   templateUrl: './service-provider.html',
   styleUrl: './service-provider.scss',
 })
@@ -78,6 +85,7 @@ export class ServiceProvider {
   private service = inject(ServiceProviderService);
   private sanitizer = inject(DomSanitizer);
   protected vibes = inject(VibesCodeService);
+  protected i18n = inject(LanguageService);
 
   item = toSignal(
     this.route.paramMap.pipe(switchMap((params) => this.service.getById(params.get('id')!))),
@@ -91,7 +99,9 @@ export class ServiceProvider {
 
   categoryLabel = computed(() => {
     const provider = this.item();
-    return provider ? CATEGORY_LABEL[provider.category] ?? provider.category : '';
+    if (!provider) return '';
+    const key = CATEGORY_KEYS[provider.category];
+    return key ? this.i18n.t(key) : provider.category;
   });
 
   hasInstructions = computed(() => hasRichText(this.item()?.instructions));
@@ -115,7 +125,7 @@ export class ServiceProvider {
   redeemedAt = signal<Date | null>(null);
   redeemUsesLeft = signal<number | null>(null);
   // Non-blocking notice when we couldn't confirm the user is on-site.
-  locationWarning = signal<string | null>(null);
+  locationWarning = signal<LocalizedMessage | null>(null);
 
   // Thumbs up/down feedback state for free services.
   feedbackRating = signal<FeedbackRating | null>(null);
@@ -135,23 +145,9 @@ export class ServiceProvider {
     return state as Extract<GateState, { kind: 'redeem-failed' }>;
   }
 
-  asConfirm(state: GateState): Extract<GateState, { kind: 'confirm' }> {
-    return state as Extract<GateState, { kind: 'confirm' }>;
-  }
-
   redeemErrorMessage(reason: string): string {
-    switch (reason) {
-      case 'already_used':
-        return 'Olet jo lunastanut edun tähän palveluun tällä koodilla.';
-      case 'no_uses_left':
-        return 'Tällä koodilla ei ole enää käyntejä jäljellä.';
-      case 'invalid_code':
-        return 'Koodia ei löytynyt. Tarkista VIBEs-koodisi.';
-      case 'free_provider':
-        return 'Tämä palvelu on maksuton, lunastusta ei tarvita.';
-      default:
-        return 'Lunastus epäonnistui. Yritä hetken kuluttua uudelleen.';
-    }
+    const known = ['already_used', 'no_uses_left', 'invalid_code', 'free_provider'];
+    return this.i18n.t(known.includes(reason) ? `reason.${reason}` : 'reason.generic');
   }
 
   constructor(protected location: Location) {
@@ -227,7 +223,7 @@ export class ServiceProvider {
     this.locationWarning.set(warning);
 
     if (warning) {
-      this.gate.set({ kind: 'confirm', warning });
+      this.gate.set({ kind: 'confirm' });
       return;
     }
 
@@ -262,29 +258,29 @@ export class ServiceProvider {
    */
   private async checkLocationWarning(provider: {
     address: string;
-  }): Promise<string | null> {
+  }): Promise<LocalizedMessage | null> {
     let userPos: GeolocationPosition;
     try {
       userPos = await getBrowserPosition();
     } catch (err: unknown) {
       if (err instanceof GeolocationPositionError && err.code === err.PERMISSION_DENIED) {
-        return 'Sijainti ei ole käytössä, joten emme voineet varmistaa että olet paikan päällä. Käytä etua vain paikan päällä.';
+        return { key: 'loc.denied' };
       }
       if (err instanceof Error && err.message === 'unsupported') {
-        return 'Selaimesi ei tue sijaintia, joten emme voineet varmistaa että olet paikan päällä. Käytä etua vain paikan päällä.';
+        return { key: 'loc.unsupported' };
       }
-      return 'Sijainnin tarkistus epäonnistui, joten emme voineet varmistaa että olet paikan päällä. Käytä etua vain paikan päällä.';
+      return { key: 'loc.error' };
     }
 
     let providerPos: { lat: number; lng: number } | null;
     try {
       providerPos = await firstValueFrom(this.service.geocodeAddress(provider.address));
     } catch {
-      return 'Paikan sijaintia ei voitu selvittää, joten etäisyyttä ei tarkistettu.';
+      return { key: 'loc.geocode_fail' };
     }
 
     if (!providerPos) {
-      return 'Paikan sijaintia ei löytynyt, joten etäisyyttä ei tarkistettu.';
+      return { key: 'loc.not_found' };
     }
 
     const distance = haversineMeters(
@@ -293,7 +289,7 @@ export class ServiceProvider {
     );
 
     if (distance > PROXIMITY_THRESHOLD_METERS) {
-      return `Vaikutat olevan noin ${Math.round(distance)} m päässä paikasta. Käytä etua vain paikan päällä.`;
+      return { key: 'loc.too_far', params: { distance: Math.round(distance) } };
     }
 
     return null;

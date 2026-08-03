@@ -3,21 +3,23 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { RouterLink } from '@angular/router';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { ServiceProvider, ServiceProviderService } from '../service-provider.service';
+import { LanguageService, TranslatePipe } from '../i18n';
 
-const CATEGORY_LABEL: Record<string, string> = {
-  exercise: 'Liikunta',
-  culture: 'Kulttuuri',
-  wellness: 'Hyvinvointi',
+const CATEGORY_KEYS: Record<string, string> = {
+  exercise: 'cat.exercise',
+  culture: 'cat.culture',
+  wellness: 'cat.wellness',
 };
 
 @Component({
   selector: 'app-service-providers-list',
-  imports: [RouterLink, MatProgressSpinnerModule],
+  imports: [RouterLink, MatProgressSpinnerModule, TranslatePipe],
   templateUrl: './service-providers-list.html',
   styleUrl: './service-providers-list.scss',
 })
 export class ServiceProvidersList {
   private service = inject(ServiceProviderService);
+  private i18n = inject(LanguageService);
 
   category = input<string>();
 
@@ -38,6 +40,7 @@ export class ServiceProvidersList {
   }
 
   categoryLabel(provider: ServiceProvider): string {
-    return CATEGORY_LABEL[provider.category] ?? provider.category;
+    const key = CATEGORY_KEYS[provider.category];
+    return key ? this.i18n.t(key) : provider.category;
   }
 }
