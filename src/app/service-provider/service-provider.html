@@ -36,13 +36,13 @@
 
       <section class="av-detail__section">
         <h2 class="av-detail__section-title">{{ 'detail.description' | t }}</h2>
-        <div class="av-detail__rich" [innerHTML]="localizedDescription()"></div>
+        <div class="av-detail__rich" appExternalLinks [innerHTML]="localizedDescription()"></div>
       </section>
 
       @if (hasInstructions()) {
         <section class="av-detail__section">
           <h2 class="av-detail__section-title">{{ 'detail.instructions' | t }}</h2>
-          <div class="av-detail__rich" [innerHTML]="localizedInstructions()"></div>
+          <div class="av-detail__rich" appExternalLinks [innerHTML]="localizedInstructions()"></div>
         </section>
       }
 

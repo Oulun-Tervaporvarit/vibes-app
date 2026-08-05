@@ -8,6 +8,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { FeedbackRating, ServiceProviderService } from '../service-provider.service';
 import { VibesCodeService } from '../vibes-code.service';
 import { LanguageService, TranslatePipe } from '../i18n';
+import { ExternalLinksDirective } from '../external-links.directive';
 
 const PROXIMITY_THRESHOLD_METERS = 100;
 
@@ -109,7 +110,7 @@ function youtubeId(input: string | null | undefined): string | null {
 
 @Component({
   selector: 'app-service-provider',
-  imports: [DatePipe, MatProgressSpinnerModule, TranslatePipe],
+  imports: [DatePipe, MatProgressSpinnerModule, TranslatePipe, ExternalLinksDirective],
   templateUrl: './service-provider.html',
   styleUrl: './service-provider.scss',
 })
