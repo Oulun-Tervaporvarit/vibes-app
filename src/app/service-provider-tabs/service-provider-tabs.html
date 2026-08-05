@@ -13,21 +13,21 @@
 </section>
 
 <mat-tab-group class="av-tabs" mat-stretch-tabs="false" mat-align-tabs="center" animationDuration="200ms">
-  <mat-tab>
+  <mat-tab labelClass="av-tab-exercise">
     <ng-template mat-tab-label>
       <span class="material-icons av-tab-icon" aria-hidden="true">directions_run</span>
       {{ 'cat.exercise' | t }}
     </ng-template>
     <app-service-providers-list category="exercise"></app-service-providers-list>
   </mat-tab>
-  <mat-tab>
+  <mat-tab labelClass="av-tab-culture">
     <ng-template mat-tab-label>
       <span class="material-icons av-tab-icon" aria-hidden="true">theater_comedy</span>
       {{ 'cat.culture' | t }}
     </ng-template>
     <app-service-providers-list category="culture"></app-service-providers-list>
   </mat-tab>
-  <mat-tab>
+  <mat-tab labelClass="av-tab-wellness">
     <ng-template mat-tab-label>
       <span class="material-icons av-tab-icon" aria-hidden="true">spa</span>
       {{ 'cat.wellness' | t }}
