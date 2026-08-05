@@ -5,20 +5,23 @@ This project was generated using [Angular CLI](https://github.com/angular/angula
 ## Publishing
 
 * Push to `main` branch -> <https://passi.stag.allvibes.fi> (staging, GitHub Pages via `.github/workflows/main.yml`)
-* Push to `prod` branch -> <https://passi.allvibes.fi> (production, Cloudflare Pages)
+* Push to `prod` branch -> <https://passi.allvibes.fi> (production, Cloudflare Workers)
 
-### Production (Cloudflare Pages)
+### Production (Cloudflare Workers)
 
-Production is served by a Cloudflare Pages project connected to this repo:
+Production is served by a Cloudflare Workers project (static assets) connected
+to this repo:
 
 * **Production branch:** `prod`
 * **Build command:** `npm run build` (uses the Angular `production` configuration)
-* **Build output directory:** `dist/allvibes-passi-app/browser`
+* **Deploy command:** `npx wrangler deploy`
 * **Custom domain:** `passi.allvibes.fi`
 
-`public/_redirects` provides the single-page-app fallback (`/* /index.html 200`)
-so deep links like `/service/:id` and `/ohje` resolve, and `.nvmrc` pins the
-Node version used by the Cloudflare build.
+`wrangler.jsonc` configures the deploy: `assets.directory` points at the Angular
+browser output (`dist/allvibes-passi-app/browser`), and
+`assets.not_found_handling: "single-page-application"` serves `index.html` for
+any unmatched path so deep links like `/service/:id` and `/ohje` resolve. `.nvmrc`
+pins the Node version used by the Cloudflare build.
 
 ## Development server
 
