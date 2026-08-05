@@ -12,7 +12,8 @@
   </div>
 </section>
 
-<mat-tab-group class="av-tabs" mat-stretch-tabs="false" mat-align-tabs="center" animationDuration="200ms">
+<mat-tab-group class="av-tabs" mat-stretch-tabs="false" mat-align-tabs="center" animationDuration="200ms"
+  [selectedIndex]="selectedIndex" (selectedTabChange)="onTabChange($event.index)">
   <mat-tab labelClass="av-tab-exercise">
     <ng-template mat-tab-label>
       <span class="material-icons av-tab-icon" aria-hidden="true">directions_run</span>
