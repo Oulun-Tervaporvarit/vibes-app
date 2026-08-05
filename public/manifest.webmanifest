@@ -1,6 +1,6 @@
 {
-    "name": "allvibes-passi-app",
-    "short_name": "allvibes-passi-app",
+    "name": "All Vibes OK",
+    "short_name": "All Vibes OK",
     "scope": "./",
     "start_url": "./",
     "icons": [
