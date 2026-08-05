@@ -1,0 +1,22 @@
+{
+  // Cloudflare Workers static-assets config for the Angular SPA.
+  //
+  // The Angular application builder emits the site into a nested folder
+  // (dist/<project>/browser), so the assets directory must point there —
+  // pointing at dist/ leaves index.html at /allvibes-passi-app/browser/
+  // and the site root 404s.
+  //
+  // "single-page-application" not_found_handling serves index.html for any
+  // unmatched path so client-side routes (/ohje, /service/:id) resolve to
+  // the Angular router instead of 404ing on deep links / reloads.
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "vibes-app",
+  "compatibility_date": "2026-08-05",
+  "assets": {
+    "directory": "./dist/allvibes-passi-app/browser",
+    "not_found_handling": "single-page-application"
+  },
+  "observability": {
+    "enabled": true
+  }
+}
