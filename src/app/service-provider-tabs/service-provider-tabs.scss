@@ -132,6 +132,42 @@
     border-radius: 4px;
   }
 
+  // Give each category tab its own accent colour so they're easy to tell
+  // apart. The icon + label take the accent, and the active-tab underline
+  // matches it. The "Kaikki palvelut" tab intentionally stays neutral white.
+  ::ng-deep .mat-mdc-tab.av-tab-exercise {
+    --tab-accent: var(--av-pink);
+  }
+  ::ng-deep .mat-mdc-tab.av-tab-culture {
+    --tab-accent: var(--av-yellow);
+  }
+  ::ng-deep .mat-mdc-tab.av-tab-wellness {
+    --tab-accent: var(--av-mint);
+  }
+
+  ::ng-deep .mat-mdc-tab.av-tab-exercise .mdc-tab__text-label,
+  ::ng-deep .mat-mdc-tab.av-tab-culture .mdc-tab__text-label,
+  ::ng-deep .mat-mdc-tab.av-tab-wellness .mdc-tab__text-label {
+    color: var(--tab-accent);
+    opacity: 0.85;
+    // Keep the light accents legible on the blue header.
+    text-shadow: 0 1px 2px rgba(14, 14, 14, 0.28);
+  }
+
+  // Active category tab: full-strength accent + matching underline.
+  ::ng-deep .mat-mdc-tab--active.av-tab-exercise .mdc-tab__text-label,
+  ::ng-deep .mat-mdc-tab--active.av-tab-culture .mdc-tab__text-label,
+  ::ng-deep .mat-mdc-tab--active.av-tab-wellness .mdc-tab__text-label {
+    color: var(--tab-accent);
+    opacity: 1;
+  }
+
+  ::ng-deep .mat-mdc-tab.av-tab-exercise .mdc-tab-indicator__content--underline,
+  ::ng-deep .mat-mdc-tab.av-tab-culture .mdc-tab-indicator__content--underline,
+  ::ng-deep .mat-mdc-tab.av-tab-wellness .mdc-tab-indicator__content--underline {
+    border-color: var(--tab-accent) !important;
+  }
+
   ::ng-deep .mat-mdc-tab .mdc-tab__ripple::before,
   ::ng-deep .mat-mdc-tab-ripple {
     background-color: rgba(255, 255, 255, 0.08) !important;
