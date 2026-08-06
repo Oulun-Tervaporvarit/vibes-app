@@ -45,6 +45,16 @@
       object-fit: cover;
       display: block;
     }
+
+    // Logos (SVG) are shown whole on a clean background instead of cropped.
+    &--logo {
+      background: var(--av-surface);
+
+      img {
+        object-fit: contain;
+        padding: 14px;
+      }
+    }
   }
 
   &__media-fallback {

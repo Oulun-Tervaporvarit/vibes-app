@@ -66,6 +66,15 @@ export class ServiceProviderService {
     return provider.banner ? `${CMS_BASE_URL}/assets/${provider.banner.id}` : null;
   }
 
+  /**
+   * True when the banner is a vector logo (SVG) rather than a photo. Logos
+   * should be shown in full (`object-fit: contain`) instead of being cropped to
+   * fill the frame, which zooms in and cuts off the edges.
+   */
+  isLogoBanner(provider: ServiceProvider): boolean {
+    return provider.banner?.type?.startsWith('image/svg') ?? false;
+  }
+
   /** Records a thumbs up/down for a service provider. Resolves true on success. */
   submitFeedback(serviceProviderId: number, rating: FeedbackRating): Promise<boolean> {
     return firstValueFrom(

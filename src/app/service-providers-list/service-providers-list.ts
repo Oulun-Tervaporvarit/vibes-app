@@ -46,6 +46,11 @@ export class ServiceProvidersList {
     return this.service.bannerUrl(provider);
   }
 
+  /** Whether the banner is a logo (SVG) — shown in full instead of cropped. */
+  isLogo(provider: ServiceProvider): boolean {
+    return this.service.isLogoBanner(provider);
+  }
+
   categoryLabel(provider: ServiceProvider): string {
     const key = CATEGORY_KEYS[provider.category];
     return key ? this.i18n.t(key) : provider.category;

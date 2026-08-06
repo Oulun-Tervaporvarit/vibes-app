@@ -7,7 +7,7 @@
       </button>
 
       @if (bannerSrc(); as src) {
-        <img class="av-detail__banner" [src]="src" [alt]="localizedName()">
+        <img class="av-detail__banner" [class.av-detail__banner--logo]="bannerIsLogo()" [src]="src" [alt]="localizedName()">
       } @else {
         <div class="av-detail__banner av-detail__banner--fallback" aria-hidden="true">✨</div>
       }
