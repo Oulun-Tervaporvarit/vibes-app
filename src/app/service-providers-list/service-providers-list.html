@@ -31,7 +31,7 @@
       @for (provider of items; track provider.id) {
         <li class="av-provider-card">
           <a class="av-provider-card__link" [routerLink]="['/service', provider.id]">
-            <div class="av-provider-card__media">
+            <div class="av-provider-card__media" [class.av-provider-card__media--logo]="isLogo(provider)">
               @if (bannerUrl(provider); as src) {
                 <img [src]="src" [alt]="name(provider)" loading="lazy">
               } @else {
