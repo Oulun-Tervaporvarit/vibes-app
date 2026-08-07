@@ -20,6 +20,8 @@ export interface DirectusFile {
   filename_download?: string;
   title?: string;
   type?: string;
+  width?: number | null;
+  height?: number | null;
 }
 
 export interface ServiceProvider {
@@ -67,12 +69,27 @@ export class ServiceProviderService {
   }
 
   /**
-   * True when the banner is a vector logo (SVG) rather than a photo. Logos
-   * should be shown in full (`object-fit: contain`) instead of being cropped to
-   * fill the frame, which zooms in and cuts off the edges.
+   * True when the banner is a logo rather than a photo. Logos should be shown
+   * in full (`object-fit: contain`) instead of being cropped to fill the frame,
+   * which zooms in and cuts off the edges.
+   *
+   * A banner counts as a logo when it is a vector (SVG), or a near-square /
+   * portrait PNG. Photo banners are landscape JPEG/WEBP (or wide PNGs), so the
+   * aspect-ratio test leaves them cropped-to-fill as before.
    */
   isLogoBanner(provider: ServiceProvider): boolean {
-    return provider.banner?.type?.startsWith('image/svg') ?? false;
+    const banner = provider.banner;
+    if (!banner) return false;
+    if (banner.type?.startsWith('image/svg')) return true;
+    if (
+      banner.type === 'image/png' &&
+      banner.width &&
+      banner.height &&
+      banner.height / banner.width >= 0.8
+    ) {
+      return true;
+    }
+    return false;
   }
 
   /** Records a thumbs up/down for a service provider. Resolves true on success. */
