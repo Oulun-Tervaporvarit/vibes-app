@@ -20,6 +20,8 @@ export interface DirectusFile {
   filename_download?: string;
   title?: string;
   type?: string;
+  width?: number | null;
+  height?: number | null;
 }
 
 export interface ServiceProvider {
@@ -68,15 +70,26 @@ export class ServiceProviderService {
 
   /**
    * True when the banner is a logo rather than a photo. Logos should be shown
-   * in full (`object-fit: contain`) instead of being cropped to fill the
-   * frame, which zooms in and cuts off the edges. SVGs are always logos;
-   * raster logos (e.g. a PNG wordmark) are recognised by "logo" in the file's
-   * title or filename in Directus.
+   * in full (`object-fit: contain`) instead of being cropped to fill the frame,
+   * which zooms in and cuts off the edges.
+   *
+   * A banner counts as a logo when it is a vector (SVG), a near-square /
+   * portrait PNG, or its Directus title/filename contains "logo" (catches wide
+   * raster wordmarks the aspect-ratio test misses). Photo banners are landscape
+   * JPEG/WEBP (or wide PNGs), so they stay cropped-to-fill as before.
    */
   isLogoBanner(provider: ServiceProvider): boolean {
     const banner = provider.banner;
     if (!banner) return false;
     if (banner.type?.startsWith('image/svg')) return true;
+    if (
+      banner.type === 'image/png' &&
+      banner.width &&
+      banner.height &&
+      banner.height / banner.width >= 0.8
+    ) {
+      return true;
+    }
     const label = `${banner.title ?? ''} ${banner.filename_download ?? ''}`.toLowerCase();
     return label.includes('logo');
   }
