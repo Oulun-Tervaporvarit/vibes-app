@@ -73,9 +73,10 @@ export class ServiceProviderService {
    * in full (`object-fit: contain`) instead of being cropped to fill the frame,
    * which zooms in and cuts off the edges.
    *
-   * A banner counts as a logo when it is a vector (SVG), or a near-square /
-   * portrait PNG. Photo banners are landscape JPEG/WEBP (or wide PNGs), so the
-   * aspect-ratio test leaves them cropped-to-fill as before.
+   * A banner counts as a logo when it is a vector (SVG), a near-square /
+   * portrait PNG, or its Directus title/filename contains "logo" (catches wide
+   * raster wordmarks the aspect-ratio test misses). Photo banners are landscape
+   * JPEG/WEBP (or wide PNGs), so they stay cropped-to-fill as before.
    */
   isLogoBanner(provider: ServiceProvider): boolean {
     const banner = provider.banner;
@@ -89,7 +90,8 @@ export class ServiceProviderService {
     ) {
       return true;
     }
-    return false;
+    const label = `${banner.title ?? ''} ${banner.filename_download ?? ''}`.toLowerCase();
+    return label.includes('logo');
   }
 
   /** Records a thumbs up/down for a service provider. Resolves true on success. */
