@@ -59,7 +59,7 @@
   aspect-ratio: 16 / 9;
   object-fit: cover;
 
-  // Logos (SVG) are shown whole, centred on a clean background with breathing
+  // Logos are shown whole, centred on a clean background with breathing
   // room, instead of being cropped to fill the 16:9 frame.
   &--logo {
     object-fit: contain;

@@ -46,7 +46,7 @@ export class ServiceProvidersList {
     return this.service.bannerUrl(provider);
   }
 
-  /** Whether the banner is a logo (SVG) — shown in full instead of cropped. */
+  /** Whether the banner is a logo — shown in full instead of cropped. */
   isLogo(provider: ServiceProvider): boolean {
     return this.service.isLogoBanner(provider);
   }

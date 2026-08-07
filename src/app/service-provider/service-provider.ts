@@ -131,7 +131,7 @@ export class ServiceProvider {
     return provider ? this.service.bannerUrl(provider) : null;
   });
 
-  /** Whether the banner is a logo (SVG) — shown in full instead of cropped. */
+  /** Whether the banner is a logo — shown in full instead of cropped. */
   bannerIsLogo = computed(() => {
     const provider = this.item();
     return !!provider && this.service.isLogoBanner(provider);

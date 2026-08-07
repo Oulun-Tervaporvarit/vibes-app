@@ -67,12 +67,18 @@ export class ServiceProviderService {
   }
 
   /**
-   * True when the banner is a vector logo (SVG) rather than a photo. Logos
-   * should be shown in full (`object-fit: contain`) instead of being cropped to
-   * fill the frame, which zooms in and cuts off the edges.
+   * True when the banner is a logo rather than a photo. Logos should be shown
+   * in full (`object-fit: contain`) instead of being cropped to fill the
+   * frame, which zooms in and cuts off the edges. SVGs are always logos;
+   * raster logos (e.g. a PNG wordmark) are recognised by "logo" in the file's
+   * title or filename in Directus.
    */
   isLogoBanner(provider: ServiceProvider): boolean {
-    return provider.banner?.type?.startsWith('image/svg') ?? false;
+    const banner = provider.banner;
+    if (!banner) return false;
+    if (banner.type?.startsWith('image/svg')) return true;
+    const label = `${banner.title ?? ''} ${banner.filename_download ?? ''}`.toLowerCase();
+    return label.includes('logo');
   }
 
   /** Records a thumbs up/down for a service provider. Resolves true on success. */
