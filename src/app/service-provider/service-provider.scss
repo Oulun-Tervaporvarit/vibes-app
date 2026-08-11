@@ -143,6 +143,9 @@
   color: var(--av-text);
   font-size: 15px;
   line-height: 1.6;
+  // CMS content can contain long unbreakable strings (e.g. booking URLs) that
+  // would otherwise overflow the card and make the page scroll horizontally.
+  overflow-wrap: anywhere;
 
   ::ng-deep p {
     margin: 0 0 10px;
