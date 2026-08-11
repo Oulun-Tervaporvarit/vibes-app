@@ -37,9 +37,18 @@ export class ServiceProvidersList {
     // All lists are sorted alphabetically by the displayed name (locale-aware,
     // so it re-sorts correctly when the language changes).
     const lang = this.i18n.lang();
-    return [...list].sort((a, b) =>
+    const sorted = [...list].sort((a, b) =>
       this.name(a).localeCompare(this.name(b), lang, { sensitivity: 'base' })
     );
+
+    // The compact "Kaikki palvelut" list additionally groups services that
+    // require a VIBEs code above the free ones; sort() is stable, so each
+    // group stays alphabetical.
+    if (this.compact()) {
+      sorted.sort((a, b) => Number(a.free) - Number(b.free));
+    }
+
+    return sorted;
   });
 
   bannerUrl(provider: ServiceProvider): string | null {
