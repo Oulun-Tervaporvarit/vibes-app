@@ -160,6 +160,25 @@
     font-weight: 600;
     text-decoration: underline;
   }
+
+  // CMS tables are wider than a phone screen; `overflow-wrap` can't shrink a
+  // table below its own minimum width, so let the table scroll horizontally
+  // inside the card instead of pushing the whole page sideways.
+  ::ng-deep table {
+    display: block;
+    max-width: 100%;
+    overflow-x: auto;
+    border-collapse: collapse;
+    margin: 0 0 10px;
+  }
+
+  ::ng-deep th,
+  ::ng-deep td {
+    padding: 6px 10px;
+    border: 1px solid var(--av-border);
+    vertical-align: top;
+    text-align: left;
+  }
 }
 
 .av-detail__map-frame {
