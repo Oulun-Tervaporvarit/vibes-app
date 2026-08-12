@@ -183,6 +183,10 @@
 
 .av-carousel {
   position: relative;
+  // The gallery graphics are portrait (4:5), so keep the carousel a
+  // comfortable width instead of letting it tower on wide screens.
+  max-width: 440px;
+  margin: 0 auto;
 
   &__track {
     display: flex;
@@ -201,8 +205,12 @@
   &__slide {
     flex: 0 0 100%;
     width: 100%;
-    aspect-ratio: 16 / 10;
-    object-fit: cover;
+    // Match the portrait (4:5) gallery graphics and show them whole —
+    // `contain` never crops, so text in the images stays visible even if
+    // a differently shaped image is uploaded later.
+    aspect-ratio: 4 / 5;
+    object-fit: contain;
+    background: var(--av-surface-muted);
     scroll-snap-align: start;
     display: block;
   }
