@@ -41,12 +41,9 @@ export class ServiceProvidersList {
       this.name(a).localeCompare(this.name(b), lang, { sensitivity: 'base' })
     );
 
-    // The compact "Kaikki palvelut" list additionally groups services that
-    // require a VIBEs code above the free ones; sort() is stable, so each
-    // group stays alphabetical.
-    if (this.compact()) {
-      sorted.sort((a, b) => Number(a.free) - Number(b.free));
-    }
+    // Services that require a VIBEs code are grouped above the free ones in
+    // every list; sort() is stable, so each group stays alphabetical.
+    sorted.sort((a, b) => Number(a.free) - Number(b.free));
 
     return sorted;
   });

@@ -53,6 +53,8 @@ export const TRANSLATIONS: Record<string, Entry> = {
   'detail.location': { fi: 'Sijainti', en: 'Location' },
   'detail.video': { fi: 'Ohjevideo', en: 'Instruction video' },
   'detail.map': { fi: 'Kartta', en: 'Map' },
+  'carousel.prev': { fi: 'Edellinen kuva', en: 'Previous image' },
+  'carousel.next': { fi: 'Seuraava kuva', en: 'Next image' },
   'detail.visits_left': { fi: 'Käyntejä jäljellä', en: 'Visits left' },
   'detail.enter_code_hint': {
     fi: 'Syötä VIBEs-koodi yläpalkkiin lunastaaksesi edun.',
