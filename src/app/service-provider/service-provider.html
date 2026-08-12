@@ -34,11 +34,6 @@
         </div>
       }
 
-      <section class="av-detail__section">
-        <h2 class="av-detail__section-title">{{ 'detail.description' | t }}</h2>
-        <div class="av-detail__rich" appExternalLinks [innerHTML]="localizedDescription()"></div>
-      </section>
-
       @if (galleryImages().length > 0) {
         <section class="av-detail__section">
           <div class="av-carousel">
@@ -74,6 +69,11 @@
           </div>
         </section>
       }
+
+      <section class="av-detail__section">
+        <h2 class="av-detail__section-title">{{ 'detail.description' | t }}</h2>
+        <div class="av-detail__rich" appExternalLinks [innerHTML]="localizedDescription()"></div>
+      </section>
 
       @if (hasInstructions()) {
         <section class="av-detail__section">
