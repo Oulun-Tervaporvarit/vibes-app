@@ -39,6 +39,42 @@
         <div class="av-detail__rich" appExternalLinks [innerHTML]="localizedDescription()"></div>
       </section>
 
+      @if (galleryImages().length > 0) {
+        <section class="av-detail__section">
+          <div class="av-carousel">
+            <div class="av-carousel__track" #carouselTrack (scroll)="onCarouselScroll(carouselTrack)">
+              @for (img of galleryImages(); track img.id) {
+                <img class="av-carousel__slide" [src]="imageUrl(img)" [alt]="imageAlt(img)" loading="lazy">
+              }
+            </div>
+
+            @if (galleryImages().length > 1) {
+              <button
+                type="button"
+                class="av-carousel__nav av-carousel__nav--prev"
+                (click)="scrollCarousel(carouselTrack, -1)"
+                [attr.aria-label]="'carousel.prev' | t"
+              >
+                <span class="material-icons" aria-hidden="true">chevron_left</span>
+              </button>
+              <button
+                type="button"
+                class="av-carousel__nav av-carousel__nav--next"
+                (click)="scrollCarousel(carouselTrack, 1)"
+                [attr.aria-label]="'carousel.next' | t"
+              >
+                <span class="material-icons" aria-hidden="true">chevron_right</span>
+              </button>
+              <div class="av-carousel__dots" aria-hidden="true">
+                @for (img of galleryImages(); track img.id) {
+                  <span class="av-carousel__dot" [class.av-carousel__dot--active]="$index === activeSlide()"></span>
+                }
+              </div>
+            }
+          </div>
+        </section>
+      }
+
       @if (hasInstructions()) {
         <section class="av-detail__section">
           <h2 class="av-detail__section-title">{{ 'detail.instructions' | t }}</h2>

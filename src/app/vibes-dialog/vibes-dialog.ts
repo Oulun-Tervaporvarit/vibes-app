@@ -120,17 +120,8 @@ const PROVIDERS = {
       en: 'Hoops, music and chilling in the evenings with good company 🏀',
     },
   },
-  nurkka: {
-    providerId: 36,
-    emoji: '☕',
-    title: 'Nurkka-kohtaamispaikka',
-    description: {
-      fi: 'Hengaa Valkeassa, juo kaakao ja pelaa lautapelejä — zero pressure ☕',
-      en: 'Hang out at Valkea, grab a cocoa and play board games — zero pressure ☕',
-    },
-  },
   walkers: {
-    providerId: 33,
+    providerId: 51,
     emoji: '🫶',
     title: 'Walkers-kohtaamispaikka',
     description: {
@@ -210,6 +201,42 @@ const PROVIDERS = {
       en: 'Band rooms, a studio and gaming spaces for youth — book your session 🎤',
     },
   },
+  pikisaari: {
+    providerId: 53,
+    emoji: '🖼️',
+    title: 'Pikisaaren taidegalleriakierros',
+    description: {
+      fi: 'Kierrä Pikisaaren galleriat ja imppaa paikallista taidetta — ilmaiseksi 🖼️',
+      en: 'Tour the Pikisaari galleries and soak up local art — for free 🖼️',
+    },
+  },
+  kaupungintalo: {
+    providerId: 54,
+    emoji: '🏛️',
+    title: 'Kaupungintalon taidenäyttelyt',
+    description: {
+      fi: 'Poikkea kaupungintalolle — vaihtuvia näyttelyitä keskellä kaupunkia 🏛️',
+      en: 'Pop into City Hall — rotating exhibitions right downtown 🏛️',
+    },
+  },
+  taidekierros: {
+    providerId: 55,
+    emoji: '😎',
+    title: 'Keskustan taidekierros',
+    description: {
+      fi: 'Bongaa keskustan taideteokset kävellen — city walk, but make it art 😎',
+      en: 'Spot downtown artworks on foot — a city walk, but make it art 😎',
+    },
+  },
+  oulunsalo: {
+    providerId: 56,
+    emoji: '🏸',
+    title: 'Oulunsalon liikuntakeskus',
+    description: {
+      fi: 'Sulkapalloa ja kuntosalia Oulunsalossa — Action-vuorot maksutta 🏸',
+      en: 'Badminton and gym sessions in Oulunsalo — free Action turns 🏸',
+    },
+  },
 } satisfies Record<string, Activity>;
 
 type ProviderKey = keyof typeof PROVIDERS;
@@ -224,30 +251,30 @@ const RECOMMENDATIONS: Record<Mood, Record<Desire, ProviderKey[]>> = {
     'unohtaa-arkea': ['lainaamo', 'uinti', 'luonto'],
     'kapertya-kotiin': ['kirjasto', 'yoga', 'chillaa'],
     'ulos-kavereiden': ['keilaus', 'yokoris', 'harrastetilat'],
-    'kokeilla-uutta': ['pakopeli', 'tanssi', 'bouldering'],
+    'kokeilla-uutta': ['pakopeli', 'tanssi', 'oulunsalo'],
   },
   'low-battery': {
     'unohtaa-arkea': ['luonto', 'floats', 'taidemuseo'],
     'kapertya-kotiin': ['chillaa', 'yoga', 'kirjasto'],
-    'ulos-kavereiden': ['nurkka', 'walkers', 'luonto'],
-    'kokeilla-uutta': ['kirjasto', 'yoga', 'taidemuseo'],
+    'ulos-kavereiden': ['walkers', 'talot', 'luonto'],
+    'kokeilla-uutta': ['kirjasto', 'pikisaari', 'taidemuseo'],
   },
   'hyva-flow': {
     'unohtaa-arkea': ['lainaamo', 'uinti', 'luonto'],
     'kapertya-kotiin': ['kirjasto', 'yoga', 'chillaa'],
     'ulos-kavereiden': ['yokoris', 'keilaus', 'karpat'],
-    'kokeilla-uutta': ['pakopeli', 'bouldering', 'tanssi'],
+    'kokeilla-uutta': ['pakopeli', 'bouldering', 'taidekierros'],
   },
   'leviamassa': {
     'unohtaa-arkea': ['yoga', 'luonto', 'floats'],
     'kapertya-kotiin': ['yoga', 'chillaa', 'kirjasto'],
-    'ulos-kavereiden': ['luonto', 'nurkka', 'keilaus'],
+    'ulos-kavereiden': ['luonto', 'walkers', 'keilaus'],
     'kokeilla-uutta': ['yoga', 'tanssi', 'rela'],
   },
   'ihan-pihalla': {
-    'unohtaa-arkea': ['luonto', 'taidemuseo', 'yoga'],
+    'unohtaa-arkea': ['luonto', 'kaupungintalo', 'yoga'],
     'kapertya-kotiin': ['chillaa', 'kirjasto', 'sekasin'],
-    'ulos-kavereiden': ['nurkka', 'walkers', 'talot'],
+    'ulos-kavereiden': ['walkers', 'talot', 'taidekierros'],
     'kokeilla-uutta': ['pakopeli', 'bouldering', 'rockcamp'],
   },
 };

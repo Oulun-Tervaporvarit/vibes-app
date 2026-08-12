@@ -24,6 +24,11 @@ export interface DirectusFile {
   height?: number | null;
 }
 
+/** Junction row of the `images` files field on `service_provider`. */
+export interface ServiceProviderImage {
+  directus_files_id: DirectusFile | null;
+}
+
 export interface ServiceProvider {
   id: number;
   status: string;
@@ -38,6 +43,7 @@ export interface ServiceProvider {
   instruction_video?: string | null;
   address: string;
   banner: DirectusFile | null;
+  images?: ServiceProviderImage[] | null;
 }
 
 interface DirectusResponse<T> {
@@ -57,15 +63,28 @@ export class ServiceProviderService {
   }
 
   getById(id: number | string): Observable<ServiceProvider> {
+    // `*.*` expands the junction rows of `images` but not the files inside
+    // them, so the gallery files are requested explicitly.
     return this.http
       .get<DirectusResponse<ServiceProvider>>(
-        `${CMS_BASE_URL}/items/service_provider/${id}?fields=*.*`
+        `${CMS_BASE_URL}/items/service_provider/${id}?fields=*.*,images.directus_files_id.*`
       )
       .pipe(map((res) => res.data));
   }
 
   bannerUrl(provider: ServiceProvider): string | null {
     return provider.banner ? `${CMS_BASE_URL}/assets/${provider.banner.id}` : null;
+  }
+
+  assetUrl(file: DirectusFile): string {
+    return `${CMS_BASE_URL}/assets/${file.id}`;
+  }
+
+  /** Gallery images of a provider, in editor-defined order, without gaps. */
+  galleryImages(provider: ServiceProvider | undefined | null): DirectusFile[] {
+    return (provider?.images ?? [])
+      .map((row) => row.directus_files_id)
+      .filter((file): file is DirectusFile => !!file);
   }
 
   /**

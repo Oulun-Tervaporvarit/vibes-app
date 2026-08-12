@@ -5,7 +5,7 @@ import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
 import { firstValueFrom, switchMap } from 'rxjs';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { FeedbackRating, ServiceProviderService } from '../service-provider.service';
+import { DirectusFile, FeedbackRating, ServiceProviderService } from '../service-provider.service';
 import { VibesCodeService } from '../vibes-code.service';
 import { LanguageService, TranslatePipe } from '../i18n';
 import { ExternalLinksDirective } from '../external-links.directive';
@@ -136,6 +136,28 @@ export class ServiceProvider {
     const provider = this.item();
     return !!provider && this.service.isLogoBanner(provider);
   });
+
+  /** Gallery images shown as a carousel; empty when the provider has none. */
+  galleryImages = computed(() => this.service.galleryImages(this.item()));
+
+  /** Index of the carousel slide currently in view, for the dot indicator. */
+  activeSlide = signal(0);
+
+  imageUrl(file: DirectusFile): string {
+    return this.service.assetUrl(file);
+  }
+
+  imageAlt(file: DirectusFile): string {
+    return file.title || this.localizedName();
+  }
+
+  scrollCarousel(track: HTMLElement, direction: -1 | 1) {
+    track.scrollBy({ left: direction * track.clientWidth, behavior: 'smooth' });
+  }
+
+  onCarouselScroll(track: HTMLElement) {
+    this.activeSlide.set(Math.round(track.scrollLeft / track.clientWidth));
+  }
 
   categoryLabel = computed(() => {
     const provider = this.item();

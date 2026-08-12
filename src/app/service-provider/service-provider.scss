@@ -181,6 +181,92 @@
   }
 }
 
+.av-carousel {
+  position: relative;
+
+  &__track {
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    border-radius: var(--av-radius-md);
+    background: var(--av-surface-muted);
+    // Hide the scrollbar — the dots + arrows communicate position.
+    scrollbar-width: none;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  }
+
+  &__slide {
+    flex: 0 0 100%;
+    width: 100%;
+    aspect-ratio: 16 / 10;
+    object-fit: cover;
+    scroll-snap-align: start;
+    display: block;
+  }
+
+  &__nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border: none;
+    border-radius: 50%;
+    overflow: hidden;
+    background: rgba(255, 255, 255, 0.92);
+    color: var(--av-black);
+    cursor: pointer;
+    box-shadow: 0 3px 10px rgba(14, 14, 14, 0.18);
+    transition: background 0.16s ease;
+
+    &:hover {
+      background: #fff;
+    }
+
+    &--prev {
+      left: 10px;
+    }
+
+    &--next {
+      right: 10px;
+    }
+
+    .material-icons {
+      font-size: 22px;
+    }
+  }
+
+  &__dots {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 10px;
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+  }
+
+  &__dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.55);
+    box-shadow: 0 1px 3px rgba(14, 14, 14, 0.3);
+    transition: background 0.16s ease, transform 0.16s ease;
+
+    &--active {
+      background: #fff;
+      transform: scale(1.2);
+    }
+  }
+}
+
 .av-detail__map-frame {
   display: block;
   width: 100%;
