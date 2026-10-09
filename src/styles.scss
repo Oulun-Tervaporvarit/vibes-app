@@ -11,6 +11,11 @@
   --av-orange: #FFA500;
   --av-pink: #FF7BBE;
   --av-pink-soft: #FFF0F7;
+
+  // Marker for a service that has not opened yet.
+  --av-sash: var(--av-pink);
+  --av-sash-ink: #fff;
+  --av-sash-soft: var(--av-pink-soft);
   --av-mint: #5FE3C0;
   --av-black: #0E0E0E;
   --av-surface: #FFFFFF;
@@ -126,8 +131,8 @@ h1, h2, h3, h4 {
   gap: 0.5em;
   padding: 0.45em 0;
   transform: translateY(-50%) rotate(-11deg);
-  background: var(--av-pink);
-  color: #fff;
+  background: var(--av-sash);
+  color: var(--av-sash-ink);
   // Sized against the banner it crosses, not the viewport: the same sash runs
   // over a 280px card and a full-width hero. Its container opts in with
   // `container-type: inline-size`.
@@ -144,6 +149,118 @@ h1, h2, h3, h4 {
 
   .material-icons {
     font-size: 1.1em;
+  }
+}
+
+// Only worth animating where the sash is the hero of the page. On a grid of
+// cards this would be two dozen compositor animations for one piece of news.
+.av-opens-sash--animated {
+  overflow: hidden;
+
+  // A highlight travelling the length of the sash, like light catching ribbon.
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      100deg,
+      rgba(255, 255, 255, 0) 38%,
+      rgba(255, 255, 255, 0.6) 50%,
+      rgba(255, 255, 255, 0) 62%
+    );
+    transform: translateX(-100%);
+    animation: av-sash-gleam 4.5s ease-in-out infinite;
+  }
+
+  // The two sparkles flanking the text breathe out of phase with each other.
+  .material-icons {
+    animation: av-twinkle 2.6s ease-in-out infinite;
+
+    &:last-of-type {
+      animation-delay: 1.3s;
+    }
+  }
+}
+
+// Loose sparkles scattered over the banner around the sash. Needs a
+// positioned, clipped parent, which both banners already are.
+.av-opens-twinkles {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+
+  .material-icons {
+    position: absolute;
+    color: var(--av-sash);
+    text-shadow: 0 0 12px rgba(255, 255, 255, 0.9);
+    animation: av-twinkle 3.2s ease-in-out infinite;
+  }
+
+  // Placed by hand rather than evenly: a regular spread reads as a pattern.
+  .material-icons:nth-child(1) {
+    top: 12%;
+    left: 16%;
+    font-size: 22px;
+    animation-delay: 0.2s;
+  }
+
+  .material-icons:nth-child(2) {
+    top: 72%;
+    left: 34%;
+    font-size: 30px;
+    animation-delay: 1.4s;
+  }
+
+  .material-icons:nth-child(3) {
+    top: 20%;
+    right: 12%;
+    font-size: 18px;
+    animation-delay: 2.3s;
+  }
+
+  .material-icons:nth-child(4) {
+    top: 80%;
+    right: 24%;
+    font-size: 24px;
+    animation-delay: 0.9s;
+  }
+}
+
+@keyframes av-sash-gleam {
+  0% {
+    transform: translateX(-100%);
+  }
+
+  // Sweeps, then rests: a gleam looping with no pause reads as a progress bar.
+  55%,
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+@keyframes av-twinkle {
+  0%,
+  100% {
+    opacity: 0.3;
+    transform: scale(0.75) rotate(-10deg);
+  }
+
+  50% {
+    opacity: 1;
+    transform: scale(1.15) rotate(12deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .av-opens-sash--animated .material-icons,
+  .av-opens-twinkles .material-icons {
+    animation: none;
+  }
+
+  .av-opens-sash--animated::after {
+    animation: none;
+    opacity: 0;
   }
 }
 
