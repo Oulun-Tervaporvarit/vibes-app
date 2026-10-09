@@ -1,6 +1,13 @@
-import { Component, inject, output, signal } from '@angular/core';
+import { Component, computed, inject, output, signal } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
+import { catchError, of } from 'rxjs';
+import {
+  ServiceProviderService,
+  isUpcoming,
+  opensOnLabel,
+} from '../service-provider.service';
 import { Lang, LanguageService, TranslatePipe } from '../i18n';
 
 type Mood = 'kierroksilla' | 'low-battery' | 'hyva-flow' | 'leviamassa' | 'ihan-pihalla';
@@ -287,7 +294,29 @@ const RECOMMENDATIONS: Record<Mood, Record<Desire, ProviderKey[]>> = {
 })
 export class VibesDialog {
   private router = inject(Router);
+  private service = inject(ServiceProviderService);
   protected i18n = inject(LanguageService);
+
+  /**
+   * Opening days of the services in the catalog below, keyed by provider id.
+   * The catalog is hardcoded, so this is the only thing the dialog reads from
+   * Directus — enough to avoid recommending a service that hasn't opened yet.
+   * While the request is in flight the map is empty and no marker is shown, so
+   * the survey never waits on the network.
+   */
+  private opensOnById = computed(() => {
+    const byId = new Map<number, string>();
+    for (const provider of this.providers() ?? []) {
+      if (isUpcoming(provider)) byId.set(provider.id, opensOnLabel(provider));
+    }
+    return byId;
+  });
+
+  // The survey works without this data, so a CMS failure must not take the
+  // dialog down with it — it just means no opening days are marked.
+  private providers = toSignal(this.service.getAll().pipe(catchError(() => of([]))), {
+    initialValue: undefined,
+  });
 
   dismissed = output<void>();
 
@@ -314,6 +343,11 @@ export class VibesDialog {
   /** Localized description for a recommendation. */
   desc(activity: Activity): string {
     return activity.description[this.i18n.lang()];
+  }
+
+  /** The opening day of a recommendation that hasn't opened yet, else ''. */
+  opensOn(activity: Activity): string {
+    return this.opensOnById().get(activity.providerId) ?? '';
   }
 
   selectMood(mood: Mood) {

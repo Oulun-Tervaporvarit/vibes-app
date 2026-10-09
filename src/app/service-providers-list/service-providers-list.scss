@@ -55,6 +55,16 @@
         padding: 14px;
       }
     }
+
+    // Services that haven't opened yet read as inactive at a glance. Only the
+    // artwork is dimmed — the chip, badge and opens band sit in this same box.
+    &--upcoming {
+      img,
+      .av-provider-card__media-fallback {
+        filter: grayscale(70%);
+        opacity: 0.6;
+      }
+    }
   }
 
   &__media-fallback {
@@ -93,6 +103,26 @@
     &--redeem {
       background: var(--av-blue);
       color: #fff;
+    }
+  }
+
+  &__opens {
+    position: absolute;
+    inset: auto 0 0 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 6px 10px;
+    background: var(--av-orange);
+    color: var(--av-black);
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+
+    .material-icons {
+      font-size: 15px;
     }
   }
 
@@ -201,6 +231,21 @@
     color: var(--av-text-muted);
     text-transform: uppercase;
     letter-spacing: 0.05em;
+  }
+
+  &__opens {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--av-orange);
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+
+    .material-icons {
+      font-size: 14px;
+    }
   }
 
   &__access {

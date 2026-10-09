@@ -130,4 +130,13 @@ h1, h2, h3, h4 {
     background: var(--av-blue);
     color: #fff;
   }
+
+  &--upcoming {
+    background: var(--av-orange);
+    color: var(--av-black);
+
+    .material-icons {
+      font-size: 15px;
+    }
+  }
 }

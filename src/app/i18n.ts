@@ -45,6 +45,8 @@ export const TRANSLATIONS: Record<string, Entry> = {
   'access.unlimited': { fi: 'Rajaton käyttö', en: 'Unlimited use' },
   'access.code_short': { fi: 'VIBEs-koodi', en: 'VIBEs code' },
   'access.code_long': { fi: 'Vaatii lunastuksen VIBEs-koodilla', en: 'Requires a VIBEs code' },
+  'access.opens': { fi: 'Avautuu {date}', en: 'Opens {date}' },
+  'access.opens_generic': { fi: 'Avautuu myöhemmin', en: 'Opens later' },
 
   // Service detail
   'detail.back': { fi: 'Takaisin', en: 'Back' },
@@ -71,6 +73,14 @@ export const TRANSLATIONS: Record<string, Entry> = {
   },
   'detail.show_staff': { fi: 'Näytä henkilökunnalle', en: 'Show to staff' },
   'detail.redeeming': { fi: 'Lunastetaan…', en: 'Redeeming…' },
+  'detail.opens_title': {
+    fi: 'Palvelu avautuu {date}.',
+    en: 'This service opens on {date}.',
+  },
+  'detail.opens_locked': {
+    fi: ' Etua ei voi vielä lunastaa — tule käymään uudelleen avautumispäivänä.',
+    en: ' The benefit can’t be redeemed yet — come back on the opening day.',
+  },
 
   // Redeem success card
   'redeem.eyebrow': { fi: 'Etu käytössä', en: 'Perk redeemed' },
@@ -190,6 +200,10 @@ export const TRANSLATIONS: Record<string, Entry> = {
   },
   'guide.s3_free': { fi: '= maksuton, käytä niin monta kertaa kuin haluat 🙌', en: '= free, use it as many times as you like 🙌' },
   'guide.s3_code': { fi: '= käytät yhden käynnin koodistasi 🎟', en: '= uses one visit from your code 🎟' },
+  'guide.s3_opens': {
+    fi: '= palvelu avautuu vasta myöhemmin, etua ei voi vielä lunastaa ⏳',
+    en: '= opens later on, the benefit can’t be redeemed yet ⏳',
+  },
   'guide.s4_title': { fi: 'Lunasta etu paikan päällä ✅', en: 'Redeem on-site ✅' },
   'guide.s4_text': {
     fi: 'Kun oot paikan päällä, paina “Näytä henkilökunnalle” ja näytä ruutu työntekijälle. Yksi käynti kuluu. Saman paikan voit lunastaa kerran per koodi — säästä siis käynnit uusiin paikkoihin!',

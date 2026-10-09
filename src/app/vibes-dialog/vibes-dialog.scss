@@ -235,6 +235,22 @@
   line-height: 1.45;
 }
 
+.activity-opens {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 4px;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--av-orange);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+
+  .material-icons {
+    font-size: 14px;
+  }
+}
+
 .cta-btn {
   width: 100%;
   padding: 14px 22px;

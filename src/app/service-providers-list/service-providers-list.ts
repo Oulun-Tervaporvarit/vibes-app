@@ -2,7 +2,12 @@ import { Component, computed, inject, input } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { RouterLink } from '@angular/router';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { ServiceProvider, ServiceProviderService } from '../service-provider.service';
+import {
+  ServiceProvider,
+  ServiceProviderService,
+  isUpcoming as providerIsUpcoming,
+  opensOnLabel,
+} from '../service-provider.service';
 import { LanguageService, TranslatePipe } from '../i18n';
 
 const CATEGORY_KEYS: Record<string, string> = {
@@ -65,5 +70,19 @@ export class ServiceProvidersList {
   /** Provider name in the current language, falling back to Finnish. */
   name(provider: ServiceProvider): string {
     return this.i18n.lang() === 'en' && provider.name_en ? provider.name_en : provider.name;
+  }
+
+  /**
+   * Whether the service only opens on a future date. Called from the template
+   * rather than cached in a computed, so the marker corrects itself on the next
+   * change-detection pass after midnight.
+   */
+  isUpcoming(provider: ServiceProvider): boolean {
+    return providerIsUpcoming(provider);
+  }
+
+  /** The opening day of an upcoming service, e.g. `1.11.2026`. */
+  opensOn(provider: ServiceProvider): string {
+    return opensOnLabel(provider);
   }
 }

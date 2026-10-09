@@ -21,6 +21,12 @@
         } @else {
           <span class="av-chip av-chip--redeem">{{ 'access.code_long' | t }}</span>
         }
+        @if (isUpcoming()) {
+          <span class="av-chip av-chip--upcoming">
+            <span class="material-icons" aria-hidden="true">schedule</span>
+            {{ 'access.opens' | t: { date: opensOnLabel() } }}
+          </span>
+        }
       </div>
 
       <h1 class="av-detail__title">{{ localizedName() }}</h1>
@@ -114,7 +120,19 @@
       }
     </article>
 
-    @if (!provider.free) {
+    @if (isUpcoming()) {
+      <footer class="av-detail__cta-bar">
+        <p class="av-detail__alert av-detail__alert--upcoming">
+          <span class="material-icons" aria-hidden="true">schedule</span>
+          <span>
+            <b>{{ 'detail.opens_title' | t: { date: opensOnLabel() } }}</b>
+            @if (!provider.free) {
+              {{ 'detail.opens_locked' | t }}
+            }
+          </span>
+        </p>
+      </footer>
+    } @else if (!provider.free) {
       <footer class="av-detail__cta-bar">
         @if (alreadyRedeemed()) {
           <p class="av-detail__redeemed">

@@ -362,6 +362,13 @@
   b {
     font-weight: 700;
   }
+
+  // Shown instead of the redeem CTA (or the feedback footer) while the service
+  // has not opened yet. Outlined, because unlike the advisory it replaces the
+  // main action rather than qualifying it.
+  &--upcoming {
+    border: 1.5px solid var(--av-orange);
+  }
 }
 
 .av-detail__cta-bar .av-btn {
