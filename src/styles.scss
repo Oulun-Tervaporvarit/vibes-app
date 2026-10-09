@@ -187,51 +187,6 @@ h1, h2, h3, h4 {
   }
 }
 
-// Loose sparkles scattered over the banner around the sash. Needs a
-// positioned, clipped parent, which both banners already are.
-.av-opens-twinkles {
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-  pointer-events: none;
-
-  .material-icons {
-    position: absolute;
-    color: var(--av-sash);
-    text-shadow: 0 0 12px rgba(255, 255, 255, 0.9);
-    animation: av-twinkle 3.2s ease-in-out infinite;
-  }
-
-  // Placed by hand rather than evenly: a regular spread reads as a pattern.
-  .material-icons:nth-child(1) {
-    top: 12%;
-    left: 16%;
-    font-size: 22px;
-    animation-delay: 0.2s;
-  }
-
-  .material-icons:nth-child(2) {
-    top: 72%;
-    left: 34%;
-    font-size: 30px;
-    animation-delay: 1.4s;
-  }
-
-  .material-icons:nth-child(3) {
-    top: 20%;
-    right: 12%;
-    font-size: 18px;
-    animation-delay: 2.3s;
-  }
-
-  .material-icons:nth-child(4) {
-    top: 80%;
-    right: 24%;
-    font-size: 24px;
-    animation-delay: 0.9s;
-  }
-}
-
 @keyframes av-sash-gleam {
   0% {
     transform: translateX(-100%);
@@ -258,8 +213,7 @@ h1, h2, h3, h4 {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .av-opens-sash--animated .material-icons,
-  .av-opens-twinkles .material-icons {
+  .av-opens-sash--animated .material-icons {
     animation: none;
   }
 
