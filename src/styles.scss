@@ -170,14 +170,19 @@ h1, h2, h3, h4 {
     );
     transform: translateX(-100%);
     animation: av-sash-gleam 4.5s ease-in-out infinite;
+    // Set per card so a grid of sashes does not gleam in unison, which reads
+    // as one blinking element rather than as glitter. Unset on the hero, where
+    // there is only ever one sash.
+    animation-delay: var(--av-sash-delay, 0s);
   }
 
   // The two sparkles flanking the text breathe out of phase with each other.
   .material-icons {
     animation: av-twinkle 2.6s ease-in-out infinite;
+    animation-delay: var(--av-sash-delay, 0s);
 
     &:last-of-type {
-      animation-delay: 1.3s;
+      animation-delay: calc(var(--av-sash-delay, 0s) + 1.3s);
     }
   }
 }

@@ -85,4 +85,14 @@ export class ServiceProvidersList {
   opensOn(provider: ServiceProvider): string {
     return opensOnLabel(provider);
   }
+
+  /**
+   * Start offset for this card's sash animation, spread over seven steps so
+   * the sashes in a grid gleam out of step. Derived from the id rather than
+   * the row position: only some cards carry a sash, so counting rows would
+   * hand several of them the same offset.
+   */
+  sashDelay(provider: ServiceProvider): string {
+    return `${(provider.id % 7) * 0.6}s`;
+  }
 }
