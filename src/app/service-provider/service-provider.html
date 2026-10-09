@@ -7,9 +7,27 @@
       </button>
 
       @if (bannerSrc(); as src) {
-        <img class="av-detail__banner" [class.av-detail__banner--logo]="bannerIsLogo()" [src]="src" [alt]="localizedName()">
+        <img
+          class="av-detail__banner"
+          [class.av-detail__banner--logo]="bannerIsLogo()"
+          [class.av-detail__banner--upcoming]="isUpcoming()"
+          [src]="src"
+          [alt]="localizedName()"
+        >
       } @else {
-        <div class="av-detail__banner av-detail__banner--fallback" aria-hidden="true">✨</div>
+        <div
+          class="av-detail__banner av-detail__banner--fallback"
+          [class.av-detail__banner--upcoming]="isUpcoming()"
+          aria-hidden="true"
+        >✨</div>
+      }
+
+      @if (isUpcoming()) {
+        <span class="av-opens-sash av-detail__opens">
+          <span class="material-icons" aria-hidden="true">auto_awesome</span>
+          {{ 'access.opens' | t: { date: opensOnLabel() } }}
+          <span class="material-icons" aria-hidden="true">auto_awesome</span>
+        </span>
       }
     </header>
 
@@ -20,12 +38,6 @@
           <span class="av-chip av-chip--yellow">{{ 'access.unlimited' | t }}</span>
         } @else {
           <span class="av-chip av-chip--redeem">{{ 'access.code_long' | t }}</span>
-        }
-        @if (isUpcoming()) {
-          <span class="av-chip av-chip--upcoming">
-            <span class="material-icons" aria-hidden="true">auto_awesome</span>
-            {{ 'access.opens' | t: { date: opensOnLabel() } }}
-          </span>
         }
       </div>
 

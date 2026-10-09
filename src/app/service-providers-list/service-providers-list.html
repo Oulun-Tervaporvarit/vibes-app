@@ -55,7 +55,7 @@
                 {{ (provider.free ? 'access.unlimited' : 'access.code_short') | t }}
               </span>
               @if (isUpcoming(provider)) {
-                <span class="av-provider-card__opens">
+                <span class="av-opens-sash av-provider-card__opens">
                   <span class="material-icons" aria-hidden="true">auto_awesome</span>
                   {{ 'access.opens' | t: { date: opensOn(provider) } }}
                 </span>

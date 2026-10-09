@@ -110,6 +110,43 @@ h1, h2, h3, h4 {
   }
 }
 
+// Big diagonal sash laid across a provider's banner while the service has not
+// opened yet. Deliberately wider than its container: both ends have to run off
+// the edges, or it reads as a tilted label rather than a sash. The container
+// needs `position: relative` and `overflow: hidden` — both banners have them.
+.av-opens-sash {
+  position: absolute;
+  top: 50%;
+  left: -25%;
+  width: 150%;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5em;
+  padding: 0.45em 0;
+  transform: translateY(-50%) rotate(-11deg);
+  background: var(--av-pink);
+  color: #fff;
+  // Sized against the banner it crosses, not the viewport: the same sash runs
+  // over a 280px card and a full-width hero. Its container opts in with
+  // `container-type: inline-size`.
+  font-size: clamp(12px, 5.2cqw, 30px);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  white-space: nowrap;
+  text-shadow: 0 1px 2px rgba(14, 14, 14, 0.18);
+  box-shadow: 0 6px 20px rgba(14, 14, 14, 0.25);
+  // The sash sits inside the card's link and the detail hero; never let it
+  // swallow a tap meant for either.
+  pointer-events: none;
+
+  .material-icons {
+    font-size: 1.1em;
+  }
+}
+
 .av-chip {
   display: inline-flex;
   align-items: center;
@@ -130,14 +167,5 @@ h1, h2, h3, h4 {
   &--redeem {
     background: var(--av-blue);
     color: #fff;
-  }
-
-  &--upcoming {
-    background: var(--av-pink);
-    color: #fff;
-
-    .material-icons {
-      font-size: 15px;
-    }
   }
 }

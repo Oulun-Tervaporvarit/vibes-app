@@ -42,7 +42,7 @@ describe('ServiceProvider (detail page)', () => {
   async function render(provider: ServiceProvider) {
     const service = {
       getById: () => of(provider),
-      bannerUrl: () => null,
+      bannerUrl: (p: ServiceProvider) => (p.banner ? `https://cms.test/assets/${p.banner.id}` : null),
       isLogoBanner: () => false,
       galleryImages: () => [],
       submitFeedback: () => Promise.resolve(true),
@@ -93,17 +93,37 @@ describe('ServiceProvider (detail page)', () => {
     expect(fixture.nativeElement.querySelector('.av-detail__uses')).toBeNull();
   });
 
-  it('marks an upcoming service in the chips row', async () => {
+  it('leaves the chips row to category and access only', async () => {
     await render(makeProvider({ opens_on: isoDaysFromNow(30) }));
 
-    expect(fixture.nativeElement.querySelector('.av-chip--upcoming')).not.toBeNull();
+    // The sash on the banner already says it; a chip here repeated it twice
+    // within a screenful.
+    expect(fixture.nativeElement.querySelectorAll('.av-detail__chips .av-chip').length).toBe(2);
+  });
+
+  it('lays a sash across the banner of an upcoming service', async () => {
+    await render(makeProvider({ opens_on: isoDaysFromNow(30), banner: { id: 'file-1' } }));
+    const sash = fixture.nativeElement.querySelector('.av-detail__opens');
+
+    expect(sash).not.toBeNull();
+    expect(sash.textContent).toContain(isoDaysFromNow(30).slice(0, 4));
+    // The artwork behind it is muted, as on the list cards.
+    expect(
+      fixture.nativeElement.querySelector('.av-detail__banner--upcoming')
+    ).not.toBeNull();
+  });
+
+  it('leaves the banner of an open service alone', async () => {
+    await render(makeProvider({ opens_on: isoDaysFromNow(-1), banner: { id: 'file-1' } }));
+
+    expect(fixture.nativeElement.querySelector('.av-detail__opens')).toBeNull();
+    expect(fixture.nativeElement.querySelector('.av-detail__banner--upcoming')).toBeNull();
   });
 
   it('shows the redeem CTA once the service has opened', async () => {
     await render(makeProvider({ opens_on: isoDaysFromNow(-1) }));
 
     expect(locked()).toBeNull();
-    expect(fixture.nativeElement.querySelector('.av-chip--upcoming')).toBeNull();
     expect(redeemButton()).not.toBeNull();
     expect(redeemButton()!.disabled).toBe(false);
   });
