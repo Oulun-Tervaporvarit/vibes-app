@@ -36,6 +36,12 @@ export interface ServiceProvider {
   name_en?: string | null;
   category: ServiceProviderCategory | string;
   free: boolean;
+  /**
+   * First day the service can be used, as a Directus date-only string
+   * (`YYYY-MM-DD`). Empty/null means the service is always open. Read it
+   * through `isUpcoming()` / `opensOnLabel()` below — never `new Date(...)`.
+   */
+  opens_on?: string | null;
   description: string;
   description_en?: string | null;
   instructions: string;
@@ -44,6 +50,56 @@ export interface ServiceProvider {
   address: string;
   banner: DirectusFile | null;
   images?: ServiceProviderImage[] | null;
+}
+
+/** Today as a local-calendar `YYYY-MM-DD` string. The argument exists for tests. */
+export function todayIsoDate(now: Date = new Date()): string {
+  const pad = (n: number) => String(n).padStart(2, '0');
+  return `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}`;
+}
+
+/** True when `value` looks like a Directus date-only string we can work with. */
+function isIsoDate(value: string | null | undefined): value is string {
+  return !!value && /^\d{4}-\d{2}-\d{2}/.test(value.trim());
+}
+
+/**
+ * True when the service has not opened yet.
+ *
+ * An empty `opens_on` means the service is always open, and the opening day
+ * itself counts as open, so the comparison is a strict `>`.
+ *
+ * `opens_on` is compared as a *string*, never parsed into a `Date`:
+ * `new Date('2026-11-01')` is UTC midnight, which then renders (and compares)
+ * as the previous day in any negative-offset timezone. ISO-8601 dates sort
+ * lexicographically in chronological order, so comparing them against a
+ * locally-derived "today" is both simpler and correct everywhere.
+ *
+ * An unparseable value fails *open*: a typo in the CMS must never lock a
+ * benefit the editor did not mean to lock.
+ */
+export function isUpcoming(
+  provider: Pick<ServiceProvider, 'opens_on'> | null | undefined,
+  today: string = todayIsoDate()
+): boolean {
+  const opensOn = provider?.opens_on?.trim();
+  if (!isIsoDate(opensOn)) return false;
+  // slice(0, 10) keeps this working if the field is ever widened to a timestamp.
+  return opensOn.slice(0, 10) > today;
+}
+
+/**
+ * The opening day as `1.11.2026`, or an empty string when there is none.
+ *
+ * Formatted from the string parts rather than through `DatePipe`, both to avoid
+ * the UTC-parse trap above and because the app registers no locale — `d.M.yyyy`
+ * is what it already shows everywhere else.
+ */
+export function opensOnLabel(provider: Pick<ServiceProvider, 'opens_on'> | null | undefined): string {
+  const opensOn = provider?.opens_on?.trim();
+  if (!isIsoDate(opensOn)) return '';
+  const [year, month, day] = opensOn.slice(0, 10).split('-');
+  return `${Number(day)}.${Number(month)}.${year}`;
 }
 
 interface DirectusResponse<T> {

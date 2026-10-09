@@ -45,6 +45,8 @@ export const TRANSLATIONS: Record<string, Entry> = {
   'access.unlimited': { fi: 'Rajaton käyttö', en: 'Unlimited use' },
   'access.code_short': { fi: 'VIBEs-koodi', en: 'VIBEs code' },
   'access.code_long': { fi: 'Vaatii lunastuksen VIBEs-koodilla', en: 'Requires a VIBEs code' },
+  'access.opens': { fi: 'Pian täällä {date}', en: 'Coming soon {date}' },
+  'access.opens_generic': { fi: 'Pian täällä', en: 'Coming soon' },
 
   // Service detail
   'detail.back': { fi: 'Takaisin', en: 'Back' },
@@ -71,6 +73,15 @@ export const TRANSLATIONS: Record<string, Entry> = {
   },
   'detail.show_staff': { fi: 'Näytä henkilökunnalle', en: 'Show to staff' },
   'detail.redeeming': { fi: 'Lunastetaan…', en: 'Redeeming…' },
+  'detail.opens_soon': { fi: 'Kohta ollaan täällä! 👋', en: 'Almost here! 👋' },
+  'detail.opens_body_free': {
+    fi: ' Tämä palvelu avautuu {date} — merkkaa kalenteriin 🗓️',
+    en: ' This service opens on {date} — mark your calendar 🗓️',
+  },
+  'detail.opens_body': {
+    fi: ' Tämä palvelu avautuu {date}. Etua ei voi vielä lunastaa — merkkaa kalenteriin 🗓️',
+    en: ' This service opens on {date}. The benefit can’t be redeemed yet — mark your calendar 🗓️',
+  },
 
   // Redeem success card
   'redeem.eyebrow': { fi: 'Etu käytössä', en: 'Perk redeemed' },
@@ -190,6 +201,10 @@ export const TRANSLATIONS: Record<string, Entry> = {
   },
   'guide.s3_free': { fi: '= maksuton, käytä niin monta kertaa kuin haluat 🙌', en: '= free, use it as many times as you like 🙌' },
   'guide.s3_code': { fi: '= käytät yhden käynnin koodistasi 🎟', en: '= uses one visit from your code 🎟' },
+  'guide.s3_opens': {
+    fi: '= palvelu ei ole vielä avautunut, merkkaa avautumispäivä kalenteriin 🗓️',
+    en: '= not open yet, mark the opening day in your calendar 🗓️',
+  },
   'guide.s4_title': { fi: 'Lunasta etu paikan päällä ✅', en: 'Redeem on-site ✅' },
   'guide.s4_text': {
     fi: 'Kun oot paikan päällä, paina “Näytä henkilökunnalle” ja näytä ruutu työntekijälle. Yksi käynti kuluu. Saman paikan voit lunastaa kerran per koodi — säästä siis käynnit uusiin paikkoihin!',

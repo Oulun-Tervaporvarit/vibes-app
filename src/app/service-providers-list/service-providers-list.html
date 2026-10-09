@@ -14,6 +14,12 @@
             <span class="av-complist__main">
               <span class="av-complist__name">{{ name(provider) }}</span>
               <span class="av-complist__cat">{{ categoryLabel(provider) }}</span>
+              @if (isUpcoming(provider)) {
+                <span class="av-complist__opens">
+                  <span class="material-icons" aria-hidden="true">auto_awesome</span>
+                  {{ 'access.opens' | t: { date: opensOn(provider) } }}
+                </span>
+              }
             </span>
             <span
               class="av-complist__access"
@@ -31,7 +37,11 @@
       @for (provider of items; track provider.id) {
         <li class="av-provider-card">
           <a class="av-provider-card__link" [routerLink]="['/service', provider.id]">
-            <div class="av-provider-card__media" [class.av-provider-card__media--logo]="isLogo(provider)">
+            <div
+              class="av-provider-card__media"
+              [class.av-provider-card__media--logo]="isLogo(provider)"
+              [class.av-provider-card__media--upcoming]="isUpcoming(provider)"
+            >
               @if (bannerUrl(provider); as src) {
                 <img [src]="src" [alt]="name(provider)" loading="lazy">
               } @else {
@@ -44,6 +54,12 @@
               >
                 {{ (provider.free ? 'access.unlimited' : 'access.code_short') | t }}
               </span>
+              @if (isUpcoming(provider)) {
+                <span class="av-opens-sash av-provider-card__opens">
+                  <span class="material-icons" aria-hidden="true">auto_awesome</span>
+                  {{ 'access.opens' | t: { date: opensOn(provider) } }}
+                </span>
+              }
             </div>
 
             <div class="av-provider-card__body">

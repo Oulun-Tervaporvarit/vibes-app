@@ -16,6 +16,8 @@
 
 .av-detail__hero {
   position: relative;
+  // Lets .av-opens-sash scale to the hero rather than the viewport.
+  container-type: inline-size;
   border-radius: var(--av-radius-lg);
   overflow: hidden;
   background: var(--av-surface-muted);
@@ -59,6 +61,13 @@
   aspect-ratio: 16 / 9;
   object-fit: cover;
 
+  // Muted while the service has not opened yet, the same as the list cards,
+  // so the sash has something quiet to sit on.
+  &--upcoming {
+    filter: grayscale(70%);
+    opacity: 0.6;
+  }
+
   // Logos are shown whole, centred on a clean background with breathing
   // room, instead of being cropped to fill the 16:9 frame.
   &--logo {
@@ -74,6 +83,11 @@
     font-size: 64px;
     background: linear-gradient(135deg, var(--av-blue-light), var(--av-yellow-soft));
   }
+}
+
+// Above centre, because the detail card overlaps the hero's bottom edge.
+.av-detail__opens {
+  top: 42%;
 }
 
 .av-detail__card {
@@ -361,6 +375,18 @@
 
   b {
     font-weight: 700;
+  }
+
+  // Shown instead of the redeem CTA (or the feedback footer) while the service
+  // has not opened yet. Outlined, because unlike the advisory it replaces the
+  // main action rather than qualifying it, and pink to match the list markers.
+  &--upcoming {
+    background: var(--av-sash-soft);
+    border: 1.5px solid var(--av-sash);
+
+    .material-icons {
+      color: var(--av-sash);
+    }
   }
 }
 

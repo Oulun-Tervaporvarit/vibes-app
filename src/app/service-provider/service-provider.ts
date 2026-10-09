@@ -5,7 +5,13 @@ import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
 import { firstValueFrom, switchMap } from 'rxjs';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { DirectusFile, FeedbackRating, ServiceProviderService } from '../service-provider.service';
+import {
+  DirectusFile,
+  FeedbackRating,
+  ServiceProviderService,
+  isUpcoming as providerIsUpcoming,
+  opensOnLabel as providerOpensOnLabel,
+} from '../service-provider.service';
 import { VibesCodeService } from '../vibes-code.service';
 import { LanguageService, TranslatePipe } from '../i18n';
 import { ExternalLinksDirective } from '../external-links.directive';
@@ -238,6 +244,12 @@ export class ServiceProvider {
     return this.vibes.hasRedeemed(provider.id);
   });
 
+  /** Whether this service only opens on a future date (Directus `opens_on`). */
+  isUpcoming = computed(() => providerIsUpcoming(this.item()));
+
+  /** The opening day of an upcoming service, e.g. `1.11.2026`. */
+  opensOnLabel = computed(() => providerOpensOnLabel(this.item()));
+
   asRedeemFailed(state: GateState): Extract<GateState, { kind: 'redeem-failed' }> {
     return state as Extract<GateState, { kind: 'redeem-failed' }>;
   }
@@ -305,6 +317,7 @@ export class ServiceProvider {
     const provider = this.item();
     if (!provider) return;
     if (this.gate().kind === 'checking') return;
+    if (providerIsUpcoming(provider)) return;
 
     // A valid VIBEs code is required to redeem.
     if (!this.vibes.code()) {
@@ -337,7 +350,14 @@ export class ServiceProvider {
   }
 
   /** Performs the actual redemption. Keeps any location warning for the receipt. */
-  private async doRedeem(provider: { id: number }) {
+  private async doRedeem(provider: { id: number; opens_on?: string | null }) {
+    // Deliberately duplicates the template and onShowToStaff(): hiding the
+    // button is presentation, not a guarantee, and `isUpcoming()` is read fresh
+    // here rather than from the computed.
+    if (providerIsUpcoming(provider)) {
+      this.gate.set({ kind: 'idle' });
+      return;
+    }
     const result = await this.vibes.redeem(provider.id);
     if (result.success) {
       this.redeemedAt.set(new Date());
