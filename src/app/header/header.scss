@@ -59,6 +59,7 @@
 }
 
 .av-header__right {
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: flex-end;
@@ -196,13 +197,31 @@
   }
 }
 
+.av-code-field {
+  display: inline-flex;
+}
+
 .av-code-hint {
-  flex-basis: 100%;
+  // Floated under the field rather than laid out in the header. As a flex item
+  // with flex-basis: 100% it claimed a whole row and pushed the language
+  // toggle onto another, growing the sticky header from 59px to 182px and
+  // shoving the page down the moment someone mistyped a code.
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  z-index: 1;
   margin: 0;
-  text-align: right;
+  width: max-content;
+  max-width: min(260px, calc(100vw - 28px));
+  padding: 8px 12px;
+  border-radius: var(--av-radius-sm);
+  background: var(--av-surface);
+  color: var(--av-black);
+  box-shadow: var(--av-shadow-md);
   font-size: 12px;
   font-weight: 600;
-  color: #fff;
+  line-height: 1.35;
+  text-align: left;
 }
 
 .av-lang-toggle {
