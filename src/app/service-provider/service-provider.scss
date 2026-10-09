@@ -365,9 +365,14 @@
 
   // Shown instead of the redeem CTA (or the feedback footer) while the service
   // has not opened yet. Outlined, because unlike the advisory it replaces the
-  // main action rather than qualifying it.
+  // main action rather than qualifying it, and pink to match the list markers.
   &--upcoming {
-    border: 1.5px solid var(--av-orange);
+    background: var(--av-pink-soft);
+    border: 1.5px solid var(--av-pink);
+
+    .material-icons {
+      color: var(--av-pink);
+    }
   }
 }
 

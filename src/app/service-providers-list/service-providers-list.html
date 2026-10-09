@@ -16,7 +16,7 @@
               <span class="av-complist__cat">{{ categoryLabel(provider) }}</span>
               @if (isUpcoming(provider)) {
                 <span class="av-complist__opens">
-                  <span class="material-icons" aria-hidden="true">schedule</span>
+                  <span class="material-icons" aria-hidden="true">auto_awesome</span>
                   {{ 'access.opens' | t: { date: opensOn(provider) } }}
                 </span>
               }
@@ -56,7 +56,7 @@
               </span>
               @if (isUpcoming(provider)) {
                 <span class="av-provider-card__opens">
-                  <span class="material-icons" aria-hidden="true">schedule</span>
+                  <span class="material-icons" aria-hidden="true">auto_awesome</span>
                   {{ 'access.opens' | t: { date: opensOn(provider) } }}
                 </span>
               }

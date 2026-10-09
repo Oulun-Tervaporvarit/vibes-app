@@ -10,6 +10,7 @@
   --av-yellow-soft: #FFFCD0;
   --av-orange: #FFA500;
   --av-pink: #FF7BBE;
+  --av-pink-soft: #FFF0F7;
   --av-mint: #5FE3C0;
   --av-black: #0E0E0E;
   --av-surface: #FFFFFF;
@@ -132,8 +133,8 @@ h1, h2, h3, h4 {
   }
 
   &--upcoming {
-    background: var(--av-orange);
-    color: var(--av-black);
+    background: var(--av-pink);
+    color: #fff;
 
     .material-icons {
       font-size: 15px;

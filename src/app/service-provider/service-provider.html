@@ -23,7 +23,7 @@
         }
         @if (isUpcoming()) {
           <span class="av-chip av-chip--upcoming">
-            <span class="material-icons" aria-hidden="true">schedule</span>
+            <span class="material-icons" aria-hidden="true">auto_awesome</span>
             {{ 'access.opens' | t: { date: opensOnLabel() } }}
           </span>
         }
@@ -123,12 +123,13 @@
     @if (isUpcoming()) {
       <footer class="av-detail__cta-bar">
         <p class="av-detail__alert av-detail__alert--upcoming">
-          <span class="material-icons" aria-hidden="true">schedule</span>
+          <span class="material-icons" aria-hidden="true">auto_awesome</span>
           <span>
-            <b>{{ 'detail.opens_title' | t: { date: opensOnLabel() } }}</b>
-            @if (!provider.free) {
-              {{ 'detail.opens_locked' | t }}
-            }
+            <b>{{ 'detail.opens_soon' | t }}</b>
+            {{
+              (provider.free ? 'detail.opens_body_free' : 'detail.opens_body')
+                | t: { date: opensOnLabel() }
+            }}
           </span>
         </p>
       </footer>

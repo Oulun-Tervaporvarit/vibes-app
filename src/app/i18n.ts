@@ -45,8 +45,8 @@ export const TRANSLATIONS: Record<string, Entry> = {
   'access.unlimited': { fi: 'Rajaton käyttö', en: 'Unlimited use' },
   'access.code_short': { fi: 'VIBEs-koodi', en: 'VIBEs code' },
   'access.code_long': { fi: 'Vaatii lunastuksen VIBEs-koodilla', en: 'Requires a VIBEs code' },
-  'access.opens': { fi: 'Avautuu {date}', en: 'Opens {date}' },
-  'access.opens_generic': { fi: 'Avautuu myöhemmin', en: 'Opens later' },
+  'access.opens': { fi: 'Pian täällä {date}', en: 'Coming soon {date}' },
+  'access.opens_generic': { fi: 'Pian täällä', en: 'Coming soon' },
 
   // Service detail
   'detail.back': { fi: 'Takaisin', en: 'Back' },
@@ -73,13 +73,14 @@ export const TRANSLATIONS: Record<string, Entry> = {
   },
   'detail.show_staff': { fi: 'Näytä henkilökunnalle', en: 'Show to staff' },
   'detail.redeeming': { fi: 'Lunastetaan…', en: 'Redeeming…' },
-  'detail.opens_title': {
-    fi: 'Palvelu avautuu {date}.',
-    en: 'This service opens on {date}.',
+  'detail.opens_soon': { fi: 'Kohta ollaan täällä! 👋', en: 'Almost here! 👋' },
+  'detail.opens_body_free': {
+    fi: ' Tämä palvelu avautuu {date} — merkkaa kalenteriin 🗓️',
+    en: ' This service opens on {date} — mark your calendar 🗓️',
   },
-  'detail.opens_locked': {
-    fi: ' Etua ei voi vielä lunastaa — tule käymään uudelleen avautumispäivänä.',
-    en: ' The benefit can’t be redeemed yet — come back on the opening day.',
+  'detail.opens_body': {
+    fi: ' Tämä palvelu avautuu {date}. Etua ei voi vielä lunastaa — merkkaa kalenteriin 🗓️',
+    en: ' This service opens on {date}. The benefit can’t be redeemed yet — mark your calendar 🗓️',
   },
 
   // Redeem success card
@@ -201,8 +202,8 @@ export const TRANSLATIONS: Record<string, Entry> = {
   'guide.s3_free': { fi: '= maksuton, käytä niin monta kertaa kuin haluat 🙌', en: '= free, use it as many times as you like 🙌' },
   'guide.s3_code': { fi: '= käytät yhden käynnin koodistasi 🎟', en: '= uses one visit from your code 🎟' },
   'guide.s3_opens': {
-    fi: '= palvelu avautuu vasta myöhemmin, etua ei voi vielä lunastaa ⏳',
-    en: '= opens later on, the benefit can’t be redeemed yet ⏳',
+    fi: '= palvelu ei ole vielä avautunut, merkkaa avautumispäivä kalenteriin 🗓️',
+    en: '= not open yet, mark the opening day in your calendar 🗓️',
   },
   'guide.s4_title': { fi: 'Lunasta etu paikan päällä ✅', en: 'Redeem on-site ✅' },
   'guide.s4_text': {
