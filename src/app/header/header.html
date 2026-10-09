@@ -31,24 +31,27 @@
           </button>
         </div>
       } @else {
-        <label class="av-code-input" [class.av-code-input--error]="invalid()">
-          <span class="av-code-input__icon material-icons" aria-hidden="true">vpn_key</span>
-          <input
-            [(ngModel)]="code"
-            (change)="submitCode()"
-            (keydown.enter)="submitCode()"
-            [placeholder]="'header.placeholder' | t"
-            [attr.aria-label]="'header.code_aria' | t"
-            autocomplete="off"
-            spellcheck="false"
-          />
-          @if (checking()) {
-            <span class="av-code-input__status material-icons av-spin" aria-hidden="true">progress_activity</span>
+        <div class="av-code-field">
+          <label class="av-code-input" [class.av-code-input--error]="invalid()">
+            <span class="av-code-input__icon material-icons" aria-hidden="true">vpn_key</span>
+            <input
+              [(ngModel)]="code"
+              (change)="submitCode()"
+              (keydown.enter)="submitCode()"
+              [placeholder]="'header.placeholder' | t"
+              [attr.aria-label]="'header.code_aria' | t"
+              [attr.aria-invalid]="invalid() ? 'true' : null"
+              autocomplete="off"
+              spellcheck="false"
+            />
+            @if (checking()) {
+              <span class="av-code-input__status material-icons av-spin" aria-hidden="true">progress_activity</span>
+            }
+          </label>
+          @if (invalid()) {
+            <p class="av-code-hint" role="alert">{{ 'header.invalid' | t }}</p>
           }
-        </label>
-        @if (invalid()) {
-          <p class="av-code-hint">{{ 'header.invalid' | t }}</p>
-        }
+        </div>
       }
 
       <button
